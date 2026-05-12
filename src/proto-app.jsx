@@ -650,9 +650,12 @@ function ReportForm({ toast, mealType, onSubmitted }) {
       return;
     }
     setSubmitting(true);
-    const payload = {
+    const submittedAt = new Date().toISOString();
+    const entry = {
       ...form,
-      submittedAt: new Date().toISOString(),
+      submittedAt,
+      id: `restaurant-${Date.now()}`,
+      reports: 1,
     };
     const url = (window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL) || "";
     if (!url || url === "여기에_URL_입력") {
@@ -665,15 +668,15 @@ function ReportForm({ toast, mealType, onSubmitted }) {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(entry),
       });
-      toast("제보해줘서 고마워요! 검토 후 24시간 내에 게시될 예정이에요 🍚");
+      toast("제보 등록 완료! 피드에서 바로 확인할 수 있어요 🍚");
       setForm({
         name: "", address: "", genre: "한식", mood: "quiet", mealType,
         people: "2~4명 소수팀", priceRange: "1~2만원", extras: [],
         comment: "", nickname: "", team: "",
       });
-      onSubmitted && onSubmitted();
+      onSubmitted && onSubmitted(entry);
     } catch (err) {
       toast("제출에 실패했어요. 잠시 후 다시 시도해주세요.", "err");
     } finally {
@@ -898,6 +901,20 @@ const DEFAULT_FILTERS = {
   mode: null, people: 6, mood: null, genres: [], budget: null, conditions: [],
 };
 
+// 낙관적 업데이트용: Apps Script가 JSON에 반영하기 전까지 localStorage에서 유지.
+// 정식 JSON에 같은 id가 등장하면 자동으로 정리됨.
+const PENDING_KEY = "jjop.pending";
+function loadPending() {
+  try {
+    const raw = localStorage.getItem(PENDING_KEY);
+    const arr = raw ? JSON.parse(raw) : [];
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+function savePending(arr) {
+  try { localStorage.setItem(PENDING_KEY, JSON.stringify(arr)); } catch {}
+}
+
 function App() {
   const [tab, setTab] = useState("추천");
   const [recScreen, setRecScreen] = useState("landing"); // landing | step1..3 | result
@@ -908,22 +925,41 @@ function App() {
   const [loadError, setLoadError] = useState(null);
   const [toastEl, toast] = useToast();
 
-  // 데이터 로드
+  // 데이터 로드 — JSON + localStorage 펜딩 항목 머지
   const loadData = useCallback(() => {
     const path = (window.APP_CONFIG && window.APP_CONFIG.RESTAURANTS_JSON) || "src/data/restaurants.json";
     fetch(path, { cache: "no-cache" })
       .then(r => r.ok ? r.json() : Promise.reject(new Error(r.statusText)))
       .then(arr => {
-        const list = Array.isArray(arr) ? arr.map(dataHelpers.normalize) : [];
-        setPlaces(list);
+        const jsonList = Array.isArray(arr) ? arr.map(dataHelpers.normalize) : [];
+        const jsonIds = new Set(jsonList.map(p => p.id));
+        // 펜딩에서 이미 JSON에 반영된 항목은 제거
+        const pending = loadPending();
+        const stillPending = pending.filter(p => !jsonIds.has(p.id));
+        if (stillPending.length !== pending.length) savePending(stillPending);
+        // 펜딩이 위로 오도록 합침
+        const merged = [...stillPending.map(dataHelpers.normalize), ...jsonList];
+        setPlaces(merged);
         setLoadError(null);
       })
       .catch(err => {
-        setPlaces([]);
+        // JSON 로드 실패해도 펜딩 항목은 보여줌
+        const pending = loadPending();
+        setPlaces(pending.map(dataHelpers.normalize));
         setLoadError(err.message || "데이터 로드 실패");
       });
   }, []);
   useEffect(() => { loadData(); }, [loadData]);
+
+  // 제보 폼 성공 시: 즉시 places에 추가 + localStorage 저장
+  const handleSubmitted = useCallback((entry) => {
+    if (!entry || !entry.id) return;
+    const pending = loadPending();
+    const next = [entry, ...pending.filter(p => p.id !== entry.id)];
+    savePending(next);
+    const normalized = dataHelpers.normalize(entry);
+    setPlaces(prev => [normalized, ...prev.filter(p => p.id !== entry.id)]);
+  }, []);
 
   const set = (patch) => setFilters(f => ({ ...f, ...patch }));
   const toggleGenre = (g) => setFilters(f => ({
@@ -997,7 +1033,7 @@ function App() {
       onDetail={id => setDetailId(id)} onNav={handleNav}/>;
   } else if (tab === "제보하기") {
     content = <ReportForm toast={toast} mealType={mealType}
-      onSubmitted={() => { /* 시트에 저장되면 검토 후 JSON 갱신 */ }}/>;
+      onSubmitted={handleSubmitted}/>;
   } else if (tab === "이번주 핫픽") {
     content = <HotPicks places={places} mealType={mealType}
       onDetail={id => setDetailId(id)} onNav={handleNav}/>;
