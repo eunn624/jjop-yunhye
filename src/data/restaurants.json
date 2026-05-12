@@ -285,5 +285,24 @@
     "reports": 1,
     "naverLink": "https://map.naver.com/p/search/%EC%99%95%EC%8A%A4%EB%8D%95%20%ED%8C%90%EA%B5%90%EC%A0%90%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC%20%EB%8C%80%EC%99%95%ED%8C%90%EA%B5%90%EB%A1%9C645%EB%B2%88%EA%B8%B8%2036%20ns%EB%B3%84%EA%B4%80%20B1%EC%B8%B5",
     "naverCategory": "중식당"
+  },
+  {
+    "id": "restaurant-1778585425952",
+    "name": "어슬청담 판교아브뉴프랑점",
+    "address": "경기 성남시 분당구 동판교로177번길 25",
+    "genre": "한식",
+    "mood": "formal",
+    "mealType": "dinner",
+    "people": "2~4명 소수팀",
+    "priceRange": "1~2만원",
+    "extras": [],
+    "comment": "명품 소갈비찜의 진수",
+    "nickname": "zizon시은",
+    "team": "UX디자인",
+    "submittedAt": "2026-05-12T11:30:25.952Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EC%96%B4%EC%8A%AC%EC%B2%AD%EB%8B%B4%20%ED%8C%90%EA%B5%90%EC%95%84%EB%B8%8C%EB%89%B4%ED%94%84%EB%9E%91%EC%A0%90%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC%20%EB%8F%99%ED%8C%90%EA%B5%90%EB%A1%9C177%EB%B2%88%EA%B8%B8%2025%202%EC%B8%B5%20221%ED%98%B8",
+    "naverCategory": "한식",
+    "thumbnail": "https://pup-post-phinf.pstatic.net/MjAyNTExMjRfMjkg/MDAxNzYzOTEyMzAxNDQx.79Di3dIeLUu2I51A-DLgx6ooAqMQWFlB8beSEybHaWgg.eQfkt2sxV9L9jef8dqfiDYzeDnR0xd1En3mpmSeyb9gg.JPEG/9AAA10F2-BD7B-4230-8E5B-F25F37C71F1C.jpg"
   }
 ]
