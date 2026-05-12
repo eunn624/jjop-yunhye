@@ -109,7 +109,7 @@ function BrandA({ size = 18 }) {
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-sans)' }}>
       <MeoksungMascot size={size * 1.7} mood="wink" />
       <span style={{ fontWeight: 700, fontSize: size, letterSpacing: '-0.02em', color: '#1b1c1e' }}>
-        먹<span style={{ color: '#0066FF' }}>숭이</span>
+        먹<span style={{ color: '#B07900' }}>숭이</span>
       </span>
     </span>
   );

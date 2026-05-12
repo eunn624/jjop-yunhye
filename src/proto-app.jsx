@@ -76,12 +76,12 @@ function Stepper({ step, total = 4 }) {
           <React.Fragment key={l}>
             <div style={{
               display: 'flex', alignItems: 'center', gap: 8,
-              color: state === "now" ? '#0066FF' : state === "done" ? '#37383c' : '#aeb0b6',
+              color: state === "now" ? '#B07900' : state === "done" ? '#37383c' : '#aeb0b6',
               fontWeight: state === "now" ? 600 : 500, fontSize: 13,
             }}>
               <div style={{
                 width: 24, height: 24, borderRadius: '50%',
-                background: state === "now" ? '#0066FF' : state === "done" ? '#37383c' : '#e1e2e4',
+                background: state === "now" ? '#FFC107' : state === "done" ? '#37383c' : '#e1e2e4',
                 color: state !== "todo" ? '#fff' : '#878a93',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: 12, fontWeight: 700, transition: 'all .25s',
@@ -147,11 +147,11 @@ function Landing({ onStart, onBrowse, places, onNav }) {
     <div className="landing-pad">
       <div className="landing-hero">
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 13, color: '#0066FF', fontWeight: 600, marginBottom: 16 }}>
+          <div style={{ fontSize: 13, color: '#B07900', fontWeight: 600, marginBottom: 16 }}>
             조직운영비, 알차게 쓰자 🐒
           </div>
           <h1 style={{ font: 'var(--text-display-2)', letterSpacing: '-0.02em', margin: '0 0 16px', lineHeight: 1.1 }}>
-            팀비 어디 쓰지<span style={{ color: '#0066FF' }}>?</span><br/>
+            팀비 어디 쓰지<span style={{ color: '#FFC107' }}>?</span><br/>
             <span style={{ color: 'rgba(0,0,0,0.5)', fontSize: 32, fontWeight: 500 }}>
               먹숭이가 동료 추천만 모았어요.
             </span>
@@ -226,12 +226,12 @@ function StepMode({ filters, set, next, back }) {
           return (
             <div key={o.id} className="opt-card" onClick={() => set({ mealType: o.id })}
               style={{
-                border: on ? '2px solid #0066FF' : '1px solid rgba(0,0,0,0.1)',
+                border: on ? '2px solid #FFC107' : '1px solid rgba(0,0,0,0.1)',
                 background: on ? 'linear-gradient(180deg, #fffceb 0%, #fff 80%)' : '#fafafb',
                 borderRadius: 16, padding: '28px 24px', cursor: 'pointer', position: 'relative',
               }}>
               {on && <div style={{ position: 'absolute', top: 12, right: 12, width: 22, height: 22,
-                borderRadius: '50%', background: '#0066FF', color: '#fff',
+                borderRadius: '50%', background: '#FFC107', color: '#1b1c1e',
                 display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
               <div style={{ fontSize: 38, marginBottom: 8, opacity: on ? 1 : 0.7 }}>{o.ico}</div>
               <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{o.title}</div>
@@ -274,8 +274,8 @@ function StepPeople({ filters, set, next, back }) {
           return (
             <div key={b.l} className="opt-card" onClick={() => set({ people: on ? null : b.l })}
               style={{
-                border: on ? '2px solid #0066FF' : '1px solid rgba(0,0,0,0.1)',
-                background: on ? '#f7fbff' : '#fff',
+                border: on ? '2px solid #FFC107' : '1px solid rgba(0,0,0,0.1)',
+                background: on ? '#FFFDF0' : '#fff',
                 borderRadius: 12, padding: '18px 18px', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: 14,
               }}>
@@ -284,8 +284,8 @@ function StepPeople({ filters, set, next, back }) {
                 <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 2 }}>{b.l}</div>
                 <div style={{ fontSize: 12, color: '#70737c' }}>{b.desc}</div>
               </div>
-              {on && <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#0066FF',
-                color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
+              {on && <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#FFC107',
+                color: '#1b1c1e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
             </div>
           );
         })}
@@ -326,8 +326,8 @@ function StepMood({ filters, set, next, back }) {
           return (
             <div key={m.id} className="opt-card" onClick={() => set({ mood: m.id })}
               style={{
-                border: on ? '2px solid #0066FF' : '1px solid rgba(0,0,0,0.1)',
-                background: on ? '#f7fbff' : '#fff',
+                border: on ? '2px solid #FFC107' : '1px solid rgba(0,0,0,0.1)',
+                background: on ? '#FFFDF0' : '#fff',
                 borderRadius: 12, padding: '20px 18px', cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: 14,
               }}>
@@ -336,8 +336,8 @@ function StepMood({ filters, set, next, back }) {
                 <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 2 }}>{m.label}</div>
                 <div style={{ fontSize: 12, color: '#70737c' }}>{m.desc}</div>
               </div>
-              {on && <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#0066FF',
-                color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
+              {on && <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#FFC107',
+                color: '#1b1c1e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
             </div>
           );
         })}
@@ -373,8 +373,8 @@ function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back }) {
           return (
             <div key={g} className="opt-card" onClick={() => toggleGenre(g)}
               style={{
-                border: on ? '2px solid #0066FF' : '1px solid rgba(0,0,0,0.1)',
-                background: on ? '#f7fbff' : '#fff',
+                border: on ? '2px solid #FFC107' : '1px solid rgba(0,0,0,0.1)',
+                background: on ? '#FFFDF0' : '#fff',
                 borderRadius: 12, padding: '14px 8px', cursor: 'pointer', textAlign: 'center',
               }}>
               <div style={{ fontSize: 26, marginBottom: 4 }}>{genreIcons[g] || "🍽"}</div>
@@ -429,7 +429,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
           <MeoksungMascot size={56} mood="happy"/>
           <div>
-            <div style={{ fontSize: 13, color: '#0066FF', fontWeight: 600 }}>
+            <div style={{ fontSize: 13, color: '#B07900', fontWeight: 600 }}>
               먹숭이의 추천 · {filtered.length}곳 매칭
             </div>
             <h2 style={{ font: 'var(--text-h2)', margin: '4px 0 0', letterSpacing: '-0.01em' }}>
@@ -512,7 +512,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
                     {p.extras && p.extras.length > 0 && (
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                         {p.extras.slice(0, 4).map(r => (
-                          <span key={r} style={{ fontSize: 11, color: '#0054D1', background: '#EAF2FE',
+                          <span key={r} style={{ fontSize: 11, color: '#B07900', background: '#FFF8E1',
                             padding: '3px 8px', borderRadius: 4 }}>✓ {r}</span>
                         ))}
                       </div>
@@ -526,8 +526,8 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
                       else { next.add(p.id); toast(`'${p.name}' 저장됨`); }
                       setSaved(next);
                     }} style={{ width: 36, height: 36, borderRadius: 8,
-                      border: '1px solid ' + (isSaved ? '#0066FF' : 'rgba(0,0,0,0.1)'),
-                      background: isSaved ? '#EAF2FE' : '#fff', cursor: 'pointer', fontSize: 16 }}>
+                      border: '1px solid ' + (isSaved ? '#FFC107' : 'rgba(0,0,0,0.1)'),
+                      background: isSaved ? '#FFF8E1' : '#fff', cursor: 'pointer', fontSize: 16 }}>
                       {isSaved ? "★" : "☆"}
                     </button>
                     <button className="btn-primary" onClick={e => { e.stopPropagation(); onDetail(p.id); }}
@@ -671,7 +671,7 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast }) {
               {place.extras && place.extras.length > 0 && (
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
                   {place.extras.map(r => (
-                    <span key={r} style={{ fontSize: 12, color: '#0054D1', background: '#EAF2FE',
+                    <span key={r} style={{ fontSize: 12, color: '#B07900', background: '#FFF8E1',
                       padding: '4px 10px', borderRadius: 999 }}>✓ {r}</span>
                   ))}
                 </div>
