@@ -104,7 +104,7 @@
   {
     "id": "restaurant-1778579206704",
     "name": "우화 판교아브뉴프랑점",
-    "address": "경기 성남시 분당구 동판교로177번길 25 2층 212, 213호 우화",
+    "address": "우화 판교아브뉴프랑점 경기 성남시 분당구 동판교로177번길 25",
     "genre": "고기구이",
     "mood": "quiet",
     "mealType": "both",
@@ -119,8 +119,22 @@
     "comment": "가격대는 있지만 고급지게 먹고 싶다면 강추!",
     "nickname": "zi0_zzang",
     "team": "UX디자인팀",
-    "submittedAt": "2026-05-12T09:46:46.704Z",
-    "reports": 1
+    "submittedAt": "2026-05-12T09:47:16.203Z",
+    "reports": 1,
+    "sub": "",
+    "menu": [],
+    "tone": "grilled",
+    "thumbnail": "",
+    "naverLink": "",
+    "naverCategory": "",
+    "capMin": 5,
+    "capMax": 10,
+    "priceMin": 5,
+    "priceMax": 99,
+    "hasRoom": false,
+    "hasParking": true,
+    "hasReserve": true,
+    "walkable": true
   },
   {
     "id": "restaurant-1778579217317",
