@@ -1,91 +1,35 @@
 // Shared components / mascots / branding for 먹숭이 prototype
 
-// ───────── Mascot SVG (먹숭이 - a friendly monkey character) ─────────
-// 팀비 회식 가이드 마스코트. 카드처럼 두툼한 둥근 머리, 양쪽 둥근 귀.
+// ───────── Mascot 이미지 (먹숭이) ─────────
+// 실제 PNG 아트워크는 /cha-assets/ 에 있고, mood 별로 다른 파일을 가져온다.
+
+const MEOKSUNG_FILES = {
+  happy:     "cha_smail.png",      // 웃는 표정
+  hungry:    "surprised.png",       // 놀란 큰 눈 (배고픔)
+  sleepy:    "sad.png",             // 시무룩 (졸림/빈 상태)
+  full:      "cha_default.png",     // 평온한 기본
+  wink:      "winking.png",         // 윙크
+  angry:     "angery.png",          // 화남 (필요시)
+  default:   "cha_default.png",
+};
 
 function MeoksungMascot({ size = 72, mood = "happy" }) {
-  // mood: happy, hungry, sleepy, full, wink
-  const eyes = {
-    happy:  <g>
-      <path d="M30 46 q4 -5 8 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <path d="M50 46 q4 -5 8 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-    </g>,
-    hungry: <g>
-      <circle cx="34" cy="48" r="3" fill="#1b1c1e"/>
-      <circle cx="54" cy="48" r="3" fill="#1b1c1e"/>
-      <circle cx="33" cy="47" r="1.1" fill="#fff"/>
-      <circle cx="53" cy="47" r="1.1" fill="#fff"/>
-    </g>,
-    sleepy: <g>
-      <path d="M30 48 h8" stroke="#1b1c1e" strokeWidth="2.5" strokeLinecap="round"/>
-      <path d="M50 48 h8" stroke="#1b1c1e" strokeWidth="2.5" strokeLinecap="round"/>
-    </g>,
-    full:   <g>
-      <path d="M28 46 q6 6 12 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <path d="M48 46 q6 6 12 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-    </g>,
-    wink:   <g>
-      <path d="M30 46 q4 -5 8 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <path d="M50 48 h8" stroke="#1b1c1e" strokeWidth="2.5" strokeLinecap="round"/>
-    </g>,
-  }[mood];
-
-  const mouth = {
-    happy:  <path d="M38 62 q6 5 12 0" stroke="#1b1c1e" strokeWidth="2.2" fill="#ff8090" strokeLinecap="round"/>,
-    hungry: <ellipse cx="44" cy="64" rx="6" ry="5" fill="#ff5252"/>,
-    sleepy: <path d="M40 64 q4 2 8 0" stroke="#1b1c1e" strokeWidth="2" fill="none" strokeLinecap="round"/>,
-    full:   <path d="M38 64 q6 -4 12 0" stroke="#1b1c1e" strokeWidth="2.2" fill="none" strokeLinecap="round"/>,
-    wink:   <path d="M38 62 q6 5 12 0" stroke="#1b1c1e" strokeWidth="2.2" fill="#ff8090" strokeLinecap="round"/>,
-  }[mood];
-
+  const file = MEOKSUNG_FILES[mood] || MEOKSUNG_FILES.default;
   return (
-    <svg className="mascot" width={size} height={size} viewBox="0 0 88 88" aria-hidden="true">
-      {/* shadow */}
-      <ellipse cx="44" cy="82" rx="22" ry="3" fill="rgba(0,0,0,0.08)"/>
-
-      {/* ears (back) */}
-      <ellipse cx="14" cy="40" rx="10" ry="11" fill="#8a5728"/>
-      <ellipse cx="74" cy="40" rx="10" ry="11" fill="#8a5728"/>
-      <ellipse cx="14" cy="42" rx="5" ry="6" fill="#f0c896"/>
-      <ellipse cx="74" cy="42" rx="5" ry="6" fill="#f0c896"/>
-
-      {/* head outline */}
-      <ellipse cx="44" cy="46" rx="28" ry="28" fill="#a3702f"/>
-      <ellipse cx="44" cy="46" rx="28" ry="28" fill="url(#monkeyShade)"/>
-
-      {/* face plate (heart-ish) */}
-      <path d="M22 50
-               C 22 32, 44 28, 44 28
-               C 44 28, 66 32, 66 50
-               C 66 68, 44 72, 44 72
-               C 44 72, 22 68, 22 50 Z" fill="#f5d7ad"/>
-
-      {/* mouth area lighter */}
-      <ellipse cx="44" cy="62" rx="14" ry="9" fill="#fbe9ce"/>
-
-      {/* hair tuft */}
-      <path d="M36 24 q3 -6 8 -3" stroke="#5a3818" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-      <path d="M48 24 q3 -4 6 -1" stroke="#5a3818" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
-
-      {/* cheeks */}
-      <circle cx="27" cy="58" r="3.5" fill="#ffa8b3" opacity="0.7"/>
-      <circle cx="61" cy="58" r="3.5" fill="#ffa8b3" opacity="0.7"/>
-
-      {/* eyes / mouth */}
-      {eyes}
-
-      {/* nose */}
-      <ellipse cx="44" cy="56" rx="2.6" ry="1.8" fill="#5a3818"/>
-
-      {mouth}
-
-      <defs>
-        <linearGradient id="monkeyShade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fff" stopOpacity="0.08"/>
-          <stop offset="1" stopColor="#000" stopOpacity="0.18"/>
-        </linearGradient>
-      </defs>
-    </svg>
+    <img
+      className="mascot"
+      src={"cha-assets/" + file}
+      alt=""
+      width={size}
+      height={size}
+      style={{
+        width: size,
+        height: size,
+        objectFit: "contain",
+        display: "block",
+        flex: "0 0 auto",
+      }}
+    />
   );
 }
 
