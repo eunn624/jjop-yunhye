@@ -121,13 +121,14 @@ function PlaceThumb({ place, h = 140, rounded = 8 }) {
   return <FoodTile tone={place && place.tone} h={h} label={place && place.name}/>;
 }
 
-// 가게 네이버지도 URL — naverLink(정확한 가게 페이지)가 있으면 그걸 쓰고, 없으면 검색 URL.
+// 가게 네이버지도 URL — naverLink(수동 입력 또는 Apps Script enrichment 결과)가 있으면 그걸 쓰고,
+// 없으면 가게명만으로 검색 (주소까지 넣으면 "조건에 맞는 업체 없음" 으로 떨어지는 경우가 잦음)
 function naverMapUrlFor(place) {
   if (!place) return null;
   if (place.naverLink) return place.naverLink;
-  const q = [place.name, place.address].filter(Boolean).join(" ").trim();
+  const q = (place.name || "").trim();
   if (!q) return null;
-  return `https://map.naver.com/v5/search/${encodeURIComponent(q)}`;
+  return `https://map.naver.com/p/search/${encodeURIComponent(q)}`;
 }
 
 function StepFade({ stepKey, children }) {
@@ -734,7 +735,8 @@ const EXTRA_OPTS  = ["도보 10분 이내","주차 가능","예약 가능","룸/
 
 function emptyForm(mealType = "lunch") {
   return {
-    name: "", address: "", genre: "한식", mood: "quiet", mealType,
+    name: "", address: "", naverLink: "",
+    genre: "한식", mood: "quiet", mealType,
     people: "2~4명 소수팀", priceRange: "1~2만원", extras: [],
     comment: "", nickname: "", team: "",
   };
@@ -776,6 +778,17 @@ function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit,
         <div style={label}>주소 *</div>
         <input style={input} value={form.address} onChange={e => set({ address: e.target.value })}
           placeholder="예: 경기 성남시 분당구 판교역로 152" />
+      </div>
+
+      <div>
+        <div style={label}>네이버 지도 URL <span style={{ color: '#aeb0b6', fontWeight: 400 }}>(선택)</span></div>
+        <input style={input} type="url"
+          value={form.naverLink || ""}
+          onChange={e => set({ naverLink: e.target.value })}
+          placeholder="예: https://map.naver.com/p/entry/place/..."/>
+        <div style={{ fontSize: 11, color: '#878a93', marginTop: 6, lineHeight: 1.5 }}>
+          네이버 지도에서 가게 페이지 주소를 복사해 붙여넣으면 자동 매칭 대신 그 링크를 씁니다. 비워두면 가게명으로 자동 매칭해요.
+        </div>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
