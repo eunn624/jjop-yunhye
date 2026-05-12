@@ -177,7 +177,7 @@ function Landing({ onStart, onBrowse, places, onNav }) {
             boxShadow: '0 4px 16px rgba(0,0,0,0.06)', fontSize: 13, fontWeight: 500 }}>
             오늘 어디 긁어? 🍌
           </div>
-          <MeoksungMascot size={260} mood="happy"/>
+          <MeoksungMascot size={320} mood="full"/>
         </div>
       </div>
 
@@ -361,7 +361,7 @@ function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back }) {
   return (
     <div className="wizard-page">
       <Stepper step={4}/>
-      <MascotSay mood="full">
+      <MascotSay mood="hungry">
         마지막 — <b>음식 종류</b>는 끌리는 거 다 골라요. 안 골라도 돼요.
       </MascotSay>
       <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 8px', letterSpacing: '-0.01em' }}>땡기는 게 있어요?</h2>
