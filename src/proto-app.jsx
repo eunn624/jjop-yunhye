@@ -1,6 +1,6 @@
-// 쩝쩝윤혜 — 메인 앱
+// 먹숭이 — 메인 앱
 // 탭: 추천 (위저드 + 결과) / 제보 피드 / 제보하기 / 이번주 핫픽
-// 글로벌: mealType (점심/저녁), restaurants.json 로드
+// 점심/저녁은 위저드 1단계에서 선택 (글로벌 토글 아님)
 
 const { useState, useEffect, useMemo, useRef, useCallback } = React;
 
@@ -23,8 +23,8 @@ function useToast() {
   return [el, show];
 }
 
-// ───────── Top nav (with meal toggle on right) ─────────
-function TopNav({ active, onNav, mealType, onMealType }) {
+// ───────── Top nav ─────────
+function TopNav({ active, onNav }) {
   return (
     <div className="topnav">
       <span onClick={() => onNav("추천")} style={{ cursor: 'pointer' }}><BrandA/></span>
@@ -34,14 +34,10 @@ function TopNav({ active, onNav, mealType, onMealType }) {
         ))}
       </div>
       <div className="spacer"/>
-      <div className={"meal-toggle " + (mealType === "dinner" ? "is-dinner" : "is-lunch")}>
-        <button className={mealType === "lunch" ? "on" : ""} onClick={() => onMealType("lunch")}>
-          <span>🌞</span> 점심
-        </button>
-        <button className={mealType === "dinner" ? "on" : ""} onClick={() => onMealType("dinner")}>
-          <span>🌙</span> 저녁
-        </button>
-      </div>
+      <span className="pill">
+        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#00BF40' }}/>
+        넥슨 판교
+      </span>
       <div className="avatar"/>
     </div>
   );
@@ -54,12 +50,12 @@ function EmptyState({ onReport, title, body }) {
       background: '#fff', borderRadius: 16, padding: '56px 32px', textAlign: 'center',
       border: '1px solid rgba(0,0,0,0.06)', maxWidth: 520, margin: '40px auto',
     }}>
-      <YunhyeMascot size={120} mood="sleepy"/>
+      <MeoksungMascot size={120} mood="sleepy"/>
       <h3 style={{ font: 'var(--text-h3)', marginTop: 16, marginBottom: 8 }}>
-        {title || "아직 등록된 맛집이 없어요."}
+        {title || "아직 아무도 제보 안 했어요."}
       </h3>
       <p style={{ color: '#70737c', margin: '0 0 24px', lineHeight: 1.6 }}>
-        {body || "첫 번째 제보자가 되어보세요!"}
+        {body || "팀비 어디다 쓰는지 알려주세요"}
       </p>
       {onReport && (
         <button className="btn-primary" onClick={onReport}>제보하러 가기 →</button>
@@ -69,8 +65,8 @@ function EmptyState({ onReport, title, body }) {
 }
 
 // ───────── Step indicator ─────────
-function Stepper({ step, total = 3 }) {
-  const labels = ["인원", "분위기", "장르"].slice(0, total);
+function Stepper({ step, total = 4 }) {
+  const labels = ["언제", "인원", "분위기", "장르"].slice(0, total);
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 40 }}>
       {labels.map((l, i) => {
@@ -103,7 +99,7 @@ function Stepper({ step, total = 3 }) {
 function MascotSay({ mood = "happy", children, size = 64 }) {
   return (
     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, marginBottom: 20 }}>
-      <YunhyeMascot size={size} mood={mood}/>
+      <MeoksungMascot size={size} mood={mood}/>
       <div className="bubble" style={{ maxWidth: 480 }}>{children}</div>
     </div>
   );
@@ -120,29 +116,28 @@ function StepFade({ stepKey, children }) {
 }
 
 // ───────── LANDING ─────────
-function Landing({ onStart, onBrowse, places, mealType, onNav }) {
+function Landing({ onStart, onBrowse, places, onNav }) {
   const recent = dataHelpers.recentSubmissionCount(places);
-  const bymeal = places.filter(p => p.mealType === mealType || p.mealType === "both");
   return (
     <div className="landing-pad">
       <div className="landing-hero">
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 13, color: '#0066FF', fontWeight: 600, marginBottom: 16 }}>
-            오늘 {mealType === "lunch" ? "점심" : "저녁"}, 윤혜가 골라드림
+            조직운영비, 알차게 쓰자 🐒
           </div>
           <h1 style={{ font: 'var(--text-display-2)', letterSpacing: '-0.02em', margin: '0 0 16px', lineHeight: 1.1 }}>
-            뭐 먹지<span style={{ color: '#0066FF' }}>?</span><br/>
+            팀비 어디 쓰지<span style={{ color: '#0066FF' }}>?</span><br/>
             <span style={{ color: 'rgba(0,0,0,0.5)', fontSize: 32, fontWeight: 500 }}>
-              그 질문, 마지막에 할게요.
+              먹숭이가 동료 추천만 모았어요.
             </span>
           </h1>
           <p style={{ color: '#46474c', fontSize: 16, lineHeight: 1.65, margin: '0 0 32px', maxWidth: 440 }}>
-            누구랑, 어떤 분위기로 가는지부터 알려주세요.<br/>
-            넥슨 동료들이 제보한 곳 중에서<br/>
-            <b>3번의 질문</b>으로 찾아드려요.
+            법카 긁어본 사람들이 직접 남긴 한 줄 추천.<br/>
+            팀장님도 만족하고, 팀비도 살아남는<br/>
+            <b>회식 한 끼</b>를 4가지 질문으로 찾아드려요.
           </p>
           <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <button className="btn-primary" onClick={onStart}>윤혜한테 물어보기 →</button>
+            <button className="btn-primary" onClick={onStart}>먹숭이한테 물어보기 →</button>
             <button className="btn-ghost" onClick={onBrowse}>그냥 둘러볼래요</button>
           </div>
           <div style={{ display: 'flex', gap: 24, marginTop: 40, fontSize: 13, color: '#70737c', flexWrap: 'wrap' }}>
@@ -155,9 +150,9 @@ function Landing({ onStart, onBrowse, places, mealType, onNav }) {
           <div style={{ position: 'absolute', top: -8, right: -16, background: '#fff',
             border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12, padding: '8px 14px',
             boxShadow: '0 4px 16px rgba(0,0,0,0.06)', fontSize: 13, fontWeight: 500 }}>
-            {mealType === "lunch" ? "어디갈까~ 🍚" : "한잔 어때~ 🍶"}
+            오늘 어디 긁어? 🍌
           </div>
-          <YunhyeMascot size={260} mood="happy"/>
+          <MeoksungMascot size={260} mood="happy"/>
         </div>
       </div>
 
@@ -168,10 +163,10 @@ function Landing({ onStart, onBrowse, places, mealType, onNav }) {
       ) : (
         <div className="landing-foot">
           <div style={{ fontSize: 12, color: '#70737c', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            {mealType === "lunch" ? "점심" : "저녁"} 등록된 가게 {bymeal.length}곳
+            동료들이 알려준 가게 {places.length}곳
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {bymeal.slice(0, 6).map(p => (
+            {places.slice(0, 6).map(p => (
               <span key={p.id} className="chip" onClick={onBrowse}>{p.name} · {p.genre}</span>
             ))}
           </div>
@@ -181,7 +176,55 @@ function Landing({ onStart, onBrowse, places, mealType, onNav }) {
   );
 }
 
-// ───────── STEP 1: people ─────────
+// ───────── STEP 1: meal type (lunch / dinner) ─────────
+function StepMode({ filters, set, next, back }) {
+  const opts = [
+    { id: "lunch",  ico: "🌞", title: "팀 점심 / 캐주얼",
+      desc: "도보 10분 안, 회전 빠른 곳 · 메뉴 단가 부담 적음" },
+    { id: "dinner", ico: "🌙", title: "본 회식 / 법카 디너",
+      desc: "술 가능, 룸·단체석 · 늦게까지 가능 · 2차 연계" },
+  ];
+  return (
+    <div className="wizard-page">
+      <Stepper step={1}/>
+      <MascotSay mood="hungry">안녕! 먹숭이야. 먼저 — <b>언제 가는 거</b>예요?</MascotSay>
+      <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 8px', letterSpacing: '-0.01em' }}>
+        팀 점심이에요, 본 회식이에요?
+      </h2>
+      <p style={{ color: '#70737c', margin: '0 0 32px' }}>
+        예산 단위, 영업 시간, 술 가능 여부가 통째로 달라져요.
+      </p>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        {opts.map(o => {
+          const on = filters.mealType === o.id;
+          return (
+            <div key={o.id} className="opt-card" onClick={() => set({ mealType: o.id })}
+              style={{
+                border: on ? '2px solid #0066FF' : '1px solid rgba(0,0,0,0.1)',
+                background: on ? 'linear-gradient(180deg, #fffceb 0%, #fff 80%)' : '#fafafb',
+                borderRadius: 16, padding: '28px 24px', cursor: 'pointer', position: 'relative',
+              }}>
+              {on && <div style={{ position: 'absolute', top: 12, right: 12, width: 22, height: 22,
+                borderRadius: '50%', background: '#0066FF', color: '#fff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
+              <div style={{ fontSize: 38, marginBottom: 8, opacity: on ? 1 : 0.7 }}>{o.ico}</div>
+              <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{o.title}</div>
+              <div style={{ fontSize: 13, color: '#70737c', lineHeight: 1.5 }}>{o.desc}</div>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 48, alignItems: 'center' }}>
+        <button className="btn-ghost" onClick={back}>← 처음으로</button>
+        <button className="btn-primary" onClick={next} disabled={!filters.mealType}>다음 →</button>
+      </div>
+    </div>
+  );
+}
+
+// ───────── STEP 2: people ─────────
 // 제보 폼과 동일한 버킷(`PEOPLE_OPTS`)을 그대로 사용한다.
 function StepPeople({ filters, set, next, back }) {
   const buckets = [
@@ -193,8 +236,10 @@ function StepPeople({ filters, set, next, back }) {
 
   return (
     <div className="wizard-page">
-      <Stepper step={1}/>
-      <MascotSay mood="happy">안녕! 윤혜야. <b>몇 명</b> 가요?</MascotSay>
+      <Stepper step={2}/>
+      <MascotSay mood="happy">
+        {filters.mealType === "lunch" ? "팀 점심이군요 🌞" : "본 회식이군요 🌙"} — <b>몇 명</b> 가요?
+      </MascotSay>
       <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 8px', letterSpacing: '-0.01em' }}>총 몇 명?</h2>
       <p style={{ color: '#70737c', margin: '0 0 32px' }}>제보된 가게의 적정 인원과 매칭해서 찾아드려요.</p>
 
@@ -239,8 +284,10 @@ function StepMood({ filters, set, next, back }) {
   ];
   return (
     <div className="wizard-page">
-      <Stepper step={2}/>
-      <MascotSay mood="wink">{filters.people}명이군요. <b>어떤 자리</b>로 만들 거예요?</MascotSay>
+      <Stepper step={3}/>
+      <MascotSay mood="wink">
+        {filters.people ? `${filters.people}이군요. ` : ""}<b>어떤 자리</b>로 만들 거예요?
+      </MascotSay>
       <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 8px', letterSpacing: '-0.01em' }}>
         오늘은 어떤 분위기예요?
       </h2>
@@ -288,7 +335,7 @@ function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back }) {
   };
   return (
     <div className="wizard-page">
-      <Stepper step={3}/>
+      <Stepper step={4}/>
       <MascotSay mood="full">
         마지막 — <b>음식 종류</b>는 끌리는 거 다 골라요. 안 골라도 돼요.
       </MascotSay>
@@ -330,19 +377,20 @@ function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back }) {
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 48 }}>
         <button className="btn-ghost" onClick={back}>← 이전</button>
-        <button className="btn-primary" onClick={finish}>윤혜야 찾아줘 →</button>
+        <button className="btn-primary" onClick={finish}>먹숭이야 찾아줘 →</button>
       </div>
     </div>
   );
 }
 
 // ───────── RESULT (with live filter editing) ─────────
-function Result({ filters, set, toggleGenre, toggleCond, places, mealType, onDetail, onReset, onBack, onNav, toast }) {
-  const filtered = useMemo(() => dataHelpers.filterPlaces(places, { ...filters, mealType }), [places, filters, mealType]);
+function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onReset, onBack, onNav, toast }) {
+  const filtered = useMemo(() => dataHelpers.filterPlaces(places, filters), [places, filters]);
   const [saved, setSaved] = useState(new Set());
 
+  const mealType = filters.mealType;
   const summary = [
-    mealType === "lunch" ? "🌞 점심" : "🌙 저녁",
+    mealType === "lunch" ? "🌞 팀 점심" : mealType === "dinner" ? "🌙 본 회식" : null,
     filters.people,
     filters.mood ? { quiet: "조용히", social: "수다", formal: "격식", casual: "캐주얼" }[filters.mood] : null,
     ...filters.genres,
@@ -354,13 +402,13 @@ function Result({ filters, set, toggleGenre, toggleCond, places, mealType, onDet
     <div className="result-page">
       <div className="result-inner">
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
-          <YunhyeMascot size={56} mood="happy"/>
+          <MeoksungMascot size={56} mood="happy"/>
           <div>
             <div style={{ fontSize: 13, color: '#0066FF', fontWeight: 600 }}>
-              윤혜의 추천 · {filtered.length}곳 매칭
+              먹숭이의 추천 · {filtered.length}곳 매칭
             </div>
             <h2 style={{ font: 'var(--text-h2)', margin: '4px 0 0', letterSpacing: '-0.01em' }}>
-              {summary.slice(0, 4).join(' · ') || (mealType === "lunch" ? "점심 둘러보기" : "저녁 둘러보기")}
+              {summary.slice(0, 4).join(' · ') || "전체 둘러보기"}
             </h2>
           </div>
           <div style={{ flex: 1 }}/>
@@ -393,7 +441,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, mealType, onDet
         ) : filtered.length === 0 ? (
           <div style={{ background: '#fff', borderRadius: 16, padding: 60, textAlign: 'center',
             border: '1px solid rgba(0,0,0,0.06)' }}>
-            <YunhyeMascot size={120} mood="sleepy"/>
+            <MeoksungMascot size={120} mood="sleepy"/>
             <h3 style={{ font: 'var(--text-h3)', marginTop: 16 }}>조건에 맞는 가게가 없어요</h3>
             <p style={{ color: '#70737c' }}>조건을 조금 풀어볼까요?</p>
             <button className="btn-primary" onClick={onReset} style={{ marginTop: 8 }}>필터 초기화</button>
@@ -418,7 +466,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, mealType, onDet
                           {["🥇 No.1","🥈 No.2","🥉 No.3"][i]}
                         </span>
                         {i === 0 && <span style={{ fontSize: 11, padding: '2px 8px', background: '#FEF4E6',
-                          color: '#D17600', borderRadius: 4, fontWeight: 600 }}>윤혜's PICK</span>}
+                          color: '#D17600', borderRadius: 4, fontWeight: 600 }}>먹숭이's PICK</span>}
                       </div>
                     )}
                     <div style={{ font: 'var(--text-title-1)', marginBottom: 4 }}>{p.name}</div>
@@ -475,7 +523,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, mealType, onDet
 }
 
 // ───────── DETAIL MODAL ─────────
-function DetailModal({ place, mealType, onClose, onUpdate, onDelete, toast }) {
+function DetailModal({ place, onClose, onUpdate, onDelete, toast }) {
   const [mode, setMode] = useState("view"); // view | edit
   const [busy, setBusy] = useState(false);
 
@@ -698,7 +746,7 @@ function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit,
       <div>
         <div style={label}>가게 이름 *</div>
         <input style={input} value={form.name} onChange={e => set({ name: e.target.value })}
-          placeholder="예: 한촌설렁탕 판교점" />
+          placeholder="예: 법카로 다녀온 그 가게" />
       </div>
 
       <div>
@@ -761,22 +809,22 @@ function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit,
       </div>
 
       <div>
-        <div style={label}>한 줄 코멘트</div>
+        <div style={label}>한 줄 추천</div>
         <textarea style={{ ...input, height: 80, padding: '10px 12px', resize: 'vertical' }}
           value={form.comment} onChange={e => set({ comment: e.target.value })}
-          placeholder="예: 12시 5분 도착이 골든타임. 5분만 늦어도 줄."/>
+          placeholder="예: 법카 긁기 딱 좋은 가격대. 팀장님도 만족하심."/>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
         <div>
           <div style={label}>닉네임</div>
           <input style={input} value={form.nickname} onChange={e => set({ nickname: e.target.value })}
-            placeholder="예: 쩝쩝박사"/>
+            placeholder="예: 회식왕"/>
         </div>
         <div>
           <div style={label}>팀 / 부서</div>
           <input style={input} value={form.team} onChange={e => set({ team: e.target.value })}
-            placeholder="예: 개발"/>
+            placeholder="예: 개발팀"/>
         </div>
       </div>
 
@@ -806,7 +854,7 @@ async function postToAppsScript(payload) {
   });
 }
 
-function ReportForm({ toast, mealType, onSubmitted }) {
+function ReportForm({ toast, onSubmitted }) {
   const [submitting, setSubmitting] = useState(false);
   const [formKey, setFormKey] = useState(0); // 리셋 트리거
 
@@ -825,7 +873,7 @@ function ReportForm({ toast, mealType, onSubmitted }) {
     };
     try {
       await postToAppsScript(entry);
-      toast("제보 등록 완료! 피드에서 바로 확인할 수 있어요 🍚");
+      toast("먹숭이가 받았어요! 동료들 팀비 고민 해결에 큰 도움이 됩니다 🍌");
       setFormKey(k => k + 1);
       onSubmitted && onSubmitted(entry);
     } catch (err) {
@@ -838,29 +886,26 @@ function ReportForm({ toast, mealType, onSubmitted }) {
   return (
     <div className="wizard-page" style={{ maxWidth: 720 }}>
       <MascotSay mood="hungry">
-        새로운 맛집 제보 환영! <b>가게 정보</b>를 알려주세요.
+        팀비 잘 쓰는 법, 동료들이 궁금해해요. <b>가게 정보</b>를 알려주세요.
       </MascotSay>
-      <PlaceForm key={formKey} initial={{ mealType }} submitLabel="제보 보내기 →"
+      <PlaceForm key={formKey} submitLabel="제보 올리기"
         busy={submitting} onSubmit={handle}/>
     </div>
   );
 }
 
 // ───────── REPORT FEED ─────────
-function ReportFeed({ places, mealType, onDetail, onNav }) {
-  const filtered = useMemo(() => {
-    const bymeal = places.filter(p => p.mealType === mealType || p.mealType === "both" || p.mealType === "all");
-    return dataHelpers.sortByRecent(bymeal);
-  }, [places, mealType]);
+function ReportFeed({ places, onDetail, onNav }) {
+  const filtered = useMemo(() => dataHelpers.sortByRecent(places), [places]);
 
   return (
     <div className="result-page">
       <div className="result-inner">
         <h2 style={{ font: 'var(--text-h2)', margin: '0 0 8px', letterSpacing: '-0.01em' }}>
-          제보 피드 · {mealType === "lunch" ? "점심" : "저녁"}
+          제보 피드
         </h2>
         <p style={{ color: '#70737c', margin: '0 0 24px' }}>
-          최근 동료들이 올린 맛집 제보예요.
+          동료들이 직접 다녀와서 남긴 한 줄 추천이에요.
         </p>
         {filtered.length === 0 ? (
           <EmptyState onReport={() => onNav("제보하기")}/>
@@ -895,20 +940,17 @@ function ReportFeed({ places, mealType, onDetail, onNav }) {
 }
 
 // ───────── HOT PICKS ─────────
-function HotPicks({ places, mealType, onDetail, onNav }) {
-  const sorted = useMemo(() => {
-    const bymeal = places.filter(p => p.mealType === mealType || p.mealType === "both" || p.mealType === "all");
-    return dataHelpers.sortByReports(bymeal);
-  }, [places, mealType]);
+function HotPicks({ places, onDetail, onNav }) {
+  const sorted = useMemo(() => dataHelpers.sortByReports(places), [places]);
 
   return (
     <div className="result-page">
       <div className="result-inner">
         <h2 style={{ font: 'var(--text-h2)', margin: '0 0 8px', letterSpacing: '-0.01em' }}>
-          🔥 이번주 핫픽 · {mealType === "lunch" ? "점심" : "저녁"}
+          🔥 이번주 핫픽
         </h2>
         <p style={{ color: '#70737c', margin: '0 0 24px' }}>
-          제보 수가 가장 많은 순으로 보여드려요.
+          동료들 사이에서 제보가 가장 많이 들어온 가게들이에요.
         </p>
         {sorted.length === 0 ? (
           <EmptyState onReport={() => onNav("제보하기")}/>
@@ -979,8 +1021,7 @@ const saveDeletedIds = (arr) => saveJsonArray(DELETED_KEY, arr);
 
 function App() {
   const [tab, setTab] = useState("추천");
-  const [recScreen, setRecScreen] = useState("landing"); // landing | step1..3 | result
-  const [mealType, setMealType] = useState("lunch");
+  const [recScreen, setRecScreen] = useState("landing"); // landing | step1..4 | result
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [detailId, setDetailId] = useState(null);
   const [places, setPlaces] = useState([]);
@@ -1078,22 +1119,24 @@ function App() {
     setRecScreen("landing");
   };
 
-  // 키보드 네비 (위저드 동안)
+  // 키보드 네비 (위저드 동안) — 4단계: mode → people → mood → genre → result
   useEffect(() => {
     function onKey(e) {
       if (tab !== "추천") return;
       if (e.key === "Enter" || e.key === "ArrowRight") {
-        if (recScreen === "step1") setRecScreen("step2");
-        else if (recScreen === "step2" && filters.mood) setRecScreen("step3");
-        else if (recScreen === "step3") setRecScreen("result");
+        if (recScreen === "step1" && filters.mealType) setRecScreen("step2");
+        else if (recScreen === "step2") setRecScreen("step3");
+        else if (recScreen === "step3" && filters.mood) setRecScreen("step4");
+        else if (recScreen === "step4") setRecScreen("result");
       } else if (e.key === "ArrowLeft") {
         if (recScreen === "step2") setRecScreen("step1");
         else if (recScreen === "step3") setRecScreen("step2");
+        else if (recScreen === "step4") setRecScreen("step3");
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [tab, recScreen, filters.mood]);
+  }, [tab, recScreen, filters.mealType, filters.mood]);
 
   const detailPlace = detailId ? places.find(p => p.id === detailId) : null;
 
@@ -1101,39 +1144,41 @@ function App() {
   if (tab === "추천") {
     if (recScreen === "landing") {
       content = <Landing onStart={handleStart} onBrowse={handleBrowse}
-        places={places} mealType={mealType} onNav={handleNav}/>;
+        places={places} onNav={handleNav}/>;
     } else if (recScreen === "step1") {
-      content = <StepPeople filters={filters} set={set}
+      content = <StepMode filters={filters} set={set}
         next={() => setRecScreen("step2")} back={handleHome}/>;
     } else if (recScreen === "step2") {
-      content = <StepMood filters={filters} set={set}
+      content = <StepPeople filters={filters} set={set}
         next={() => setRecScreen("step3")} back={() => setRecScreen("step1")}/>;
     } else if (recScreen === "step3") {
+      content = <StepMood filters={filters} set={set}
+        next={() => setRecScreen("step4")} back={() => setRecScreen("step2")}/>;
+    } else if (recScreen === "step4") {
       content = <StepGenre filters={filters} set={set} toggleGenre={toggleGenre} toggleCond={toggleCond}
-        finish={() => setRecScreen("result")} back={() => setRecScreen("step2")}/>;
+        finish={() => setRecScreen("result")} back={() => setRecScreen("step3")}/>;
     } else if (recScreen === "result") {
       content = <Result filters={filters} set={set} toggleGenre={toggleGenre} toggleCond={toggleCond}
-        places={places} mealType={mealType}
+        places={places}
         onDetail={id => setDetailId(id)}
         onReset={() => { resetFilters(); }}
-        onBack={() => setRecScreen("step3")}
+        onBack={() => setRecScreen("step4")}
         onNav={handleNav}
         toast={toast}/>;
     }
   } else if (tab === "제보 피드") {
-    content = <ReportFeed places={places} mealType={mealType}
+    content = <ReportFeed places={places}
       onDetail={id => setDetailId(id)} onNav={handleNav}/>;
   } else if (tab === "제보하기") {
-    content = <ReportForm toast={toast} mealType={mealType}
-      onSubmitted={handleSubmitted}/>;
+    content = <ReportForm toast={toast} onSubmitted={handleSubmitted}/>;
   } else if (tab === "이번주 핫픽") {
-    content = <HotPicks places={places} mealType={mealType}
+    content = <HotPicks places={places}
       onDetail={id => setDetailId(id)} onNav={handleNav}/>;
   }
 
   return (
-    <div className={"app-shell theme-" + mealType}>
-      <TopNav active={tab} onNav={handleNav} mealType={mealType} onMealType={setMealType}/>
+    <div className="app-shell">
+      <TopNav active={tab} onNav={handleNav}/>
       <div className="body">
         {loadError && (
           <div style={{ background: '#fff3cd', color: '#7a5a00', padding: '10px 16px',
@@ -1143,7 +1188,7 @@ function App() {
         )}
         <StepFade stepKey={tab + ":" + recScreen}>{content}</StepFade>
       </div>
-      {detailPlace && <DetailModal place={detailPlace} mealType={mealType}
+      {detailPlace && <DetailModal place={detailPlace}
         onClose={() => setDetailId(null)}
         onUpdate={handleUpdated} onDelete={handleDeleted} toast={toast}/>}
       {toastEl}

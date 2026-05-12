@@ -1,66 +1,96 @@
-// Shared components / mascots / branding for 쩝쩝윤혜 prototype
+// Shared components / mascots / branding for 먹숭이 prototype
 
-// ───────── Mascot SVGs (윤혜 - a friendly rice-bowl character) ─────────
-// Two variants to differentiate branding:
-//   - 쩝쩝윤혜 (A): playful rice-bowl mascot, cheeks pink, eating noises
-//   - 판교한끼 (B): minimal monogram + utensil mark
+// ───────── Mascot SVG (먹숭이 - a friendly monkey character) ─────────
+// 팀비 회식 가이드 마스코트. 카드처럼 두툼한 둥근 머리, 양쪽 둥근 귀.
 
-function YunhyeMascot({ size = 72, mood = "happy" }) {
+function MeoksungMascot({ size = 72, mood = "happy" }) {
   // mood: happy, hungry, sleepy, full, wink
   const eyes = {
-    happy:  <g><path d="M30 38 q4 -5 8 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/><path d="M50 38 q4 -5 8 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/></g>,
-    hungry: <g><circle cx="34" cy="40" r="2.5" fill="#1b1c1e"/><circle cx="54" cy="40" r="2.5" fill="#1b1c1e"/><circle cx="33" cy="39" r="1" fill="#fff"/><circle cx="53" cy="39" r="1" fill="#fff"/></g>,
-    sleepy: <g><path d="M30 40 h8" stroke="#1b1c1e" strokeWidth="2.5" strokeLinecap="round"/><path d="M50 40 h8" stroke="#1b1c1e" strokeWidth="2.5" strokeLinecap="round"/></g>,
-    full:   <g><path d="M28 38 q6 6 12 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/><path d="M48 38 q6 6 12 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/></g>,
-    wink:   <g><path d="M30 38 q4 -5 8 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/><path d="M50 40 h8" stroke="#1b1c1e" strokeWidth="2.5" strokeLinecap="round"/></g>,
+    happy:  <g>
+      <path d="M30 46 q4 -5 8 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M50 46 q4 -5 8 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+    </g>,
+    hungry: <g>
+      <circle cx="34" cy="48" r="3" fill="#1b1c1e"/>
+      <circle cx="54" cy="48" r="3" fill="#1b1c1e"/>
+      <circle cx="33" cy="47" r="1.1" fill="#fff"/>
+      <circle cx="53" cy="47" r="1.1" fill="#fff"/>
+    </g>,
+    sleepy: <g>
+      <path d="M30 48 h8" stroke="#1b1c1e" strokeWidth="2.5" strokeLinecap="round"/>
+      <path d="M50 48 h8" stroke="#1b1c1e" strokeWidth="2.5" strokeLinecap="round"/>
+    </g>,
+    full:   <g>
+      <path d="M28 46 q6 6 12 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M48 46 q6 6 12 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+    </g>,
+    wink:   <g>
+      <path d="M30 46 q4 -5 8 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M50 48 h8" stroke="#1b1c1e" strokeWidth="2.5" strokeLinecap="round"/>
+    </g>,
   }[mood];
 
   const mouth = {
-    happy:  <path d="M38 50 q6 6 12 0" stroke="#1b1c1e" strokeWidth="2.5" fill="#ff7081" strokeLinecap="round"/>,
-    hungry: <ellipse cx="44" cy="52" rx="6" ry="5" fill="#ff5252"/>,
-    sleepy: <path d="M40 52 q4 2 8 0" stroke="#1b1c1e" strokeWidth="2" fill="none" strokeLinecap="round"/>,
-    full:   <path d="M38 52 q6 -4 12 0" stroke="#1b1c1e" strokeWidth="2.5" fill="none" strokeLinecap="round"/>,
-    wink:   <path d="M38 50 q6 6 12 0" stroke="#1b1c1e" strokeWidth="2.5" fill="#ff7081" strokeLinecap="round"/>,
+    happy:  <path d="M38 62 q6 5 12 0" stroke="#1b1c1e" strokeWidth="2.2" fill="#ff8090" strokeLinecap="round"/>,
+    hungry: <ellipse cx="44" cy="64" rx="6" ry="5" fill="#ff5252"/>,
+    sleepy: <path d="M40 64 q4 2 8 0" stroke="#1b1c1e" strokeWidth="2" fill="none" strokeLinecap="round"/>,
+    full:   <path d="M38 64 q6 -4 12 0" stroke="#1b1c1e" strokeWidth="2.2" fill="none" strokeLinecap="round"/>,
+    wink:   <path d="M38 62 q6 5 12 0" stroke="#1b1c1e" strokeWidth="2.2" fill="#ff8090" strokeLinecap="round"/>,
   }[mood];
 
   return (
     <svg className="mascot" width={size} height={size} viewBox="0 0 88 88" aria-hidden="true">
       {/* shadow */}
-      <ellipse cx="44" cy="80" rx="22" ry="3" fill="rgba(0,0,0,0.08)"/>
-      {/* bowl bottom */}
-      <path d="M14 50 q0 26 30 26 t30 -26 z" fill="#1a4fcc"/>
-      <path d="M14 50 q0 26 30 26 t30 -26 z" fill="url(#bowlShade)"/>
-      {/* bowl rim */}
-      <ellipse cx="44" cy="50" rx="30" ry="6" fill="#0040b3"/>
-      <ellipse cx="44" cy="50" rx="30" ry="6" fill="none" stroke="#001a66" strokeWidth="0.5"/>
-      {/* rice head */}
-      <path d="M18 50 q0 -28 26 -28 t26 28 z" fill="#fff8e7"/>
-      <path d="M18 50 q0 -28 26 -28 t26 28 z" fill="url(#riceShade)"/>
-      {/* rice grains */}
-      <ellipse cx="32" cy="32" rx="2.5" ry="1.5" fill="#fff" stroke="#e8d9b5" strokeWidth="0.4" transform="rotate(-20 32 32)"/>
-      <ellipse cx="44" cy="26" rx="2.5" ry="1.5" fill="#fff" stroke="#e8d9b5" strokeWidth="0.4"/>
-      <ellipse cx="56" cy="32" rx="2.5" ry="1.5" fill="#fff" stroke="#e8d9b5" strokeWidth="0.4" transform="rotate(20 56 32)"/>
-      <ellipse cx="38" cy="22" rx="2" ry="1.2" fill="#fff" stroke="#e8d9b5" strokeWidth="0.4" transform="rotate(-10 38 22)"/>
-      <ellipse cx="50" cy="22" rx="2" ry="1.2" fill="#fff" stroke="#e8d9b5" strokeWidth="0.4" transform="rotate(10 50 22)"/>
+      <ellipse cx="44" cy="82" rx="22" ry="3" fill="rgba(0,0,0,0.08)"/>
+
+      {/* ears (back) */}
+      <ellipse cx="14" cy="40" rx="10" ry="11" fill="#8a5728"/>
+      <ellipse cx="74" cy="40" rx="10" ry="11" fill="#8a5728"/>
+      <ellipse cx="14" cy="42" rx="5" ry="6" fill="#f0c896"/>
+      <ellipse cx="74" cy="42" rx="5" ry="6" fill="#f0c896"/>
+
+      {/* head outline */}
+      <ellipse cx="44" cy="46" rx="28" ry="28" fill="#a3702f"/>
+      <ellipse cx="44" cy="46" rx="28" ry="28" fill="url(#monkeyShade)"/>
+
+      {/* face plate (heart-ish) */}
+      <path d="M22 50
+               C 22 32, 44 28, 44 28
+               C 44 28, 66 32, 66 50
+               C 66 68, 44 72, 44 72
+               C 44 72, 22 68, 22 50 Z" fill="#f5d7ad"/>
+
+      {/* mouth area lighter */}
+      <ellipse cx="44" cy="62" rx="14" ry="9" fill="#fbe9ce"/>
+
+      {/* hair tuft */}
+      <path d="M36 24 q3 -6 8 -3" stroke="#5a3818" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+      <path d="M48 24 q3 -4 6 -1" stroke="#5a3818" strokeWidth="2.2" fill="none" strokeLinecap="round"/>
+
       {/* cheeks */}
-      <circle cx="28" cy="46" r="3.5" fill="#ffb3bc" opacity="0.85"/>
-      <circle cx="60" cy="46" r="3.5" fill="#ffb3bc" opacity="0.85"/>
-      {/* face */}
+      <circle cx="27" cy="58" r="3.5" fill="#ffa8b3" opacity="0.7"/>
+      <circle cx="61" cy="58" r="3.5" fill="#ffa8b3" opacity="0.7"/>
+
+      {/* eyes / mouth */}
       {eyes}
+
+      {/* nose */}
+      <ellipse cx="44" cy="56" rx="2.6" ry="1.8" fill="#5a3818"/>
+
       {mouth}
+
       <defs>
-        <linearGradient id="bowlShade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fff" stopOpacity="0"/>
+        <linearGradient id="monkeyShade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#fff" stopOpacity="0.08"/>
           <stop offset="1" stopColor="#000" stopOpacity="0.18"/>
-        </linearGradient>
-        <linearGradient id="riceShade" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fff" stopOpacity="0"/>
-          <stop offset="1" stopColor="#d9c89f" stopOpacity="0.35"/>
         </linearGradient>
       </defs>
     </svg>
   );
 }
+
+// 이전 이름 호환용 alias
+const YunhyeMascot = MeoksungMascot;
 
 // Steam puffs (for hot dish illustrations)
 function Steam({ x = 0, y = 0, opacity = 0.6 }) {
@@ -73,13 +103,13 @@ function Steam({ x = 0, y = 0, opacity = 0.6 }) {
 }
 
 // ───────── Branding lockups ─────────
-// Variant A: 쩝쩝윤혜 (mascot wordmark)
+// Variant A: 먹숭이 (mascot wordmark)
 function BrandA({ size = 18 }) {
   return (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: 'var(--font-sans)' }}>
-      <YunhyeMascot size={size * 1.7} mood="wink" />
+      <MeoksungMascot size={size * 1.7} mood="wink" />
       <span style={{ fontWeight: 700, fontSize: size, letterSpacing: '-0.02em', color: '#1b1c1e' }}>
-        쩝쩝<span style={{ color: '#0066FF' }}>윤혜</span>
+        먹<span style={{ color: '#0066FF' }}>숭이</span>
       </span>
     </span>
   );
@@ -174,5 +204,5 @@ function Note({ children, w = 240 }) {
 }
 
 Object.assign(window, {
-  YunhyeMascot, Steam, BrandA, BrandB, Chrome, TopNav, FoodTile, Note,
+  MeoksungMascot, YunhyeMascot, Steam, BrandA, BrandB, Chrome, TopNav, FoodTile, Note,
 });

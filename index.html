@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
-<title>쩝쩝윤혜 — H1 Interactive Prototype</title>
+<title>먹숭이 — 팀비 알차게 쓰자</title>
 <link rel="stylesheet" href="wds/colors_and_type.css" />
 <style>
   html, body { margin: 0; padding: 0; min-height: 100%; background: #fff; }
@@ -184,34 +184,6 @@
   button:focus-visible, .opt-card:focus-visible, .chip:focus-visible {
     outline: 2px solid #0066FF; outline-offset: 2px;
   }
-
-  /* Meal type toggle (top-right) */
-  .meal-toggle {
-    display: inline-flex; padding: 3px; background: #f4f4f5; border-radius: 9999px;
-    gap: 2px;
-  }
-  .meal-toggle button {
-    border: 0; background: transparent; padding: 0 14px; height: 30px;
-    border-radius: 9999px; font-size: 13px; color: #46474c; cursor: pointer;
-    font-family: inherit; display: inline-flex; align-items: center; gap: 5px;
-    transition: background .15s, color .15s;
-  }
-  .meal-toggle button:hover { color: #1b1c1e; }
-  .meal-toggle button.on {
-    background: #fff; color: #0066FF; font-weight: 600;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  }
-
-  /* Dinner theme — warmer accents */
-  .app-shell.theme-dinner { background: #fff; }
-  .app-shell.theme-dinner .topnav { background: #1b1c1e; border-bottom-color: rgba(255,255,255,0.06); }
-  .app-shell.theme-dinner .topnav .navlinks { color: #c2c4c8; }
-  .app-shell.theme-dinner .topnav .navlinks a.active { color: #FF9200; }
-  .app-shell.theme-dinner .meal-toggle { background: rgba(255,255,255,0.08); }
-  .app-shell.theme-dinner .meal-toggle button { color: #c2c4c8; }
-  .app-shell.theme-dinner .meal-toggle button.on { background: #FF9200; color: #1b1c1e; }
-  .app-shell.theme-dinner .landing-pad { background: #faf6f0; }
-  .app-shell.theme-dinner .result-page { background: #faf6f0; }
 
   /* Modal */
   .modal-backdrop {
