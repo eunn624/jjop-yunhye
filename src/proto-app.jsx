@@ -1,45 +1,76 @@
-// H1 Interactive Prototype — fully working state machine
-// Screens: landing → step1(mode) → step2(people) → step3(mood) → step4(genre+budget+cond)
-//          → result → detail (with back to result, back to start)
+// 쩝쩝윤혜 — 메인 앱
+// 탭: 추천 (위저드 + 결과) / 제보 피드 / 제보하기 / 이번주 핫픽
+// 글로벌: mealType (점심/저녁), restaurants.json 로드
 
-const { useState, useEffect, useMemo, useRef } = React;
+const { useState, useEffect, useMemo, useRef, useCallback } = React;
+
+const TABS = ["추천", "제보 피드", "제보하기", "이번주 핫픽"];
 
 // ───────── Toast ─────────
 function useToast() {
   const [msg, setMsg] = useState(null);
   const tref = useRef();
-  function show(text) {
-    setMsg(text);
+  function show(text, kind = "ok") {
+    setMsg({ text, kind });
     clearTimeout(tref.current);
-    tref.current = setTimeout(() => setMsg(null), 2200);
+    tref.current = setTimeout(() => setMsg(null), 2800);
   }
-  const el = msg ? <div className="toast"><span>✓</span>{msg}</div> : null;
+  const el = msg ? (
+    <div className="toast" style={msg.kind === "err" ? { background: '#d83838' } : null}>
+      <span>{msg.kind === "err" ? "!" : "✓"}</span>{msg.text}
+    </div>
+  ) : null;
   return [el, show];
 }
 
-// ───────── Top nav ─────────
-function TopNav({ onHome, active = "추천" }) {
+// ───────── Top nav (with meal toggle on right) ─────────
+function TopNav({ active, onNav, mealType, onMealType }) {
   return (
     <div className="topnav">
-      <span onClick={onHome} style={{ cursor: 'pointer' }}><BrandA/></span>
+      <span onClick={() => onNav("추천")} style={{ cursor: 'pointer' }}><BrandA/></span>
       <div className="navlinks">
-        {["추천","제보 피드","제보하기","이번주 핫픽"].map(l => (
-          <a key={l} className={l === active ? "active" : ""} onClick={l === "추천" ? onHome : undefined}>{l}</a>
+        {TABS.map(l => (
+          <a key={l} className={l === active ? "active" : ""} onClick={() => onNav(l)}>{l}</a>
         ))}
       </div>
       <div className="spacer"/>
-      <span className="pill">
-        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#00BF40' }}/>
-        넥슨 판교 · 본사
-      </span>
+      <div className={"meal-toggle " + (mealType === "dinner" ? "is-dinner" : "is-lunch")}>
+        <button className={mealType === "lunch" ? "on" : ""} onClick={() => onMealType("lunch")}>
+          <span>🌞</span> 점심
+        </button>
+        <button className={mealType === "dinner" ? "on" : ""} onClick={() => onMealType("dinner")}>
+          <span>🌙</span> 저녁
+        </button>
+      </div>
       <div className="avatar"/>
     </div>
   );
 }
 
+// ───────── Empty state ─────────
+function EmptyState({ onReport, title, body }) {
+  return (
+    <div style={{
+      background: '#fff', borderRadius: 16, padding: '56px 32px', textAlign: 'center',
+      border: '1px solid rgba(0,0,0,0.06)', maxWidth: 520, margin: '40px auto',
+    }}>
+      <YunhyeMascot size={120} mood="sleepy"/>
+      <h3 style={{ font: 'var(--text-h3)', marginTop: 16, marginBottom: 8 }}>
+        {title || "아직 등록된 맛집이 없어요."}
+      </h3>
+      <p style={{ color: '#70737c', margin: '0 0 24px', lineHeight: 1.6 }}>
+        {body || "첫 번째 제보자가 되어보세요!"}
+      </p>
+      {onReport && (
+        <button className="btn-primary" onClick={onReport}>제보하러 가기 →</button>
+      )}
+    </div>
+  );
+}
+
 // ───────── Step indicator ─────────
-function Stepper({ step }) {
-  const labels = ["언제", "인원", "분위기", "장르"];
+function Stepper({ step, total = 3 }) {
+  const labels = ["인원", "분위기", "장르"].slice(0, total);
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 40 }}>
       {labels.map((l, i) => {
@@ -69,7 +100,6 @@ function Stepper({ step }) {
   );
 }
 
-// ───────── Mascot + speech bubble row ─────────
 function MascotSay({ mood = "happy", children, size = 64 }) {
   return (
     <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, marginBottom: 20 }}>
@@ -79,7 +109,6 @@ function MascotSay({ mood = "happy", children, size = 64 }) {
   );
 }
 
-// ───────── Step transition wrapper ─────────
 function StepFade({ stepKey, children }) {
   const [shown, setShown] = useState(false);
   useEffect(() => {
@@ -87,21 +116,19 @@ function StepFade({ stepKey, children }) {
     const t = setTimeout(() => setShown(true), 30);
     return () => clearTimeout(t);
   }, [stepKey]);
-  return (
-    <div className={shown ? "step-shown" : "step-enter"} key={stepKey}>
-      {children}
-    </div>
-  );
+  return <div className={shown ? "step-shown" : "step-enter"} key={stepKey}>{children}</div>;
 }
 
 // ───────── LANDING ─────────
-function Landing({ onStart }) {
+function Landing({ onStart, onBrowse, places, mealType, onNav }) {
+  const recent = dataHelpers.recentSubmissionCount(places);
+  const bymeal = places.filter(p => p.mealType === mealType || p.mealType === "both");
   return (
-    <div style={{ background: '#f7f7f8', minHeight: '100%', padding: '64px 80px', boxSizing: 'border-box' }}>
-      <div style={{ maxWidth: 960, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 64 }}>
+    <div className="landing-pad">
+      <div className="landing-hero">
         <div style={{ flex: 1 }}>
           <div style={{ fontSize: 13, color: '#0066FF', fontWeight: 600, marginBottom: 16 }}>
-            오늘 회식 장소, 윤혜가 골라드림
+            오늘 {mealType === "lunch" ? "점심" : "저녁"}, 윤혜가 골라드림
           </div>
           <h1 style={{ font: 'var(--text-display-2)', letterSpacing: '-0.02em', margin: '0 0 16px', lineHeight: 1.1 }}>
             뭐 먹지<span style={{ color: '#0066FF' }}>?</span><br/>
@@ -111,94 +138,51 @@ function Landing({ onStart }) {
           </h1>
           <p style={{ color: '#46474c', fontSize: 16, lineHeight: 1.65, margin: '0 0 32px', maxWidth: 440 }}>
             누구랑, 어떤 분위기로 가는지부터 알려주세요.<br/>
-            넥슨 동료 1,284명이 제보한 곳 중에서<br/>
-            <b>4번의 질문</b>으로 찾아드려요.
+            넥슨 동료들이 제보한 곳 중에서<br/>
+            <b>3번의 질문</b>으로 찾아드려요.
           </p>
-          <div style={{ display: 'flex', gap: 12 }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
             <button className="btn-primary" onClick={onStart}>윤혜한테 물어보기 →</button>
-            <button className="btn-ghost" onClick={onStart}>그냥 둘러볼래요</button>
+            <button className="btn-ghost" onClick={onBrowse}>그냥 둘러볼래요</button>
           </div>
-          <div style={{ display: 'flex', gap: 24, marginTop: 40, fontSize: 13, color: '#70737c' }}>
+          <div style={{ display: 'flex', gap: 24, marginTop: 40, fontSize: 13, color: '#70737c', flexWrap: 'wrap' }}>
             <span>⏱ 평균 38초</span>
-            <span>· 등록 가게 287곳</span>
-            <span>· 이번주 신규 제보 12건</span>
+            <span>· 등록 가게 {places.length}곳</span>
+            <span>· 이번주 신규 제보 {recent}건</span>
           </div>
         </div>
         <div style={{ flex: '0 0 auto', position: 'relative' }}>
           <div style={{ position: 'absolute', top: -8, right: -16, background: '#fff',
             border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12, padding: '8px 14px',
             boxShadow: '0 4px 16px rgba(0,0,0,0.06)', fontSize: 13, fontWeight: 500 }}>
-            어디갈까~ 🍚
+            {mealType === "lunch" ? "어디갈까~ 🍚" : "한잔 어때~ 🍶"}
           </div>
           <YunhyeMascot size={260} mood="happy"/>
         </div>
       </div>
-      <div style={{ maxWidth: 960, margin: '56px auto 0', borderTop: '1px solid rgba(0,0,0,0.08)', paddingTop: 28 }}>
-        <div style={{ fontSize: 12, color: '#70737c', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-          지난주 가장 많이 결정된 조합
+
+      {places.length === 0 ? (
+        <div className="landing-foot">
+          <EmptyState onReport={() => onNav("제보하기")}/>
         </div>
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-          {[
-            "점심 · 4명 · 빠릿하게 · 한식",
-            "저녁 · 12명 · 왁자지껄 · 고기구이",
-            "점심 · 2명 · 조용히 · 일식",
-            "저녁 · 8명 · 격식 · 한정식",
-          ].map(s => <span key={s} className="chip" onClick={onStart}>{s}</span>)}
+      ) : (
+        <div className="landing-foot">
+          <div style={{ fontSize: 12, color: '#70737c', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            {mealType === "lunch" ? "점심" : "저녁"} 등록된 가게 {bymeal.length}곳
+          </div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {bymeal.slice(0, 6).map(p => (
+              <span key={p.id} className="chip" onClick={onBrowse}>{p.name} · {p.genre}</span>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
 
-// ───────── STEP 1: mode ─────────
-function Step1({ filters, set, next }) {
-  const opts = [
-    { id: "lunch",  ico: "🌞", title: "점심", desc: "도보 10분, 회전 빠른 곳 · 대기시간 · 메뉴 사진 위주" },
-    { id: "dinner", ico: "🌙", title: "저녁", desc: "술 가능, 룸/단체석 · 영업 종료 · 2차 연계" },
-  ];
-  return (
-    <div style={{ padding: '48px 80px', maxWidth: 720, margin: '0 auto' }}>
-      <Stepper step={1}/>
-      <MascotSay mood="hungry">안녕! 윤혜야. 먼저 — <b>언제 가는 거</b>예요?</MascotSay>
-      <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 8px', letterSpacing: '-0.01em' }}>
-        점심이에요, 저녁이에요?
-      </h2>
-      <p style={{ color: '#70737c', margin: '0 0 32px' }}>
-        술 가능 여부, 도보 거리, 영업 시간이 완전히 달라져요.
-      </p>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        {opts.map(o => {
-          const on = filters.mode === o.id;
-          return (
-            <div key={o.id} className="opt-card" onClick={() => set({ mode: o.id })}
-              style={{
-                border: on ? '2px solid #0066FF' : '1px solid rgba(0,0,0,0.1)',
-                background: on ? 'linear-gradient(180deg, #fffceb 0%, #fff 80%)' : '#fafafb',
-                borderRadius: 16, padding: '28px 24px', cursor: 'pointer', position: 'relative',
-              }}>
-              {on && <div style={{ position: 'absolute', top: 12, right: 12, width: 22, height: 22,
-                borderRadius: '50%', background: '#0066FF', color: '#fff',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
-              <div style={{ fontSize: 38, marginBottom: 8, opacity: on ? 1 : 0.7 }}>{o.ico}</div>
-              <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{o.title}</div>
-              <div style={{ fontSize: 13, color: '#70737c', lineHeight: 1.5 }}>{o.desc}</div>
-            </div>
-          );
-        })}
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 48, alignItems: 'center' }}>
-        <div style={{ width: 1 }}/>
-        <div style={{ fontSize: 13, color: '#aeb0b6' }}>Enter 또는 → 키로 다음</div>
-        <button className="btn-primary" onClick={next} disabled={!filters.mode}>다음 →</button>
-      </div>
-    </div>
-  );
-}
-
-// ───────── STEP 2: people ─────────
-function Step2({ filters, set, next, back }) {
+// ───────── STEP 1: people ─────────
+function StepPeople({ filters, set, next, back }) {
   const presets = [
     { l: "2~4명 소수팀",  p: 3, range: [2, 4] },
     { l: "5~10명 팀회식", p: 6, range: [5, 10] },
@@ -216,17 +200,14 @@ function Step2({ filters, set, next, back }) {
   else hint = "💡 20명+ 대규모 — 한정식·중식 대형룸·고기집 위주로 제안드려요.";
 
   return (
-    <div style={{ padding: '48px 80px', maxWidth: 720, margin: '0 auto' }}>
-      <Stepper step={2}/>
-      <MascotSay mood="happy">
-        {filters.mode === "lunch" ? "점심이군요 🌞" : "저녁이군요 🌙"} — <b>몇 명</b> 가요?
-      </MascotSay>
+    <div className="wizard-page">
+      <Stepper step={1}/>
+      <MascotSay mood="happy">안녕! 윤혜야. <b>몇 명</b> 가요?</MascotSay>
       <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 32px', letterSpacing: '-0.01em' }}>총 몇 명?</h2>
 
       <div style={{ background: '#f7f7f8', borderRadius: 16, padding: '32px 28px', marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 8, marginBottom: 24 }}>
-          <div style={{ fontSize: 80, fontWeight: 700, letterSpacing: '-0.04em', color: '#0066FF', lineHeight: 1,
-            transition: 'transform .12s', transform: 'scale(1)' }} key={filters.people}>
+          <div style={{ fontSize: 80, fontWeight: 700, letterSpacing: '-0.04em', color: '#0066FF', lineHeight: 1 }} key={filters.people}>
             {filters.people}
           </div>
           <div style={{ fontSize: 26, fontWeight: 500, color: '#37383c' }}>명</div>
@@ -251,15 +232,15 @@ function Step2({ filters, set, next, back }) {
         fontSize: 13, color: '#0054d1' }}>{hint}</div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 48 }}>
-        <button className="btn-ghost" onClick={back}>← 이전</button>
+        <button className="btn-ghost" onClick={back}>← 처음으로</button>
         <button className="btn-primary" onClick={next}>다음 →</button>
       </div>
     </div>
   );
 }
 
-// ───────── STEP 3: mood ─────────
-function Step3({ filters, set, next, back }) {
+// ───────── STEP 2: mood ─────────
+function StepMood({ filters, set, next, back }) {
   const moods = [
     { id: "quiet",  ico: "🤫", label: "조용히 먹고 끝내기", desc: "회의 전후, 빠른 식사" },
     { id: "social", ico: "🎉", label: "분위기 좋게 수다 위주", desc: "팀 빌딩, 친목" },
@@ -267,8 +248,8 @@ function Step3({ filters, set, next, back }) {
     { id: "casual", ico: "🎮", label: "게임·캐주얼",         desc: "부서 MT, 신입 환영" },
   ];
   return (
-    <div style={{ padding: '48px 80px', maxWidth: 720, margin: '0 auto' }}>
-      <Stepper step={3}/>
+    <div className="wizard-page">
+      <Stepper step={2}/>
       <MascotSay mood="wink">{filters.people}명이군요. <b>어떤 자리</b>로 만들 거예요?</MascotSay>
       <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 8px', letterSpacing: '-0.01em' }}>
         오늘은 어떤 분위기예요?
@@ -308,17 +289,17 @@ function Step3({ filters, set, next, back }) {
   );
 }
 
-// ───────── STEP 4: genre + budget + conditions ─────────
-function Step4({ filters, set, toggleGenre, toggleCond, finish, back }) {
+// ───────── STEP 3: genre + budget + conditions ─────────
+function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back, mealType }) {
   const genres = [
     { ico: "🍚", l: "한식" }, { ico: "🍣", l: "일식" }, { ico: "🥟", l: "중식" },
     { ico: "🍝", l: "양식" }, { ico: "🍜", l: "아시안" }, { ico: "🥩", l: "고기구이" },
     { ico: "🦐", l: "해산물" }, { ico: "🍱", l: "분식·면" }, { ico: "🥗", l: "채식 가능" }, { ico: "🍣", l: "뷔페" },
   ];
-  const budgets = [
-    { id: "u1", l: "~1만원" }, { id: "1-2", l: "1~2만원" },
-    { id: "2-3", l: "2~3만원" }, { id: "3+", l: "3만원+" },
-  ];
+  // 점심/저녁에 따라 다른 예산 옵션
+  const budgets = mealType === "lunch"
+    ? [{ l: "~1만원" }, { l: "1~2만원" }, { l: "2~3만원" }, { l: "3만원+" }]
+    : [{ l: "1~2만원" }, { l: "2~3만원" }, { l: "3~5만원" }, { l: "5만원+" }];
   const conds = [
     { id: "walk10", l: "도보 10분 이내" },
     { id: "parking", l: "주차 가능" },
@@ -326,8 +307,8 @@ function Step4({ filters, set, toggleGenre, toggleCond, finish, back }) {
     { id: "room", l: "룸/단체석" },
   ];
   return (
-    <div style={{ padding: '48px 80px', maxWidth: 720, margin: '0 auto' }}>
-      <Stepper step={4}/>
+    <div className="wizard-page">
+      <Stepper step={3}/>
       <MascotSay mood="full">
         마지막 — <b>음식 종류</b>는 끌리는 거 다 골라요. 안 골라도 돼요.
       </MascotSay>
@@ -352,10 +333,10 @@ function Step4({ filters, set, toggleGenre, toggleCond, finish, back }) {
       </div>
 
       <div style={{ fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 12 }}>예산 (인당)</div>
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
         {budgets.map(b => (
-          <span key={b.id} className={"chip" + (filters.budget === b.id ? " on" : "")}
-            onClick={() => set({ budget: filters.budget === b.id ? null : b.id })}>{b.l}</span>
+          <span key={b.l} className={"chip" + (filters.budget === b.l ? " on" : "")}
+            onClick={() => set({ budget: filters.budget === b.l ? null : b.l })}>{b.l}</span>
         ))}
       </div>
 
@@ -375,90 +356,117 @@ function Step4({ filters, set, toggleGenre, toggleCond, finish, back }) {
   );
 }
 
-// ───────── RESULT ─────────
-function Result({ filters, onDetail, onReset, onBack, toast }) {
-  const ranked = useMemo(() => rankPlaces(filters), [filters]);
-  const top = ranked.slice(0, 3);
-  const more = ranked.slice(3, 6);
+// ───────── RESULT (with live filter editing) ─────────
+function Result({ filters, set, toggleGenre, toggleCond, places, mealType, onDetail, onReset, onBack, onNav, toast }) {
+  const filtered = useMemo(() => dataHelpers.filterPlaces(places, { ...filters, mealType }), [places, filters, mealType]);
   const [saved, setSaved] = useState(new Set());
 
   const summary = [
-    filters.mode === "lunch" ? "🌞 점심" : "🌙 저녁",
-    `${filters.people}명`,
-    { quiet: "조용히", social: "수다", formal: "격식", casual: "캐주얼" }[filters.mood],
+    mealType === "lunch" ? "🌞 점심" : "🌙 저녁",
+    filters.people ? `${filters.people}명` : null,
+    filters.mood ? { quiet: "조용히", social: "수다", formal: "격식", casual: "캐주얼" }[filters.mood] : null,
     ...filters.genres,
-    filters.budget && { u1: "~1만", "1-2": "1~2만", "2-3": "2~3만", "3+": "3만+" }[filters.budget],
+    filters.budget,
     ...filters.conditions.map(c => ({ walk10: "도보 10분", parking: "주차", reserve: "예약", room: "룸" }[c])),
   ].filter(Boolean);
 
+  const genres = ["한식","일식","중식","양식","아시안","고기구이","해산물","분식·면","채식 가능","뷔페"];
+  const conds = [
+    { id: "walk10", l: "도보 10분 이내" },
+    { id: "parking", l: "주차" },
+    { id: "reserve", l: "예약" },
+    { id: "room", l: "룸/단체석" },
+  ];
+
   return (
-    <div style={{ background: '#f7f7f8', minHeight: '100%', padding: '36px 60px 60px', boxSizing: 'border-box' }}>
-      <div style={{ maxWidth: 980, margin: '0 auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
+    <div className="result-page">
+      <div className="result-inner">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
           <YunhyeMascot size={56} mood="happy"/>
           <div>
-            <div style={{ fontSize: 13, color: '#0066FF', fontWeight: 600 }}>윤혜의 추천 · {ranked.length}곳 중 상위 3곳</div>
+            <div style={{ fontSize: 13, color: '#0066FF', fontWeight: 600 }}>
+              윤혜의 추천 · {filtered.length}곳 매칭
+            </div>
             <h2 style={{ font: 'var(--text-h2)', margin: '4px 0 0', letterSpacing: '-0.01em' }}>
-              {summary.slice(0, 4).join(' · ')}
+              {summary.slice(0, 4).join(' · ') || (mealType === "lunch" ? "점심 둘러보기" : "저녁 둘러보기")}
             </h2>
           </div>
           <div style={{ flex: 1 }}/>
-          <button className="btn-ghost" style={{ height: 38, fontSize: 13 }} onClick={onBack}>← 조건 다시</button>
+          {onBack && (
+            <button className="btn-ghost" style={{ height: 38, fontSize: 13 }} onClick={onBack}>← 조건 다시</button>
+          )}
         </div>
 
-        <div style={{ display: 'flex', gap: 6, marginBottom: 24, flexWrap: 'wrap' }}>
-          {summary.map(t => (
-            <span key={t} style={{ fontSize: 12, padding: '4px 10px', background: '#fff',
-              border: '1px solid rgba(0,0,0,0.08)', borderRadius: 999, color: '#46474c' }}>{t}</span>
-          ))}
+        {/* 실시간 필터 칩들 */}
+        <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 12,
+          padding: 12, marginBottom: 18 }}>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
+            <span style={{ fontSize: 12, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>장르:</span>
+            {genres.map(g => (
+              <span key={g} className={"chip" + (filters.genres.includes(g) ? " on" : "")}
+                onClick={() => toggleGenre(g)} style={{ fontSize: 12, height: 28 }}>{g}</span>
+            ))}
+          </div>
+          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+            <span style={{ fontSize: 12, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>조건:</span>
+            {conds.map(c => (
+              <span key={c.id} className={"chip" + (filters.conditions.includes(c.id) ? " on" : "")}
+                onClick={() => toggleCond(c.id)} style={{ fontSize: 12, height: 28 }}>{c.l}</span>
+            ))}
+          </div>
         </div>
 
-        {ranked.length === 0 ? (
+        {places.length === 0 ? (
+          <EmptyState onReport={() => onNav("제보하기")}/>
+        ) : filtered.length === 0 ? (
           <div style={{ background: '#fff', borderRadius: 16, padding: 60, textAlign: 'center',
             border: '1px solid rgba(0,0,0,0.06)' }}>
             <YunhyeMascot size={120} mood="sleepy"/>
             <h3 style={{ font: 'var(--text-h3)', marginTop: 16 }}>조건에 맞는 가게가 없어요</h3>
             <p style={{ color: '#70737c' }}>조건을 조금 풀어볼까요?</p>
-            <button className="btn-primary" onClick={onBack}>← 조건 수정</button>
+            <button className="btn-primary" onClick={onReset} style={{ marginTop: 8 }}>필터 초기화</button>
           </div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {top.map(({ p, reasons }, i) => {
+            {filtered.map((p, i) => {
               const isSaved = saved.has(p.id);
-              const price = filters.mode === "lunch" ? p.lunch : p.dinner;
               return (
-                <div key={p.id} className="opt-card" style={{
+                <div key={p.id} className="opt-card result-card" style={{
                   background: '#fff', borderRadius: 16, padding: 20,
-                  border: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 20,
+                  border: '1px solid rgba(0,0,0,0.06)',
                   boxShadow: i === 0 ? '0 8px 24px rgba(0,102,255,0.08)' : 'none',
                   cursor: 'pointer',
                 }} onClick={() => onDetail(p.id)}>
-                  <div style={{ width: 180, flex: '0 0 180px' }}>
-                    <FoodTile tone={p.tone} h={140}/>
-                  </div>
+                  <div className="result-card-img"><FoodTile tone={p.tone} h={140}/></div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                      <span style={{ fontSize: 13, fontWeight: 700,
-                        color: i === 0 ? '#FF9200' : i === 1 ? '#878a93' : '#a78368' }}>
-                        {["🥇 No.1","🥈 No.2","🥉 No.3"][i]}
-                      </span>
-                      {i === 0 && <span style={{ fontSize: 11, padding: '2px 8px', background: '#FEF4E6',
-                        color: '#D17600', borderRadius: 4, fontWeight: 600 }}>윤혜's PICK</span>}
-                    </div>
+                    {i < 3 && (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                        <span style={{ fontSize: 13, fontWeight: 700,
+                          color: i === 0 ? '#FF9200' : i === 1 ? '#878a93' : '#a78368' }}>
+                          {["🥇 No.1","🥈 No.2","🥉 No.3"][i]}
+                        </span>
+                        {i === 0 && <span style={{ fontSize: 11, padding: '2px 8px', background: '#FEF4E6',
+                          color: '#D17600', borderRadius: 4, fontWeight: 600 }}>윤혜's PICK</span>}
+                      </div>
+                    )}
                     <div style={{ font: 'var(--text-title-1)', marginBottom: 4 }}>{p.name}</div>
                     <div style={{ display: 'flex', gap: 12, fontSize: 13, color: '#70737c', marginBottom: 10, flexWrap: 'wrap' }}>
-                      <span>{p.genre} · {p.sub}</span>·<span>도보 {p.dist}분</span>·<span>{price}만원/인</span>
-                      ·<span>{p.capMin}~{p.capMax}명{p.room ? " · 룸" : ""}</span>
+                      <span>{p.genre}{p.sub ? ` · ${p.sub}` : ""}</span>
+                      {p.priceRange && <><span>·</span><span>{p.priceRange}</span></>}
+                      {p.people && <><span>·</span><span>{p.people}</span></>}
+                      {p.hasRoom && <><span>·</span><span>룸 가능</span></>}
                     </div>
-                    <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px', marginBottom: 10 }}>
-                      <div style={{ fontSize: 13, lineHeight: 1.5, color: '#37383c' }}>"{p.comment}"</div>
-                      <div style={{ fontSize: 11, color: '#878a93', marginTop: 4 }}>
-                        — {p.by} · {p.team} · 제보 {p.reports}건
+                    {p.comment && (
+                      <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px', marginBottom: 10 }}>
+                        <div style={{ fontSize: 13, lineHeight: 1.5, color: '#37383c' }}>"{p.comment}"</div>
+                        <div style={{ fontSize: 11, color: '#878a93', marginTop: 4 }}>
+                          — {p.nickname}{p.team ? ` · ${p.team}` : ""} · 제보 {p.reports}건
+                        </div>
                       </div>
-                    </div>
-                    {reasons.length > 0 && (
+                    )}
+                    {p.extras && p.extras.length > 0 && (
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                        {reasons.map(r => (
+                        {p.extras.slice(0, 4).map(r => (
                           <span key={r} style={{ fontSize: 11, color: '#0054D1', background: '#EAF2FE',
                             padding: '3px 8px', borderRadius: 4 }}>✓ {r}</span>
                         ))}
@@ -483,165 +491,439 @@ function Result({ filters, onDetail, onReset, onBack, toast }) {
                 </div>
               );
             })}
-
-            {more.length > 0 && (
-              <details style={{ marginTop: 8 }}>
-                <summary style={{ cursor: 'pointer', textAlign: 'center', padding: 14,
-                  color: '#0066FF', fontWeight: 500, fontSize: 14, listStyle: 'none',
-                  background: '#fff', borderRadius: 12, border: '1px dashed rgba(0,102,255,0.3)' }}>
-                  ↓ 다른 {more.length}곳도 보기
-                </summary>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 10 }}>
-                  {more.map(({ p }, i) => (
-                    <div key={p.id} className="opt-card" onClick={() => onDetail(p.id)}
-                      style={{ background: '#fff', borderRadius: 12, padding: 14,
-                        border: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 14, cursor: 'pointer' }}>
-                      <div style={{ width: 80, flex: '0 0 80px' }}><FoodTile tone={p.tone} h={64}/></div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 14, fontWeight: 600 }}>#{i + 4} {p.name}</div>
-                        <div style={{ fontSize: 12, color: '#70737c', marginTop: 2 }}>
-                          {p.genre} · 도보 {p.dist}분 · {filters.mode === "lunch" ? p.lunch : p.dinner}만원/인
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </details>
-            )}
           </div>
         )}
 
         <div style={{ textAlign: 'center', marginTop: 24, display: 'flex', gap: 8, justifyContent: 'center' }}>
-          <button className="btn-ghost" onClick={onReset}>처음부터 다시</button>
+          <button className="btn-ghost" onClick={onReset}>필터 초기화</button>
         </div>
       </div>
     </div>
   );
 }
 
-// ───────── DETAIL ─────────
-function Detail({ placeId, mode, onBack }) {
-  const p = PLACES.find(x => x.id === placeId);
-  if (!p) return null;
-  const price = mode === "lunch" ? p.lunch : p.dinner;
-  const reviews = [
-    { n: p.by, t: p.team, a: "방금 전", q: p.comment, rec: p.menu, visit: `${mode === "lunch" ? "점심" : "저녁"} · ${Math.min(p.capMax, 8)}명` },
-    { n: "팀장님", t: "개발", a: "2주 전", q: "예약하고 가세요. 평일 저녁 룸은 일주일 전부터 차요.",
-      rec: [p.menu[0]], visit: "저녁 · 9명 · 팀 회식" },
-    { n: "점심신자", t: "QA", a: "한 달 전", q: "12시 5분 도착이 골든타임. 5분만 늦어도 줄.",
-      rec: [p.menu[0]], visit: "점심 · 3명" },
-  ];
+// ───────── DETAIL MODAL ─────────
+function DetailModal({ place, mealType, onClose }) {
+  // Esc로 닫기
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  if (!place) return null;
+  const naverUrl = place.address
+    ? `https://map.naver.com/v5/search/${encodeURIComponent(place.address)}`
+    : null;
+  const kakaoUrl = place.address
+    ? `https://map.kakao.com/?q=${encodeURIComponent(place.address)}`
+    : null;
 
   return (
-    <div style={{ background: '#fff', minHeight: '100%' }}>
-      <div style={{ height: 240, position: 'relative' }}>
-        <FoodTile tone={p.tone} h={240}/>
-        <button onClick={onBack} style={{
-          position: 'absolute', top: 16, left: 24, height: 36, padding: '0 14px',
-          borderRadius: 8, background: 'rgba(255,255,255,0.95)', border: 0,
-          fontSize: 13, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-        }}>← 결과로</button>
-        <div style={{ position: 'absolute', bottom: 16, left: 32, color: '#fff' }}>
-          <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
-            {p.modes.includes("lunch") && <span style={{ fontSize: 11, padding: '3px 8px',
-              background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>점심 OK</span>}
-            {p.modes.includes("dinner") && <span style={{ fontSize: 11, padding: '3px 8px',
-              background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>저녁 OK</span>}
-            {p.room && <span style={{ fontSize: 11, padding: '3px 8px',
-              background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>룸</span>}
-            {p.parking && <span style={{ fontSize: 11, padding: '3px 8px',
-              background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>주차</span>}
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal-panel" onClick={e => e.stopPropagation()}>
+        <button className="modal-close" onClick={onClose} aria-label="닫기">✕</button>
+        <div style={{ height: 200, position: 'relative' }}>
+          <FoodTile tone={place.tone} h={200}/>
+          <div style={{ position: 'absolute', bottom: 16, left: 24, color: '#fff' }}>
+            <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 11, padding: '3px 8px', background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>
+                {place.mealType === "lunch" ? "점심" : place.mealType === "dinner" ? "저녁" : "점심·저녁"}
+              </span>
+              {place.hasRoom && <span style={{ fontSize: 11, padding: '3px 8px',
+                background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>룸</span>}
+              {place.hasParking && <span style={{ fontSize: 11, padding: '3px 8px',
+                background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>주차</span>}
+            </div>
+            <div style={{ fontSize: 24, fontWeight: 700, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>{place.name}</div>
+            <div style={{ fontSize: 13, opacity: 0.95 }}>
+              {place.genre}{place.sub ? ` · ${place.sub}` : ""}
+            </div>
           </div>
-          <div style={{ fontSize: 30, fontWeight: 700, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>{p.name}</div>
-          <div style={{ fontSize: 13, opacity: 0.95 }}>
-            {p.genre} · {p.sub} · 도보 {p.dist}분 · 최대 {p.capMax}명
+        </div>
+
+        <div style={{ padding: '24px 28px 28px' }}>
+          {place.address && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
+              fontSize: 13, color: '#46474c' }}>
+              <span>📍</span><span>{place.address}</span>
+            </div>
+          )}
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 20 }}>
+            <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
+              <div style={{ fontSize: 11, color: '#878a93', marginBottom: 2 }}>인당 예산</div>
+              <div style={{ fontSize: 14, fontWeight: 600 }}>{place.priceRange || "—"}</div>
+            </div>
+            <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
+              <div style={{ fontSize: 11, color: '#878a93', marginBottom: 2 }}>인원</div>
+              <div style={{ fontSize: 14, fontWeight: 600 }}>{place.people || "—"}</div>
+            </div>
+          </div>
+
+          {place.extras && place.extras.length > 0 && (
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
+              {place.extras.map(r => (
+                <span key={r} style={{ fontSize: 12, color: '#0054D1', background: '#EAF2FE',
+                  padding: '4px 10px', borderRadius: 999 }}>✓ {r}</span>
+              ))}
+            </div>
+          )}
+
+          {place.comment && (
+            <div style={{ background: '#fffaf0', border: '1px solid #ffe1b3', borderRadius: 10,
+              padding: '14px 16px', marginBottom: 20 }}>
+              <div style={{ fontSize: 14, lineHeight: 1.6, color: '#37383c', marginBottom: 6 }}>
+                "{place.comment}"
+              </div>
+              <div style={{ fontSize: 12, color: '#878a93' }}>
+                — {place.nickname}{place.team ? ` · ${place.team}` : ""}
+              </div>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: 8 }}>
+            {naverUrl && (
+              <a className="btn-ghost" href={naverUrl} target="_blank" rel="noopener noreferrer"
+                style={{ flex: 1, justifyContent: 'center', textDecoration: 'none' }}>
+                🗺 네이버 지도
+              </a>
+            )}
+            {kakaoUrl && (
+              <a className="btn-ghost" href={kakaoUrl} target="_blank" rel="noopener noreferrer"
+                style={{ flex: 1, justifyContent: 'center', textDecoration: 'none' }}>
+                🗺 카카오 지도
+              </a>
+            )}
+            {!place.address && (
+              <div style={{ flex: 1, textAlign: 'center', color: '#aeb0b6', fontSize: 13, padding: '12px 0' }}>
+                지도 연결을 위해 주소 정보가 필요해요
+              </div>
+            )}
           </div>
         </div>
       </div>
+    </div>
+  );
+}
 
-      <div style={{ display: 'flex', maxWidth: 1040, margin: '0 auto', padding: '28px 32px 48px', gap: 32 }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ background: 'linear-gradient(135deg, #f7fbff, #eaf2fe)',
-            border: '1px solid rgba(0,102,255,0.15)', borderRadius: 12, padding: '14px 16px',
-            marginBottom: 24, display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ display: 'flex' }}>
-              {["#ffb86b","#ff6b6b","#6aa8ff","#9e7bff"].map((c,i)=>(
-                <div key={i} style={{ width: 28, height: 28, borderRadius: '50%', background: c,
-                  border: '2px solid #fff', marginLeft: i ? -8 : 0 }}/>
-              ))}
-            </div>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>
-                넥슨 동료 <span style={{ color: '#0066FF' }}>{p.reports}명</span>이 다녀왔어요
-              </div>
-              <div style={{ fontSize: 12, color: '#70737c' }}>최근 제보: 2일 전</div>
-            </div>
-          </div>
+// ───────── REPORT FORM ─────────
+function ReportForm({ toast, mealType, onSubmitted }) {
+  const [form, setForm] = useState({
+    name: "",
+    address: "",
+    genre: "한식",
+    mood: "quiet",
+    mealType: mealType,
+    people: "2~4명 소수팀",
+    priceRange: "1~2만원",
+    extras: [],
+    comment: "",
+    nickname: "",
+    team: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
 
-          <h3 style={{ font: 'var(--text-h3)', margin: '0 0 14px' }}>동료 리뷰 {p.reports}</h3>
-          {reviews.map((r,i)=>(
-            <div key={i} style={{ padding: '16px 0', borderTop: i ? '1px solid rgba(0,0,0,0.06)' : 'none' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%',
-                  background: `hsl(${r.n.charCodeAt(0)*13}, 55%, 65%)`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  color: '#fff', fontWeight: 700, fontSize: 12 }}>{r.n[0]}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: 13, fontWeight: 600 }}>{r.n}
-                    <span style={{ fontSize: 11, color: '#0066FF', background: '#EAF2FE',
-                      padding: '1px 6px', borderRadius: 4, marginLeft: 6, fontWeight: 500 }}>{r.t}</span>
-                  </div>
-                  <div style={{ fontSize: 11, color: '#878a93' }}>{r.a} · {r.visit}</div>
-                </div>
-              </div>
-              <div style={{ fontSize: 14, lineHeight: 1.6, marginBottom: 8, color: '#37383c' }}>"{r.q}"</div>
-              <div style={{ display: 'flex', gap: 6 }}>
-                {r.rec.map(m=>(
-                  <span key={m} style={{ fontSize: 11, padding: '3px 8px', background: '#FFF1DB',
-                    color: '#D17600', borderRadius: 4 }}>👍 {m}</span>
-                ))}
-              </div>
-            </div>
-          ))}
+  const set = (patch) => setForm(f => ({ ...f, ...patch }));
+  const toggleExtra = (v) =>
+    setForm(f => ({
+      ...f,
+      extras: f.extras.includes(v) ? f.extras.filter(x => x !== v) : [...f.extras, v],
+    }));
+
+  const genres = ["한식","일식","중식","양식","아시안","고기구이","해산물","분식·면","채식 가능","뷔페"];
+  const moods = [
+    { id: "quiet",  l: "조용히 먹고 끝내기" },
+    { id: "social", l: "수다 위주" },
+    { id: "formal", l: "격식 있게" },
+    { id: "casual", l: "캐주얼" },
+  ];
+  const peopleOpts = ["2~4명 소수팀", "5~10명 팀회식", "11~20명 부서", "20명+ 대규모"];
+  const priceOpts  = ["~1만원", "1~2만원", "2~3만원", "3~5만원", "5만원+"];
+  const extraOpts  = ["도보 10분 이내","주차 가능","예약 가능","룸/단체석","술 가능","채식 옵션"];
+
+  async function submit(e) {
+    e.preventDefault();
+    if (submitting) return;
+    if (!form.name.trim() || !form.address.trim()) {
+      toast("가게 이름과 주소는 필수예요.", "err");
+      return;
+    }
+    setSubmitting(true);
+    const payload = {
+      ...form,
+      submittedAt: new Date().toISOString(),
+    };
+    const url = (window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL) || "";
+    if (!url || url === "여기에_URL_입력") {
+      toast("Apps Script URL이 설정되지 않았어요. config.js를 확인해주세요.", "err");
+      setSubmitting(false);
+      return;
+    }
+    try {
+      await fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+      });
+      toast("제보해줘서 고마워요! 검토 후 24시간 내에 게시될 예정이에요 🍚");
+      setForm({
+        name: "", address: "", genre: "한식", mood: "quiet", mealType,
+        people: "2~4명 소수팀", priceRange: "1~2만원", extras: [],
+        comment: "", nickname: "", team: "",
+      });
+      onSubmitted && onSubmitted();
+    } catch (err) {
+      toast("제출에 실패했어요. 잠시 후 다시 시도해주세요.", "err");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  const label = { fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 8 };
+  const input = {
+    width: '100%', height: 42, padding: '0 12px', borderRadius: 8,
+    border: '1px solid rgba(0,0,0,0.12)', fontSize: 14, fontFamily: 'inherit',
+    background: '#fff', boxSizing: 'border-box', color: '#1b1c1e',
+  };
+
+  return (
+    <div className="wizard-page" style={{ maxWidth: 720 }}>
+      <MascotSay mood="hungry">
+        새로운 맛집 제보 환영! <b>가게 정보</b>를 알려주세요.
+      </MascotSay>
+
+      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <div>
+          <div style={label}>가게 이름 *</div>
+          <input style={input} value={form.name} onChange={e => set({ name: e.target.value })}
+            placeholder="예: 한촌설렁탕 판교점" />
         </div>
 
-        <aside style={{ width: 280, flex: '0 0 280px' }}>
-          <div style={{ position: 'sticky', top: 16, background: '#f7f7f8', borderRadius: 12, padding: 20 }}>
-            <div style={{ fontSize: 12, color: '#878a93', marginBottom: 4 }}>인당 평균 ({mode === "lunch" ? "점심" : "저녁"})</div>
-            <div style={{ fontSize: 26, fontWeight: 700, marginBottom: 16 }}>{price}만원</div>
-            <button className="btn-primary" style={{ width: '100%', marginBottom: 8 }}>예약하기 →</button>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16 }}>
-              <button className="btn-ghost" style={{ height: 38, fontSize: 12 }}>📞 전화</button>
-              <button className="btn-ghost" style={{ height: 38, fontSize: 12 }}>🗺 지도</button>
-            </div>
-            <div style={{ paddingTop: 16, borderTop: '1px solid rgba(0,0,0,0.08)' }}>
-              <div style={{ fontSize: 12, color: '#878a93', marginBottom: 8 }}>이 가게의 시그널</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                <div style={{ fontSize: 12, display: 'flex', justifyContent: 'space-between' }}>
-                  <span>수용</span><b>{p.capMin}~{p.capMax}명</b></div>
-                <div style={{ fontSize: 12, display: 'flex', justifyContent: 'space-between' }}>
-                  <span>룸</span><b>{p.room ? "있음" : "없음"}</b></div>
-                <div style={{ fontSize: 12, display: 'flex', justifyContent: 'space-between' }}>
-                  <span>주류</span><b>{p.alcohol ? "가능" : "없음"}</b></div>
-                <div style={{ fontSize: 12, display: 'flex', justifyContent: 'space-between' }}>
-                  <span>마감</span><b>{p.end}</b></div>
-              </div>
+        <div>
+          <div style={label}>주소 *</div>
+          <input style={input} value={form.address} onChange={e => set({ address: e.target.value })}
+            placeholder="예: 경기 성남시 분당구 판교역로 152" />
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <div style={label}>점심 / 저녁</div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              {[{ id: "lunch", l: "🌞 점심" }, { id: "dinner", l: "🌙 저녁" }, { id: "both", l: "둘 다" }].map(m => (
+                <span key={m.id} className={"chip" + (form.mealType === m.id ? " on" : "")}
+                  onClick={() => set({ mealType: m.id })}>{m.l}</span>
+              ))}
             </div>
           </div>
-        </aside>
+          <div>
+            <div style={label}>장르</div>
+            <select style={input} value={form.genre} onChange={e => set({ genre: e.target.value })}>
+              {genres.map(g => <option key={g} value={g}>{g}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <div style={label}>분위기</div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {moods.map(m => (
+              <span key={m.id} className={"chip" + (form.mood === m.id ? " on" : "")}
+                onClick={() => set({ mood: m.id })}>{m.l}</span>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <div style={label}>적정 인원</div>
+            <select style={input} value={form.people} onChange={e => set({ people: e.target.value })}>
+              {peopleOpts.map(o => <option key={o} value={o}>{o}</option>)}
+            </select>
+          </div>
+          <div>
+            <div style={label}>인당 예산</div>
+            <select style={input} value={form.priceRange} onChange={e => set({ priceRange: e.target.value })}>
+              {priceOpts.map(o => <option key={o} value={o}>{o}</option>)}
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <div style={label}>특징 (해당되는 것 모두)</div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {extraOpts.map(x => (
+              <span key={x} className={"chip" + (form.extras.includes(x) ? " on" : "")}
+                onClick={() => toggleExtra(x)}>{x}</span>
+            ))}
+          </div>
+        </div>
+
+        <div>
+          <div style={label}>한 줄 코멘트</div>
+          <textarea style={{ ...input, height: 80, padding: '10px 12px', resize: 'vertical' }}
+            value={form.comment} onChange={e => set({ comment: e.target.value })}
+            placeholder="예: 12시 5분 도착이 골든타임. 5분만 늦어도 줄."/>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <div>
+            <div style={label}>닉네임</div>
+            <input style={input} value={form.nickname} onChange={e => set({ nickname: e.target.value })}
+              placeholder="예: 쩝쩝박사"/>
+          </div>
+          <div>
+            <div style={label}>팀 / 부서</div>
+            <input style={input} value={form.team} onChange={e => set({ team: e.target.value })}
+              placeholder="예: 개발"/>
+          </div>
+        </div>
+
+        <button type="submit" className="btn-primary" disabled={submitting}
+          style={{ marginTop: 8, alignSelf: 'flex-start' }}>
+          {submitting ? "제출 중..." : "제보 보내기 →"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+// ───────── REPORT FEED ─────────
+function ReportFeed({ places, mealType, onDetail, onNav }) {
+  const filtered = useMemo(() => {
+    const bymeal = places.filter(p => p.mealType === mealType || p.mealType === "both" || p.mealType === "all");
+    return dataHelpers.sortByRecent(bymeal);
+  }, [places, mealType]);
+
+  return (
+    <div className="result-page">
+      <div className="result-inner">
+        <h2 style={{ font: 'var(--text-h2)', margin: '0 0 8px', letterSpacing: '-0.01em' }}>
+          제보 피드 · {mealType === "lunch" ? "점심" : "저녁"}
+        </h2>
+        <p style={{ color: '#70737c', margin: '0 0 24px' }}>
+          최근 동료들이 올린 맛집 제보예요.
+        </p>
+        {filtered.length === 0 ? (
+          <EmptyState onReport={() => onNav("제보하기")}/>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {filtered.map(p => (
+              <div key={p.id} className="opt-card" onClick={() => onDetail(p.id)}
+                style={{ background: '#fff', borderRadius: 12, padding: 16,
+                  border: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 14, cursor: 'pointer' }}>
+                <div style={{ width: 80, flex: '0 0 80px' }}><FoodTile tone={p.tone} h={64}/></div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 15, fontWeight: 600 }}>{p.name}</div>
+                  <div style={{ fontSize: 12, color: '#70737c', marginTop: 2, marginBottom: 6 }}>
+                    {p.genre} · {p.priceRange || "예산 미정"}
+                    {p.nickname && ` · ${p.nickname}`}
+                  </div>
+                  {p.comment && (
+                    <div style={{ fontSize: 13, color: '#37383c', lineHeight: 1.4,
+                      overflow: 'hidden', textOverflow: 'ellipsis',
+                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                      "{p.comment}"
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ───────── HOT PICKS ─────────
+function HotPicks({ places, mealType, onDetail, onNav }) {
+  const sorted = useMemo(() => {
+    const bymeal = places.filter(p => p.mealType === mealType || p.mealType === "both" || p.mealType === "all");
+    return dataHelpers.sortByReports(bymeal);
+  }, [places, mealType]);
+
+  return (
+    <div className="result-page">
+      <div className="result-inner">
+        <h2 style={{ font: 'var(--text-h2)', margin: '0 0 8px', letterSpacing: '-0.01em' }}>
+          🔥 이번주 핫픽 · {mealType === "lunch" ? "점심" : "저녁"}
+        </h2>
+        <p style={{ color: '#70737c', margin: '0 0 24px' }}>
+          제보 수가 가장 많은 순으로 보여드려요.
+        </p>
+        {sorted.length === 0 ? (
+          <EmptyState onReport={() => onNav("제보하기")}/>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            {sorted.map((p, i) => (
+              <div key={p.id} className="opt-card result-card" style={{
+                background: '#fff', borderRadius: 16, padding: 20,
+                border: '1px solid rgba(0,0,0,0.06)',
+                boxShadow: i === 0 ? '0 8px 24px rgba(0,102,255,0.08)' : 'none',
+                cursor: 'pointer',
+              }} onClick={() => onDetail(p.id)}>
+                <div className="result-card-img"><FoodTile tone={p.tone} h={140}/></div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                    <span style={{ fontSize: 13, fontWeight: 700,
+                      color: i === 0 ? '#FF9200' : i === 1 ? '#878a93' : '#a78368' }}>
+                      #{i + 1}
+                    </span>
+                    <span style={{ fontSize: 11, padding: '2px 8px', background: '#FFF1DB',
+                      color: '#D17600', borderRadius: 4, fontWeight: 600 }}>제보 {p.reports}건</span>
+                  </div>
+                  <div style={{ font: 'var(--text-title-1)', marginBottom: 4 }}>{p.name}</div>
+                  <div style={{ fontSize: 13, color: '#70737c', marginBottom: 8 }}>
+                    {p.genre}{p.sub ? ` · ${p.sub}` : ""} · {p.priceRange || "예산 미정"}
+                  </div>
+                  {p.comment && (
+                    <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
+                      <div style={{ fontSize: 13, color: '#37383c' }}>"{p.comment}"</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
 // ───────── APP ─────────
+const DEFAULT_FILTERS = {
+  mode: null, people: 6, mood: null, genres: [], budget: null, conditions: [],
+};
+
 function App() {
-  const [screen, setScreen] = useState("landing"); // landing | step1..4 | result | detail
-  const [filters, setFilters] = useState({
-    mode: null, people: 6, mood: null, genres: [], budget: null, conditions: ["walk10"],
-  });
+  const [tab, setTab] = useState("추천");
+  const [recScreen, setRecScreen] = useState("landing"); // landing | step1..3 | result
+  const [mealType, setMealType] = useState("lunch");
+  const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [detailId, setDetailId] = useState(null);
+  const [places, setPlaces] = useState([]);
+  const [loadError, setLoadError] = useState(null);
   const [toastEl, toast] = useToast();
+
+  // 데이터 로드
+  const loadData = useCallback(() => {
+    const path = (window.APP_CONFIG && window.APP_CONFIG.RESTAURANTS_JSON) || "src/data/restaurants.json";
+    fetch(path, { cache: "no-cache" })
+      .then(r => r.ok ? r.json() : Promise.reject(new Error(r.statusText)))
+      .then(arr => {
+        const list = Array.isArray(arr) ? arr.map(dataHelpers.normalize) : [];
+        setPlaces(list);
+        setLoadError(null);
+      })
+      .catch(err => {
+        setPlaces([]);
+        setLoadError(err.message || "데이터 로드 실패");
+      });
+  }, []);
+  useEffect(() => { loadData(); }, [loadData]);
 
   const set = (patch) => setFilters(f => ({ ...f, ...patch }));
   const toggleGenre = (g) => setFilters(f => ({
@@ -651,73 +933,89 @@ function App() {
     ...f, conditions: f.conditions.includes(c) ? f.conditions.filter(x => x !== c) : [...f.conditions, c],
   }));
 
-  const reset = () => {
-    setFilters({ mode: null, people: 6, mood: null, genres: [], budget: null, conditions: ["walk10"] });
-    setScreen("landing");
+  const resetFilters = () => setFilters(DEFAULT_FILTERS);
+
+  const handleNav = (target) => {
+    setTab(target);
+    if (target === "추천") setRecScreen("landing");
   };
 
-  // Keyboard nav for stepper
+  const handleStart = () => setRecScreen("step1");
+  const handleBrowse = () => {
+    resetFilters();
+    setRecScreen("result");
+  };
+  const handleHome = () => {
+    setTab("추천");
+    setRecScreen("landing");
+  };
+
+  // 키보드 네비 (위저드 동안)
   useEffect(() => {
     function onKey(e) {
+      if (tab !== "추천") return;
       if (e.key === "Enter" || e.key === "ArrowRight") {
-        if (screen === "step1" && filters.mode) setScreen("step2");
-        else if (screen === "step2") setScreen("step3");
-        else if (screen === "step3" && filters.mood) setScreen("step4");
-        else if (screen === "step4") setScreen("result");
+        if (recScreen === "step1") setRecScreen("step2");
+        else if (recScreen === "step2" && filters.mood) setRecScreen("step3");
+        else if (recScreen === "step3") setRecScreen("result");
       } else if (e.key === "ArrowLeft") {
-        if (screen === "step2") setScreen("step1");
-        else if (screen === "step3") setScreen("step2");
-        else if (screen === "step4") setScreen("step3");
-      } else if (e.key === "Escape") {
-        if (screen === "detail") setScreen("result");
+        if (recScreen === "step2") setRecScreen("step1");
+        else if (recScreen === "step3") setRecScreen("step2");
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [screen, filters.mode, filters.mood]);
+  }, [tab, recScreen, filters.mood]);
 
-  const urlMap = {
-    landing: "jjop.nexon.internal/",
-    step1: "jjop.nexon.internal/decide?step=1",
-    step2: "jjop.nexon.internal/decide?step=2",
-    step3: "jjop.nexon.internal/decide?step=3",
-    step4: "jjop.nexon.internal/decide?step=4",
-    result: "jjop.nexon.internal/decide/result",
-    detail: `jjop.nexon.internal/place/${detailId}`,
-  };
+  const detailPlace = detailId ? places.find(p => p.id === detailId) : null;
 
   let content;
-  if (screen === "landing") {
-    content = <Landing onStart={() => setScreen("step1")}/>;
-  } else if (screen === "step1") {
-    content = <Step1 filters={filters} set={set} next={() => setScreen("step2")}/>;
-  } else if (screen === "step2") {
-    content = <Step2 filters={filters} set={set} next={() => setScreen("step3")} back={() => setScreen("step1")}/>;
-  } else if (screen === "step3") {
-    content = <Step3 filters={filters} set={set} next={() => setScreen("step4")} back={() => setScreen("step2")}/>;
-  } else if (screen === "step4") {
-    content = <Step4 filters={filters} set={set} toggleGenre={toggleGenre} toggleCond={toggleCond}
-      finish={() => setScreen("result")} back={() => setScreen("step3")}/>;
-  } else if (screen === "result") {
-    content = <Result filters={filters} onDetail={id => { setDetailId(id); setScreen("detail"); }}
-      onReset={reset} onBack={() => setScreen("step4")} toast={toast}/>;
-  } else if (screen === "detail") {
-    content = <Detail placeId={detailId} mode={filters.mode} onBack={() => setScreen("result")}/>;
+  if (tab === "추천") {
+    if (recScreen === "landing") {
+      content = <Landing onStart={handleStart} onBrowse={handleBrowse}
+        places={places} mealType={mealType} onNav={handleNav}/>;
+    } else if (recScreen === "step1") {
+      content = <StepPeople filters={filters} set={set}
+        next={() => setRecScreen("step2")} back={handleHome}/>;
+    } else if (recScreen === "step2") {
+      content = <StepMood filters={filters} set={set}
+        next={() => setRecScreen("step3")} back={() => setRecScreen("step1")}/>;
+    } else if (recScreen === "step3") {
+      content = <StepGenre filters={filters} set={set} toggleGenre={toggleGenre} toggleCond={toggleCond}
+        finish={() => setRecScreen("result")} back={() => setRecScreen("step2")} mealType={mealType}/>;
+    } else if (recScreen === "result") {
+      content = <Result filters={filters} set={set} toggleGenre={toggleGenre} toggleCond={toggleCond}
+        places={places} mealType={mealType}
+        onDetail={id => setDetailId(id)}
+        onReset={() => { resetFilters(); }}
+        onBack={() => setRecScreen("step3")}
+        onNav={handleNav}
+        toast={toast}/>;
+    }
+  } else if (tab === "제보 피드") {
+    content = <ReportFeed places={places} mealType={mealType}
+      onDetail={id => setDetailId(id)} onNav={handleNav}/>;
+  } else if (tab === "제보하기") {
+    content = <ReportForm toast={toast} mealType={mealType}
+      onSubmitted={() => { /* 시트에 저장되면 검토 후 JSON 갱신 */ }}/>;
+  } else if (tab === "이번주 핫픽") {
+    content = <HotPicks places={places} mealType={mealType}
+      onDetail={id => setDetailId(id)} onNav={handleNav}/>;
   }
 
   return (
-    <div className="app-shell">
-      <div className="browser">
-        <div className="chrome">
-          <div className="dots"><b/><b/><b/></div>
-          <div className="url">🔒 {urlMap[screen]}</div>
-          <div style={{ width: 60 }}/>
-        </div>
-        <TopNav onHome={reset} active="추천"/>
-        <div className="body">
-          <StepFade stepKey={screen}>{content}</StepFade>
-        </div>
+    <div className={"app-shell theme-" + mealType}>
+      <TopNav active={tab} onNav={handleNav} mealType={mealType} onMealType={setMealType}/>
+      <div className="body">
+        {loadError && (
+          <div style={{ background: '#fff3cd', color: '#7a5a00', padding: '10px 16px',
+            fontSize: 13, textAlign: 'center', borderBottom: '1px solid #f0e0a0' }}>
+            데이터를 불러오지 못했어요: {loadError} (HTTP 서버로 열어야 동작해요)
+          </div>
+        )}
+        <StepFade stepKey={tab + ":" + recScreen}>{content}</StepFade>
       </div>
+      {detailPlace && <DetailModal place={detailPlace} mealType={mealType} onClose={() => setDetailId(null)}/>}
       {toastEl}
     </div>
   );
