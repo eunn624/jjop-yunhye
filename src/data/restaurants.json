@@ -287,9 +287,21 @@
     "comment": "북경오리도 먹을 수 있음! 왕스덕 판교점은 판교 지역에서 손꼽히는 중식 맛집으로, 특히 베이징덕과 다양한 식사 메뉴가 인기입니다",
     "nickname": "회식왕",
     "team": "디자인팀",
-    "submittedAt": "2026-05-12T11:26:50.803Z",
+    "submittedAt": "2026-05-12T11:27:15.503Z",
     "reports": 1,
-    "naverLink": "https://map.naver.com/p/search/%EC%99%95%EC%8A%A4%EB%8D%95%20%ED%8C%90%EA%B5%90%EC%A0%90%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC%20%EB%8C%80%EC%99%95%ED%8C%90%EA%B5%90%EB%A1%9C645%EB%B2%88%EA%B8%B8%2036%20ns%EB%B3%84%EA%B4%80%20B1%EC%B8%B5",
-    "naverCategory": "중식당"
+    "naverLink": "https://map.naver.com/p/entry/place/634059689?c=14.26,0,0,0,dh&placePath=/home?bookmarkId=2692778972&fromPanelNum=1&additionalHeight=76&timestamp=202605122025&locale=ko&svcName=map_pcv5&from=map",
+    "naverCategory": "",
+    "sub": "",
+    "menu": [],
+    "tone": "soup",
+    "thumbnail": "",
+    "capMin": 5,
+    "capMax": 10,
+    "priceMin": 1,
+    "priceMax": 2,
+    "hasRoom": true,
+    "hasParking": true,
+    "hasReserve": true,
+    "walkable": true
   }
 ]
