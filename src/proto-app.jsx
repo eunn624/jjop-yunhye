@@ -105,6 +105,31 @@ function MascotSay({ mood = "happy", children, size = 64 }) {
   );
 }
 
+// 가게 썸네일: place.thumbnail 이 있으면 그 이미지를, 없으면 그라데이션 폴백.
+function PlaceThumb({ place, h = 140, rounded = 8 }) {
+  if (place && place.thumbnail) {
+    return (
+      <div style={{
+        width: '100%', height: h, borderRadius: rounded,
+        overflow: 'hidden', background: '#eee',
+      }}>
+        <img src={place.thumbnail} alt={place.name || ""} loading="lazy"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+      </div>
+    );
+  }
+  return <FoodTile tone={place && place.tone} h={h} label={place && place.name}/>;
+}
+
+// 가게 네이버지도 URL — naverLink(정확한 가게 페이지)가 있으면 그걸 쓰고, 없으면 검색 URL.
+function naverMapUrlFor(place) {
+  if (!place) return null;
+  if (place.naverLink) return place.naverLink;
+  const q = [place.name, place.address].filter(Boolean).join(" ").trim();
+  if (!q) return null;
+  return `https://map.naver.com/v5/search/${encodeURIComponent(q)}`;
+}
+
 function StepFade({ stepKey, children }) {
   const [shown, setShown] = useState(false);
   useEffect(() => {
@@ -457,7 +482,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
                   boxShadow: i === 0 ? '0 8px 24px rgba(0,102,255,0.08)' : 'none',
                   cursor: 'pointer',
                 }} onClick={() => onDetail(p.id)}>
-                  <div className="result-card-img"><FoodTile tone={p.tone} h={140}/></div>
+                  <div className="result-card-img"><PlaceThumb place={p} h={140}/></div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     {i < 3 && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
@@ -538,12 +563,7 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast }) {
   useEffect(() => { setMode("view"); }, [place && place.id]);
 
   if (!place) return null;
-  const naverUrl = place.address
-    ? `https://map.naver.com/v5/search/${encodeURIComponent(place.address)}`
-    : null;
-  const kakaoUrl = place.address
-    ? `https://map.kakao.com/?q=${encodeURIComponent(place.address)}`
-    : null;
+  const naverUrl = naverMapUrlFor(place);
 
   async function handleSave(form) {
     if (busy) return;
@@ -600,9 +620,17 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast }) {
           </div>
         ) : (
           <React.Fragment>
-            <div style={{ height: 200, position: 'relative' }}>
-              <FoodTile tone={place.tone} h={200}/>
-              <div style={{ position: 'absolute', bottom: 16, left: 24, color: '#fff' }}>
+            <div style={{ height: 200, position: 'relative', overflow: 'hidden',
+              borderRadius: '16px 16px 0 0', background: '#eee' }}>
+              {place.thumbnail ? (
+                <img src={place.thumbnail} alt={place.name}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}/>
+              ) : (
+                <FoodTile tone={place.tone} h={200}/>
+              )}
+              <div style={{ position: 'absolute', inset: 0,
+                background: 'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,0.55))' }}/>
+              <div style={{ position: 'absolute', bottom: 16, left: 24, right: 24, color: '#fff' }}>
                 <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
                   <span style={{ fontSize: 11, padding: '3px 8px', background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>
                     {place.mealType === "lunch" ? "점심" : place.mealType === "dinner" ? "저녁" : "점심·저녁"}
@@ -611,6 +639,8 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast }) {
                     background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>룸</span>}
                   {place.hasParking && <span style={{ fontSize: 11, padding: '3px 8px',
                     background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>주차</span>}
+                  {place.naverCategory && <span style={{ fontSize: 11, padding: '3px 8px',
+                    background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>{place.naverCategory}</span>}
                 </div>
                 <div style={{ fontSize: 24, fontWeight: 700, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>{place.name}</div>
                 <div style={{ fontSize: 13, opacity: 0.95 }}>
@@ -660,19 +690,12 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast }) {
               )}
 
               <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-                {naverUrl && (
-                  <a className="btn-ghost" href={naverUrl} target="_blank" rel="noopener noreferrer"
+                {naverUrl ? (
+                  <a className="btn-primary" href={naverUrl} target="_blank" rel="noopener noreferrer"
                     style={{ flex: 1, justifyContent: 'center', textDecoration: 'none' }}>
-                    🗺 네이버 지도
+                    🗺 네이버 지도에서 보기
                   </a>
-                )}
-                {kakaoUrl && (
-                  <a className="btn-ghost" href={kakaoUrl} target="_blank" rel="noopener noreferrer"
-                    style={{ flex: 1, justifyContent: 'center', textDecoration: 'none' }}>
-                    🗺 카카오 지도
-                  </a>
-                )}
-                {!place.address && (
+                ) : (
                   <div style={{ flex: 1, textAlign: 'center', color: '#aeb0b6', fontSize: 13, padding: '12px 0' }}>
                     지도 연결을 위해 주소 정보가 필요해요
                   </div>
@@ -915,7 +938,7 @@ function ReportFeed({ places, onDetail, onNav }) {
               <div key={p.id} className="opt-card" onClick={() => onDetail(p.id)}
                 style={{ background: '#fff', borderRadius: 12, padding: 16,
                   border: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 14, cursor: 'pointer' }}>
-                <div style={{ width: 80, flex: '0 0 80px' }}><FoodTile tone={p.tone} h={64}/></div>
+                <div style={{ width: 80, flex: '0 0 80px' }}><PlaceThumb place={p} h={64} rounded={6}/></div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: 15, fontWeight: 600 }}>{p.name}</div>
                   <div style={{ fontSize: 12, color: '#70737c', marginTop: 2, marginBottom: 6 }}>
@@ -963,7 +986,7 @@ function HotPicks({ places, onDetail, onNav }) {
                 boxShadow: i === 0 ? '0 8px 24px rgba(0,102,255,0.08)' : 'none',
                 cursor: 'pointer',
               }} onClick={() => onDetail(p.id)}>
-                <div className="result-card-img"><FoodTile tone={p.tone} h={140}/></div>
+                <div className="result-card-img"><PlaceThumb place={p} h={140}/></div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                     <span style={{ fontSize: 13, fontWeight: 700,
