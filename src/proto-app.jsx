@@ -182,56 +182,46 @@ function Landing({ onStart, onBrowse, places, mealType, onNav }) {
 }
 
 // ───────── STEP 1: people ─────────
+// 제보 폼과 동일한 버킷(`PEOPLE_OPTS`)을 그대로 사용한다.
 function StepPeople({ filters, set, next, back }) {
-  const presets = [
-    { l: "2~4명 소수팀",  p: 3, range: [2, 4] },
-    { l: "5~10명 팀회식", p: 6, range: [5, 10] },
-    { l: "11~20명 부서",  p: 14, range: [11, 20] },
-    { l: "20명+ 대규모",  p: 24, range: [21, 50] },
+  const buckets = [
+    { l: "2~4명 소수팀",  ico: "👥", desc: "회의 전후 빠른 식사, 4인 테이블 한 개로 충분" },
+    { l: "5~10명 팀회식", ico: "🍻", desc: "테이블 두 개 붙이기 / 작은 룸 정도" },
+    { l: "11~20명 부서",  ico: "🎉", desc: "룸·단체석 필수, 예약 권장" },
+    { l: "20명+ 대규모",  ico: "🏛️", desc: "한정식·중식 대형룸·고기집 위주" },
   ];
-  const max = 30;
-  const pct = Math.min(100, Math.max(0, ((filters.people - 1) / (max - 1)) * 100));
-  const presetActive = presets.findIndex(p => filters.people >= p.range[0] && filters.people <= p.range[1]);
-
-  let hint = "";
-  if (filters.people <= 4) hint = "💡 소수 팀에 안성맞춤. 룸 없어도 4인 테이블 1개로 충분.";
-  else if (filters.people <= 10) hint = `💡 ${filters.people}명이면 룸 없어도 4인 테이블 ${Math.ceil(filters.people/4)}개로 충분한 곳을 보여드려요.`;
-  else if (filters.people <= 20) hint = "💡 룸/단체석 필수 · 예약 가능 조건도 자동으로 추가돼요.";
-  else hint = "💡 20명+ 대규모 — 한정식·중식 대형룸·고기집 위주로 제안드려요.";
 
   return (
     <div className="wizard-page">
       <Stepper step={1}/>
       <MascotSay mood="happy">안녕! 윤혜야. <b>몇 명</b> 가요?</MascotSay>
-      <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 32px', letterSpacing: '-0.01em' }}>총 몇 명?</h2>
+      <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 8px', letterSpacing: '-0.01em' }}>총 몇 명?</h2>
+      <p style={{ color: '#70737c', margin: '0 0 32px' }}>제보된 가게의 적정 인원과 매칭해서 찾아드려요.</p>
 
-      <div style={{ background: '#f7f7f8', borderRadius: 16, padding: '32px 28px', marginBottom: 24 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 8, marginBottom: 24 }}>
-          <div style={{ fontSize: 80, fontWeight: 700, letterSpacing: '-0.04em', color: '#0066FF', lineHeight: 1 }} key={filters.people}>
-            {filters.people}
-          </div>
-          <div style={{ fontSize: 26, fontWeight: 500, color: '#37383c' }}>명</div>
-        </div>
-        <input className="rg" type="range" min={1} max={max} step={1} value={filters.people}
-          style={{ '--p': pct + '%' }}
-          onChange={e => set({ people: parseInt(e.target.value, 10) })}/>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12, fontSize: 12, color: '#878a93' }}>
-          <span>1명</span><span>10명</span><span>20명</span><span>30명+</span>
-        </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
+        {buckets.map(b => {
+          const on = filters.people === b.l;
+          return (
+            <div key={b.l} className="opt-card" onClick={() => set({ people: on ? null : b.l })}
+              style={{
+                border: on ? '2px solid #0066FF' : '1px solid rgba(0,0,0,0.1)',
+                background: on ? '#f7fbff' : '#fff',
+                borderRadius: 12, padding: '18px 18px', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', gap: 14,
+              }}>
+              <div style={{ fontSize: 28 }}>{b.ico}</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 2 }}>{b.l}</div>
+                <div style={{ fontSize: 12, color: '#70737c' }}>{b.desc}</div>
+              </div>
+              {on && <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#0066FF',
+                color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
+            </div>
+          );
+        })}
       </div>
 
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
-        <span style={{ fontSize: 13, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>빠른 선택:</span>
-        {presets.map((q, i) => (
-          <span key={q.l} className={"chip" + (presetActive === i ? " on" : "")}
-            onClick={() => set({ people: q.p })}>{q.l}</span>
-        ))}
-      </div>
-
-      <div style={{ marginTop: 12, padding: '12px 16px', background: '#eaf2fe', borderRadius: 8,
-        fontSize: 13, color: '#0054d1' }}>{hint}</div>
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 48 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 32 }}>
         <button className="btn-ghost" onClick={back}>← 처음으로</button>
         <button className="btn-primary" onClick={next}>다음 →</button>
       </div>
@@ -290,22 +280,12 @@ function StepMood({ filters, set, next, back }) {
 }
 
 // ───────── STEP 3: genre + budget + conditions ─────────
-function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back, mealType }) {
-  const genres = [
-    { ico: "🍚", l: "한식" }, { ico: "🍣", l: "일식" }, { ico: "🥟", l: "중식" },
-    { ico: "🍝", l: "양식" }, { ico: "🍜", l: "아시안" }, { ico: "🥩", l: "고기구이" },
-    { ico: "🦐", l: "해산물" }, { ico: "🍱", l: "분식·면" }, { ico: "🥗", l: "채식 가능" }, { ico: "🍣", l: "뷔페" },
-  ];
-  // 점심/저녁에 따라 다른 예산 옵션
-  const budgets = mealType === "lunch"
-    ? [{ l: "~1만원" }, { l: "1~2만원" }, { l: "2~3만원" }, { l: "3만원+" }]
-    : [{ l: "1~2만원" }, { l: "2~3만원" }, { l: "3~5만원" }, { l: "5만원+" }];
-  const conds = [
-    { id: "walk10", l: "도보 10분 이내" },
-    { id: "parking", l: "주차 가능" },
-    { id: "reserve", l: "예약 가능" },
-    { id: "room", l: "룸/단체석" },
-  ];
+// 예산·조건 옵션 모두 제보 폼(PRICE_OPTS, EXTRA_OPTS)과 동일한 라벨을 사용한다.
+function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back }) {
+  const genreIcons = {
+    "한식": "🍚", "일식": "🍣", "중식": "🥟", "양식": "🍝", "아시안": "🍜",
+    "고기구이": "🥩", "해산물": "🦐", "분식·면": "🍱", "채식 가능": "🥗", "뷔페": "🍽",
+  };
   return (
     <div className="wizard-page">
       <Stepper step={3}/>
@@ -316,17 +296,17 @@ function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back, mealTy
       <p style={{ color: '#70737c', margin: '0 0 32px' }}>여러 개 선택 가능 · 비워두면 전체 추천</p>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 10, marginBottom: 32 }}>
-        {genres.map(g => {
-          const on = filters.genres.includes(g.l);
+        {GENRE_OPTS.map(g => {
+          const on = filters.genres.includes(g);
           return (
-            <div key={g.l} className="opt-card" onClick={() => toggleGenre(g.l)}
+            <div key={g} className="opt-card" onClick={() => toggleGenre(g)}
               style={{
                 border: on ? '2px solid #0066FF' : '1px solid rgba(0,0,0,0.1)',
                 background: on ? '#f7fbff' : '#fff',
                 borderRadius: 12, padding: '14px 8px', cursor: 'pointer', textAlign: 'center',
               }}>
-              <div style={{ fontSize: 26, marginBottom: 4 }}>{g.ico}</div>
-              <div style={{ fontSize: 13, fontWeight: on ? 600 : 500 }}>{g.l}</div>
+              <div style={{ fontSize: 26, marginBottom: 4 }}>{genreIcons[g] || "🍽"}</div>
+              <div style={{ fontSize: 13, fontWeight: on ? 600 : 500 }}>{g}</div>
             </div>
           );
         })}
@@ -334,17 +314,17 @@ function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back, mealTy
 
       <div style={{ fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 12 }}>예산 (인당)</div>
       <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
-        {budgets.map(b => (
-          <span key={b.l} className={"chip" + (filters.budget === b.l ? " on" : "")}
-            onClick={() => set({ budget: filters.budget === b.l ? null : b.l })}>{b.l}</span>
+        {PRICE_OPTS.map(b => (
+          <span key={b} className={"chip" + (filters.budget === b ? " on" : "")}
+            onClick={() => set({ budget: filters.budget === b ? null : b })}>{b}</span>
         ))}
       </div>
 
       <div style={{ fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 12 }}>추가 조건</div>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-        {conds.map(c => (
-          <span key={c.id} className={"chip" + (filters.conditions.includes(c.id) ? " on" : "")}
-            onClick={() => toggleCond(c.id)}>{c.l}</span>
+        {EXTRA_OPTS.map(c => (
+          <span key={c} className={"chip" + (filters.conditions.includes(c) ? " on" : "")}
+            onClick={() => toggleCond(c)}>{c}</span>
         ))}
       </div>
 
@@ -363,20 +343,12 @@ function Result({ filters, set, toggleGenre, toggleCond, places, mealType, onDet
 
   const summary = [
     mealType === "lunch" ? "🌞 점심" : "🌙 저녁",
-    filters.people ? `${filters.people}명` : null,
+    filters.people,
     filters.mood ? { quiet: "조용히", social: "수다", formal: "격식", casual: "캐주얼" }[filters.mood] : null,
     ...filters.genres,
     filters.budget,
-    ...filters.conditions.map(c => ({ walk10: "도보 10분", parking: "주차", reserve: "예약", room: "룸" }[c])),
+    ...filters.conditions,
   ].filter(Boolean);
-
-  const genres = ["한식","일식","중식","양식","아시안","고기구이","해산물","분식·면","채식 가능","뷔페"];
-  const conds = [
-    { id: "walk10", l: "도보 10분 이내" },
-    { id: "parking", l: "주차" },
-    { id: "reserve", l: "예약" },
-    { id: "room", l: "룸/단체석" },
-  ];
 
   return (
     <div className="result-page">
@@ -397,21 +369,21 @@ function Result({ filters, set, toggleGenre, toggleCond, places, mealType, onDet
           )}
         </div>
 
-        {/* 실시간 필터 칩들 */}
+        {/* 실시간 필터 칩들 — 폼 옵션과 동일 */}
         <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 12,
           padding: 12, marginBottom: 18 }}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
             <span style={{ fontSize: 12, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>장르:</span>
-            {genres.map(g => (
+            {GENRE_OPTS.map(g => (
               <span key={g} className={"chip" + (filters.genres.includes(g) ? " on" : "")}
                 onClick={() => toggleGenre(g)} style={{ fontSize: 12, height: 28 }}>{g}</span>
             ))}
           </div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 12, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>조건:</span>
-            {conds.map(c => (
-              <span key={c.id} className={"chip" + (filters.conditions.includes(c.id) ? " on" : "")}
-                onClick={() => toggleCond(c.id)} style={{ fontSize: 12, height: 28 }}>{c.l}</span>
+            {EXTRA_OPTS.map(c => (
+              <span key={c} className={"chip" + (filters.conditions.includes(c) ? " on" : "")}
+                onClick={() => toggleCond(c)} style={{ fontSize: 12, height: 28 }}>{c}</span>
             ))}
           </div>
         </div>
@@ -979,8 +951,9 @@ function HotPicks({ places, mealType, onDetail, onNav }) {
 }
 
 // ───────── APP ─────────
+// 위저드 필터는 제보 폼과 동일한 한국어 라벨을 저장한다 (필터/폼 일치)
 const DEFAULT_FILTERS = {
-  mode: null, people: 6, mood: null, genres: [], budget: null, conditions: [],
+  mode: null, people: null, mood: null, genres: [], budget: null, conditions: [],
 };
 
 // 낙관적 업데이트용: Apps Script가 JSON에 반영하기 전까지 localStorage에서 유지.
@@ -1137,7 +1110,7 @@ function App() {
         next={() => setRecScreen("step3")} back={() => setRecScreen("step1")}/>;
     } else if (recScreen === "step3") {
       content = <StepGenre filters={filters} set={set} toggleGenre={toggleGenre} toggleCond={toggleCond}
-        finish={() => setRecScreen("result")} back={() => setRecScreen("step2")} mealType={mealType}/>;
+        finish={() => setRecScreen("result")} back={() => setRecScreen("step2")}/>;
     } else if (recScreen === "result") {
       content = <Result filters={filters} set={set} toggleGenre={toggleGenre} toggleCond={toggleCond}
         places={places} mealType={mealType}

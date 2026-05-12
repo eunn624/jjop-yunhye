@@ -85,31 +85,42 @@ function supportsMealType(r, mealType) {
 }
 
 // 필터 적용 (글로벌 mealType + 위저드 필터)
+// 위저드 입력은 제보 폼과 동일한 한국어 라벨을 사용한다:
+//   - filters.people    : "2~4명 소수팀" 같은 버킷 라벨 (또는 null)
+//   - filters.budget    : "1~2만원" 같은 라벨 (또는 null)
+//   - filters.conditions: 한국어 라벨 배열 ("도보 10분 이내", "주차 가능" 등)
 function filterPlaces(places, filters) {
   return places.filter(p => {
     if (!supportsMealType(p, filters.mealType)) return false;
+
+    // 인원: 위저드/폼 둘 다 버킷 → 범위 겹침 검사
     if (filters.people) {
-      if (filters.people < p.capMin || filters.people > p.capMax) return false;
+      const [flo, fhi] = parsePeopleRange(filters.people);
+      if (p.capMax < flo || p.capMin > fhi) return false;
     }
+
+    // 분위기: 단일 값 일치
     if (filters.mood && p.mood && filters.mood !== p.mood) return false;
+
+    // 장르: 선택된 것 중 하나라도 일치
     if (filters.genres && filters.genres.length > 0) {
       if (!filters.genres.includes(p.genre)) return false;
     }
+
+    // 예산: 범위 겹침
     if (filters.budget) {
       const [lo, hi] = parsePriceRange(filters.budget);
       if (p.priceMax < lo || p.priceMin > hi) return false;
     }
+
+    // 조건: 폼의 extras 라벨과 1:1 매칭 (선택된 모든 조건이 포함되어야 함)
     if (filters.conditions && filters.conditions.length > 0) {
-      const condMap = {
-        walk10: "walkable",
-        parking: "hasParking",
-        reserve: "hasReserve",
-        room: "hasRoom",
-      };
+      const extras = p.extras || [];
       for (const c of filters.conditions) {
-        if (condMap[c] && !p[condMap[c]]) return false;
+        if (!extras.includes(c)) return false;
       }
     }
+
     return true;
   });
 }
