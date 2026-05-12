@@ -225,7 +225,21 @@
     "comment": "속마음 털어 놓을 수 있음.",
     "nickname": "zi0_zzang",
     "team": "UX디자인팀",
-    "submittedAt": "2026-05-12T09:58:56.217Z",
-    "reports": 1
+    "submittedAt": "2026-05-12T09:59:48.362Z",
+    "reports": 1,
+    "sub": "",
+    "menu": [],
+    "tone": "seafood",
+    "thumbnail": "",
+    "naverLink": "",
+    "naverCategory": "",
+    "capMin": 5,
+    "capMax": 10,
+    "priceMin": 5,
+    "priceMax": 99,
+    "hasRoom": false,
+    "hasParking": true,
+    "hasReserve": true,
+    "walkable": false
   }
 ]
