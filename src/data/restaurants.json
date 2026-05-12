@@ -17,7 +17,10 @@
     "nickname": "바다의딸",
     "team": "디자인",
     "submittedAt": "2026-05-12T09:23:45.865Z",
-    "reports": 1
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EB%B0%A9%EC%95%84%EA%B9%90%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC%20%ED%8C%90%EA%B5%90%EA%B3%B5%EC%9B%90%EB%A1%9C1%EA%B8%B8%2055",
+    "naverCategory": "요리주점",
+    "thumbnail": "https://dthumb-phinf.pstatic.net/?src=%22https://mblogthumb-phinf.pstatic.net/MjAyNTA4MzBfMjkw/MDAxNzU2NTE1OTY3OTYz.PnXXuyd6X1xpZa1Jd_ZP4vlfeCmZt62gFeRDbtI-b7cg.KkIlr-bh8tSJYJ2mWp-BgJOJ1MveSB8f45NML5hA1QQg.JPEG/IMG%25A3%25DF1978.jpg?type=w800%22&opts=2&twidth=700&theight=700"
   },
   {
     "id": "restaurant-1778577958027",
@@ -46,7 +49,8 @@
     "hasRoom": false,
     "hasParking": false,
     "hasReserve": false,
-    "walkable": true
+    "walkable": true,
+    "thumbnail": "https://lh3.googleusercontent.com/p/AF1QipO7Q4L76MIz9vmZyp2KDRRmC4P7gy6uWiJ_PTWJ=w900-h900-p-k-no"
   },
   {
     "id": "restaurant-1778578668872",
@@ -89,7 +93,7 @@
     "sub": "",
     "menu": [],
     "tone": "izakaya",
-    "thumbnail": "",
+    "thumbnail": "https://img.siksinhot.com/place/1693542452995395.jpg",
     "naverLink": "",
     "naverCategory": "",
     "capMin": 5,
@@ -124,9 +128,9 @@
     "sub": "",
     "menu": [],
     "tone": "grilled",
-    "thumbnail": "",
-    "naverLink": "",
-    "naverCategory": "",
+    "thumbnail": "https://pup-post-phinf.pstatic.net/MjAyNjAyMDFfOSAg/MDAxNzY5OTI3NTA5Nzky.z1JZOBgvMna57cx63PuyQgTXtgwJLpbhcQe--KYJq2Ug.a9ol2-2sCSWrf079MkY_mLSsh1HiVAjZE0jxsuquT8Ag.JPEG/POST_IMAGE_ENCODING_20260201_153149_727.jpg",
+    "naverLink": "https://map.naver.com/p/search/%EC%9A%B0%ED%99%94%20%ED%8C%90%EA%B5%90%EC%95%84%EB%B8%8C%EB%89%B4%ED%94%84%EB%9E%91%EC%A0%90%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC%20%EB%8F%99%ED%8C%90%EA%B5%90%EB%A1%9C177%EB%B2%88%EA%B8%B8%2025%202%EC%B8%B5%20212%2C%20213%ED%98%B8%20%EC%9A%B0%ED%99%94",
+    "naverCategory": "한식",
     "capMin": 5,
     "capMax": 10,
     "priceMin": 5,
@@ -152,7 +156,10 @@
     "nickname": "하식빵",
     "team": "UX디자인팀",
     "submittedAt": "2026-05-12T09:46:57.317Z",
-    "reports": 1
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EC%AD%88%EA%BE%B8%EB%AF%B8%EC%86%90%EC%82%AC%EC%9E%A5%20%EB%B3%B8%EC%A0%90%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%84%B1%EB%82%A8%EC%8B%9C%20%EC%A4%91%EC%9B%90%EA%B5%AC%20%EC%82%B0%EC%84%B1%EB%8C%80%EB%A1%9C%20336-2",
+    "naverCategory": "주꾸미요리",
+    "thumbnail": "https://img.siksinhot.com/place/1522220478017887.jpg"
   },
   {
     "id": "restaurant-1778579540852",
@@ -175,9 +182,9 @@
     "sub": "",
     "menu": [],
     "tone": "warm",
-    "thumbnail": "",
-    "naverLink": "",
-    "naverCategory": "",
+    "thumbnail": "https://img.siksinhot.com/place/1682566128427107.jpg",
+    "naverLink": "https://map.naver.com/p/search/%EC%A0%9C%EB%A1%9C%ED%88%AC%EB%82%98%EC%9D%B8%20%EA%B2%BD%EA%B8%B0%EB%8F%84%20%EC%84%B1%EB%82%A8%EC%8B%9C%20%EB%B6%84%EB%8B%B9%EA%B5%AC%20%EC%9A%B4%EC%A4%91%EB%A1%9C146%EB%B2%88%EA%B8%B8%2019-3%201%EC%B8%B5%20%EC%A0%9C%EB%A1%9C%ED%88%AC%EB%82%98%EC%9D%B8",
+    "naverCategory": "양식",
     "capMin": 5,
     "capMax": 10,
     "priceMin": 5,
@@ -210,7 +217,7 @@
     "sub": "",
     "menu": [],
     "tone": "grilled",
-    "thumbnail": "",
+    "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/750_750_20260406074309_photo1_v7ueN3fIzBzB.webp",
     "naverLink": "",
     "naverCategory": "",
     "capMin": 5,
@@ -244,7 +251,7 @@
     "sub": "",
     "menu": [],
     "tone": "seafood",
-    "thumbnail": "",
+    "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/750_750_20260406074309_photo1_v7ueN3fIzBzB.webp",
     "naverLink": "",
     "naverCategory": "",
     "capMin": 5,
