@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "id": "restaurant-1778574593820",
+    "name": "테스트식당",
+    "address": "판교역로 152",
+    "genre": "한식",
+    "mood": "quiet",
+    "mealType": "lunch",
+    "people": "2~4명",
+    "priceRange": "1~2만원",
+    "extras": [
+      "도보 10분 이내"
+    ],
+    "comment": "테스트입니다",
+    "nickname": "테스터",
+    "team": "개발",
+    "submittedAt": "2026-05-12T08:29:53.588Z",
+    "reports": 1
+  }
+]
