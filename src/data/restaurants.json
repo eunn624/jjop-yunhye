@@ -186,5 +186,26 @@
     "hasParking": true,
     "hasReserve": true,
     "walkable": false
+  },
+  {
+    "id": "restaurant-1778579895765",
+    "name": "판교육담",
+    "address": "경기 성남시 분당구 대왕판교로606번길 10 1층 105호, 106호",
+    "genre": "고기구이",
+    "mood": "quiet",
+    "mealType": "dinner",
+    "people": "5~10명 팀회식",
+    "priceRange": "5만원+",
+    "extras": [
+      "도보 10분 이내",
+      "주차 가능",
+      "예약 가능",
+      "술 가능"
+    ],
+    "comment": "판교육담/찌마기 사장님이 같음",
+    "nickname": "zi0_zzang",
+    "team": "UX디자인팀",
+    "submittedAt": "2026-05-12T09:58:15.765Z",
+    "reports": 1
   }
 ]
