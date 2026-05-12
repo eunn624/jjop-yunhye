@@ -1,0 +1,303 @@
+/* ============================================================
+   Montage (WDS) — Colors & Type
+   Source: github.com/wanteddev/montage-web (packages/wds-theme)
+   ============================================================ */
+
+/* ---------- ATOMIC COLOR SCALES ---------- */
+:root {
+  /* common */
+  --atomic-common-0:   #000000;
+  --atomic-common-100: #ffffff;
+
+  /* blue (primary brand) */
+  --atomic-blue-10: #001536;
+  --atomic-blue-20: #002966;
+  --atomic-blue-30: #003E9C;
+  --atomic-blue-40: #0054D1;
+  --atomic-blue-45: #005EEB;
+  --atomic-blue-50: #0066FF; /* Wanted brand blue */
+  --atomic-blue-55: #1A75FF;
+  --atomic-blue-60: #3385FF;
+  --atomic-blue-65: #4F95FF;
+  --atomic-blue-70: #69A5FF;
+  --atomic-blue-80: #9EC5FF;
+  --atomic-blue-90: #C9DEFE;
+  --atomic-blue-95: #EAF2FE;
+  --atomic-blue-99: #F7FBFF;
+
+  /* coolNeutral (primary grayscale, cool-tinted) */
+  --atomic-coolNeutral-5:  #0F0F10;
+  --atomic-coolNeutral-7:  #141415;
+  --atomic-coolNeutral-10: #171719;
+  --atomic-coolNeutral-15: #1B1C1E;
+  --atomic-coolNeutral-17: #212225;
+  --atomic-coolNeutral-20: #292A2D;
+  --atomic-coolNeutral-22: #2E2F33;
+  --atomic-coolNeutral-23: #333438;
+  --atomic-coolNeutral-25: #37383C;
+  --atomic-coolNeutral-30: #46474C;
+  --atomic-coolNeutral-40: #5A5C63;
+  --atomic-coolNeutral-50: #70737C;
+  --atomic-coolNeutral-60: #878A93;
+  --atomic-coolNeutral-70: #989BA2;
+  --atomic-coolNeutral-80: #AEB0B6;
+  --atomic-coolNeutral-90: #C2C4C8;
+  --atomic-coolNeutral-95: #DBDCDF;
+  --atomic-coolNeutral-96: #E1E2E4;
+  --atomic-coolNeutral-97: #EAEBEC;
+  --atomic-coolNeutral-98: #F4F4F5;
+  --atomic-coolNeutral-99: #F7F7F8;
+
+  /* neutral (pure, non-tinted grayscale; used in shadows) */
+  --atomic-neutral-5:  #0F0F0F;
+  --atomic-neutral-10: #171717;
+  --atomic-neutral-15: #1C1C1C;
+  --atomic-neutral-20: #2A2A2A;
+  --atomic-neutral-22: #303030;
+  --atomic-neutral-30: #474747;
+  --atomic-neutral-40: #5C5C5C;
+  --atomic-neutral-50: #737373;
+  --atomic-neutral-60: #8A8A8A;
+  --atomic-neutral-70: #9B9B9B;
+  --atomic-neutral-80: #B0B0B0;
+  --atomic-neutral-90: #C4C4C4;
+  --atomic-neutral-95: #DCDCDC;
+  --atomic-neutral-99: #F7F7F7;
+
+  /* status: red / green / orange */
+  --atomic-red-40:  #E52222; --atomic-red-50:  #FF4242; --atomic-red-60:  #FF6363; --atomic-red-95: #FEECEC;
+  --atomic-green-40:#009632; --atomic-green-50:#00BF40; --atomic-green-60:#1ED45A; --atomic-green-95:#D9FFE6;
+  --atomic-orange-39:#D17600;--atomic-orange-50:#FF9200;--atomic-orange-60:#FFA938;--atomic-orange-95:#FEF4E6;
+
+  /* accents */
+  --atomic-redOrange-48: #F55A00; --atomic-redOrange-50: #FF5E00; --atomic-redOrange-60: #FF7B2E;
+  --atomic-lime-37:      #429E00; --atomic-lime-50:      #58CF04; --atomic-lime-60:      #6BE016;
+  --atomic-cyan-40:      #0098B2; --atomic-cyan-50:      #00BDDE; --atomic-cyan-60:      #28D0ED;
+  --atomic-lightBlue-40: #008DCF; --atomic-lightBlue-50: #00AEFF; --atomic-lightBlue-60: #3DC2FF;
+  --atomic-violet-45:    #5B37ED; --atomic-violet-50:    #6541F2; --atomic-violet-60:    #7D5EF7;
+  --atomic-purple-40:    #AD36E3; --atomic-purple-50:    #CB59FF; --atomic-purple-60:    #D478FF;
+  --atomic-pink-46:      #E846CD; --atomic-pink-50:      #F553DA; --atomic-pink-60:      #FA73E3;
+}
+
+/* ---------- SEMANTIC TOKENS (LIGHT, DEFAULT) ---------- */
+:root, [data-theme="light"] {
+  /* static */
+  --semantic-static-white: var(--atomic-common-100);
+  --semantic-static-black: var(--atomic-common-0);
+
+  /* primary (brand action) */
+  --semantic-primary-normal: var(--atomic-blue-50);
+  --semantic-primary-strong: var(--atomic-blue-45);
+  --semantic-primary-heavy:  var(--atomic-blue-40);
+
+  /* label / text */
+  --semantic-label-normal:      var(--atomic-coolNeutral-10);
+  --semantic-label-strong:      var(--atomic-common-0);
+  --semantic-label-neutral:     rgba(46, 47, 51, 0.88);   /* coolNeutral-22 @ 88% */
+  --semantic-label-alternative: rgba(55, 56, 60, 0.61);   /* coolNeutral-25 @ 61% */
+  --semantic-label-assistive:   rgba(55, 56, 60, 0.28);
+  --semantic-label-disable:     rgba(55, 56, 60, 0.16);
+
+  /* background */
+  --semantic-background-normal-normal:        var(--atomic-common-100);
+  --semantic-background-normal-alternative:   var(--atomic-coolNeutral-99);
+  --semantic-background-elevated-normal:      var(--atomic-common-100);
+  --semantic-background-elevated-alternative: var(--atomic-coolNeutral-99);
+  --semantic-background-transparent-normal:      rgba(255, 255, 255, 0.08);
+  --semantic-background-transparent-alternative: rgba(255, 255, 255, 0.28);
+
+  /* interaction */
+  --semantic-interaction-inactive: var(--atomic-coolNeutral-70);
+  --semantic-interaction-disable:  var(--atomic-coolNeutral-98);
+
+  /* line */
+  --semantic-line-normal-normal:      rgba(112, 115, 124, 0.22);
+  --semantic-line-normal-neutral:     rgba(112, 115, 124, 0.16);
+  --semantic-line-normal-alternative: rgba(112, 115, 124, 0.08);
+  --semantic-line-solid-normal:       var(--atomic-coolNeutral-96);
+  --semantic-line-solid-neutral:      var(--atomic-coolNeutral-97);
+  --semantic-line-solid-alternative:  var(--atomic-coolNeutral-98);
+
+  /* status */
+  --semantic-status-positive:   var(--atomic-green-50);
+  --semantic-status-cautionary: var(--atomic-orange-50);
+  --semantic-status-negative:   var(--atomic-red-50);
+
+  /* inverse (e.g. tooltips, snackbars) */
+  --semantic-inverse-primary:    var(--atomic-blue-60);
+  --semantic-inverse-background: var(--atomic-coolNeutral-15);
+  --semantic-inverse-label:      var(--atomic-coolNeutral-99);
+
+  /* fill (translucent surface) */
+  --semantic-fill-normal:      rgba(112, 115, 124, 0.08);
+  --semantic-fill-strong:      rgba(112, 115, 124, 0.16);
+  --semantic-fill-alternative: rgba(112, 115, 124, 0.05);
+
+  /* material (scrim) */
+  --semantic-material-dimmer: rgba(23, 23, 25, 0.52);
+
+  /* elevation / shadow */
+  --shadow-xsmall: 0px 1px 2px -1px rgba(23, 23, 23, 0.10);
+  --shadow-small:  0px 2px 4px -2px rgba(23, 23, 23, 0.06), 0px 4px 6px -1px rgba(23, 23, 23, 0.06);
+  --shadow-medium: 0px 4px 6px -2px rgba(23, 23, 23, 0.07), 0px 10px 15px -3px rgba(23, 23, 23, 0.07);
+  --shadow-large:  0px 6px 10px -4px rgba(23, 23, 23, 0.08), 0px 16px 24px -6px rgba(23, 23, 23, 0.08);
+  --shadow-xlarge: 0px 10px 15px -5px rgba(23, 23, 23, 0.10), 0px 24px 38px -10px rgba(23, 23, 23, 0.12);
+  --shadow-spread-small:  0px 0px 60px 0px rgba(23, 23, 23, 0.10);
+  --shadow-spread-medium: 0px 15px 75px 0px rgba(23, 23, 23, 0.16);
+}
+
+/* ---------- SEMANTIC TOKENS (DARK) ---------- */
+[data-theme="dark"] {
+  --semantic-primary-normal: var(--atomic-blue-60);
+  --semantic-primary-strong: var(--atomic-blue-55);
+  --semantic-primary-heavy:  var(--atomic-blue-50);
+
+  --semantic-label-normal:      var(--atomic-coolNeutral-99);
+  --semantic-label-strong:      var(--atomic-common-100);
+  --semantic-label-neutral:     rgba(194, 196, 200, 0.88);
+  --semantic-label-alternative: rgba(174, 176, 182, 0.61);
+  --semantic-label-assistive:   rgba(174, 176, 182, 0.28);
+  --semantic-label-disable:     rgba(152, 155, 162, 0.16);
+
+  --semantic-background-normal-normal:        var(--atomic-coolNeutral-15);
+  --semantic-background-normal-alternative:   var(--atomic-coolNeutral-5);
+  --semantic-background-elevated-normal:      var(--atomic-coolNeutral-17);
+  --semantic-background-elevated-alternative: var(--atomic-coolNeutral-7);
+
+  --semantic-interaction-inactive: var(--atomic-coolNeutral-40);
+  --semantic-interaction-disable:  var(--atomic-coolNeutral-22);
+
+  --semantic-line-solid-normal:      var(--atomic-coolNeutral-25);
+  --semantic-line-solid-neutral:     var(--atomic-coolNeutral-23);
+  --semantic-line-solid-alternative: var(--atomic-coolNeutral-22);
+
+  --semantic-status-positive:   var(--atomic-green-60);
+  --semantic-status-cautionary: var(--atomic-orange-60);
+  --semantic-status-negative:   var(--atomic-red-60);
+
+  --semantic-inverse-primary:    var(--atomic-blue-50);
+  --semantic-inverse-background: var(--atomic-common-100);
+  --semantic-inverse-label:      var(--atomic-coolNeutral-10);
+
+  --semantic-material-dimmer: rgba(23, 23, 25, 0.74);
+}
+
+/* ---------- SPACING ---------- */
+:root {
+  --space-0:  0px;
+  --space-1:  1px;
+  --space-2:  2px;
+  --space-4:  4px;
+  --space-6:  6px;
+  --space-8:  8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-14: 14px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-56: 56px;
+  --space-64: 64px;
+  --space-72: 72px;
+  --space-80: 80px;
+}
+
+/* ---------- BREAKPOINTS ---------- */
+:root {
+  --bp-xs: 0px;
+  --bp-sm: 768px;
+  --bp-md: 992px;
+  --bp-lg: 1200px;
+  --bp-xl: 1600px;
+}
+
+/* ---------- RADIUS ---------- */
+:root {
+  --radius-2:  2px;
+  --radius-4:  4px;
+  --radius-6:  6px;
+  --radius-8:  8px;
+  --radius-12: 12px;
+  --radius-16: 16px;
+  --radius-20: 20px;
+  --radius-24: 24px;
+  --radius-pill: 9999px;
+}
+
+/* ---------- OPACITY SCALE ---------- */
+:root {
+  --opacity-5:  0.05; --opacity-8:  0.08; --opacity-12: 0.12; --opacity-16: 0.16;
+  --opacity-22: 0.22; --opacity-28: 0.28; --opacity-35: 0.35; --opacity-43: 0.43;
+  --opacity-52: 0.52; --opacity-61: 0.61; --opacity-74: 0.74; --opacity-88: 0.88;
+  --opacity-97: 0.97;
+}
+
+/* ============================================================
+   TYPOGRAPHY
+   Wanted's product (wanted.co.kr) uses "Spoqa Han Sans Neo"
+   for Korean + Latin. We pull it via CDN; for body fallback
+   we use Pretendard (open-source Korean/Latin) and Inter.
+   The Montage repo itself does NOT ship a webfont — the
+   product/site loads Spoqa Han Sans Neo from spoqa.github.io.
+   ============================================================ */
+
+@import url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/css/SpoqaHanSansNeo.css');
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css');
+
+:root {
+  --font-sans: "Spoqa Han Sans Neo", "Pretendard", -apple-system, BlinkMacSystemFont,
+               "Apple SD Gothic Neo", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  /* Weights */
+  --weight-thin: 100;
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-bold: 700;
+
+  /* Type scale (matches Wanted product hierarchy) */
+  --text-display-1: 700 56px/1.18 var(--font-sans);
+  --text-display-2: 700 44px/1.22 var(--font-sans);
+  --text-h1:        700 32px/1.28 var(--font-sans);
+  --text-h2:        700 26px/1.31 var(--font-sans);
+  --text-h3:        700 22px/1.36 var(--font-sans);
+  --text-title-1:   700 18px/1.44 var(--font-sans);
+  --text-title-2:   500 16px/1.50 var(--font-sans);
+  --text-body-1:    400 16px/1.50 var(--font-sans);
+  --text-body-2:    400 14px/1.50 var(--font-sans);
+  --text-label:     500 14px/1.43 var(--font-sans);
+  --text-caption-1: 400 13px/1.38 var(--font-sans);
+  --text-caption-2: 400 12px/1.33 var(--font-sans);
+  --text-overline:  500 11px/1.27 var(--font-sans);
+}
+
+/* Element defaults */
+body {
+  font: var(--text-body-1);
+  color: var(--semantic-label-normal);
+  background: var(--semantic-background-normal-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+h1 { font: var(--text-h1); letter-spacing: -0.01em; }
+h2 { font: var(--text-h2); letter-spacing: -0.01em; }
+h3 { font: var(--text-h3); }
+h4 { font: var(--text-title-1); }
+small, .caption { font: var(--text-caption-1); color: var(--semantic-label-alternative); }
+code, kbd, pre { font-family: var(--font-mono); font-size: 0.92em; }
+
+/* Utility classes */
+.display-1 { font: var(--text-display-1); letter-spacing: -0.02em; }
+.display-2 { font: var(--text-display-2); letter-spacing: -0.02em; }
+.title-1 { font: var(--text-title-1); }
+.title-2 { font: var(--text-title-2); }
+.body-1 { font: var(--text-body-1); }
+.body-2 { font: var(--text-body-2); }
+.label { font: var(--text-label); }
+.caption-1 { font: var(--text-caption-1); }
+.caption-2 { font: var(--text-caption-2); }
+.overline { font: var(--text-overline); text-transform: uppercase; letter-spacing: 0.04em; }

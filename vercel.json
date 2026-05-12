@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/src/(.*).jsx",
+      "headers": [{ "key": "Content-Type", "value": "text/babel; charset=utf-8" }]
+    }
+  ]
+}

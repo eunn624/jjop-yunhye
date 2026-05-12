@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>쩝쩝윤혜 — H1 Interactive Prototype</title>
+<link rel="stylesheet" href="wds/colors_and_type.css" />
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #f0eee9; }
+  body { font-family: var(--font-sans); color: #1b1c1e; }
+  #root { min-height: 100%; }
+
+  /* Center the app on the canvas like a browser window */
+  .app-shell {
+    width: 100%;
+    min-height: 100vh;
+    background: #d8d6cf;
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex; align-items: flex-start; justify-content: center;
+  }
+  .browser {
+    width: 100%; max-width: 1280px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    min-height: calc(100vh - 48px);
+  }
+
+  /* Browser chrome */
+  .chrome {
+    height: 40px; flex: 0 0 40px;
+    background: #ececef; border-bottom: 1px solid rgba(0,0,0,.08);
+    display: flex; align-items: center; padding: 0 14px; gap: 10px;
+  }
+  .chrome .dots { display: flex; gap: 6px; }
+  .chrome .dots b { width: 11px; height: 11px; border-radius: 50%; display: block; }
+  .chrome .dots b:nth-child(1) { background: #ff5f56; }
+  .chrome .dots b:nth-child(2) { background: #ffbd2e; }
+  .chrome .dots b:nth-child(3) { background: #27c93f; }
+  .chrome .url {
+    flex: 1; background: #fff; border-radius: 7px; padding: 6px 12px;
+    font-size: 12px; color: #6c6f76; text-align: center;
+    border: 1px solid rgba(0,0,0,.06);
+    transition: all .25s;
+  }
+  .topnav {
+    height: 60px; flex: 0 0 60px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    display: flex; align-items: center; gap: 28px; padding: 0 40px;
+    background: #fff;
+  }
+  .topnav .navlinks { display: flex; gap: 24px; font-size: 14px; color: #46474c; }
+  .topnav .navlinks a { color: inherit; text-decoration: none; cursor: pointer; }
+  .topnav .navlinks a.active { color: #0066FF; font-weight: 600; }
+  .topnav .spacer { flex: 1; }
+  .topnav .pill {
+    height: 32px; padding: 0 12px; border-radius: 9999px;
+    background: #f4f4f5; display: inline-flex; align-items: center; gap: 6px; font-size: 13px;
+    color: #46474c;
+  }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg,#ffb86b,#ff6b6b); }
+
+  .body { flex: 1; overflow: auto; position: relative; }
+
+  /* Reusable */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; height: 32px;
+    padding: 0 14px; border-radius: 9999px; font-size: 13px;
+    background: #f4f4f5; color: #37383c;
+    border: 1px solid transparent; cursor: pointer; font-family: inherit;
+    transition: all .12s; user-select: none;
+  }
+  .chip:hover { background: #ebebec; }
+  .chip.on { background: #eaf2fe; color: #0066FF; border-color: rgba(0,102,255,.25); font-weight: 500; }
+  .chip.on:hover { background: #ddebfd; }
+
+  .btn-primary {
+    height: 46px; padding: 0 22px; border-radius: 8px; background: #0066FF; color: #fff;
+    border: 0; font-weight: 600; font-size: 15px; cursor: pointer; font-family: inherit;
+    transition: background .15s, transform .08s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-primary:hover { background: #005EEB; }
+  .btn-primary:active { background: #0054D1; }
+  .btn-primary:disabled { background: #c2c4c8; cursor: not-allowed; }
+
+  .btn-ghost {
+    height: 46px; padding: 0 22px; border-radius: 8px; background: transparent; color: #37383c;
+    border: 1px solid rgba(0,0,0,0.1); font-weight: 500; font-size: 15px; cursor: pointer; font-family: inherit;
+    transition: background .15s, border-color .15s;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-ghost:hover { background: #f7f7f8; border-color: rgba(0,0,0,0.18); }
+
+  /* Step page transition */
+  .step-enter { opacity: 0; transform: translateY(8px); }
+  .step-shown { opacity: 1; transform: translateY(0);
+    transition: opacity .35s cubic-bezier(.2,.7,.3,1), transform .35s cubic-bezier(.2,.7,.3,1); }
+
+  /* Card hover */
+  .opt-card { transition: all .15s; }
+  .opt-card:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+
+  /* Slider */
+  input[type=range].rg {
+    -webkit-appearance: none; appearance: none;
+    height: 6px; background: linear-gradient(to right, #0066FF var(--p,30%), #e1e2e4 var(--p,30%));
+    border-radius: 999px; outline: none; width: 100%;
+  }
+  input[type=range].rg::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 22px; height: 22px; border-radius: 50%; background: #fff;
+    border: 3px solid #0066FF; cursor: grab;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  input[type=range].rg::-moz-range-thumb {
+    width: 22px; height: 22px; border-radius: 50%; background: #fff;
+    border: 3px solid #0066FF; cursor: grab; box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+
+  /* Toast */
+  @keyframes toastIn {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+  .toast {
+    position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+    background: #1b1c1e; color: #fff; padding: 12px 20px; border-radius: 10px;
+    font-size: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.2); z-index: 1000;
+    animation: toastIn .25s cubic-bezier(.2,.7,.3,1);
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* Hide scrollbars within prototype body */
+  .body::-webkit-scrollbar { display: none; }
+  .body { scrollbar-width: none; }
+
+  /* Mascot bubble */
+  .bubble {
+    background: #fff; border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 16px 16px 16px 4px;
+    padding: 10px 14px; font-size: 14px; color: #46474c;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  /* Focus ring */
+  button:focus-visible, .opt-card:focus-visible, .chip:focus-visible {
+    outline: 2px solid #0066FF; outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="src/shared.jsx"></script>
+<script type="text/babel" src="src/proto-data.jsx"></script>
+<script type="text/babel" src="src/proto-app.jsx"></script>
+</body>
+</html>
