@@ -153,5 +153,24 @@
     "team": "UX디자인팀",
     "submittedAt": "2026-05-12T09:46:57.317Z",
     "reports": 1
+  },
+  {
+    "id": "restaurant-1778579540852",
+    "name": "제로투나인",
+    "address": "경기 성남시 분당구 운중로146번길 19-3 1층 제로투나인",
+    "genre": "한식",
+    "mood": "quiet",
+    "mealType": "lunch",
+    "people": "5~10명 팀회식",
+    "priceRange": "5만원+",
+    "extras": [
+      "주차 가능",
+      "예약 가능"
+    ],
+    "comment": "스테이크!!!!",
+    "nickname": "zi0_zzang",
+    "team": "UX디자인팀",
+    "submittedAt": "2026-05-12T09:52:20.852Z",
+    "reports": 1
   }
 ]
