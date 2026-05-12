@@ -70,7 +70,7 @@
   {
     "id": "restaurant-1778578829144",
     "name": "그래비티 조선 서울 판교 앤디쉬",
-    "address": "경기 성남시 분당구 판교역로146번길 2 그래비티서울판교 오토그래프컬렉션 2층",
+    "address": "그래비티 조선 서울 판교 앤디쉬 경기 성남시 분당구 판교역로146번길 2 그래비티서울판교",
     "genre": "뷔페",
     "mood": "quiet",
     "mealType": "both",
@@ -84,7 +84,21 @@
     "comment": "종류가 많지는 않지만 퀄리티 좋음. 특히 디저트가 맛있고 그중에서도 마카롱이 기가맥힘",
     "nickname": "zi0_zzang",
     "team": "UX디자인팀",
-    "submittedAt": "2026-05-12T09:40:29.144Z",
-    "reports": 1
+    "submittedAt": "2026-05-12T09:41:09.916Z",
+    "reports": 1,
+    "sub": "",
+    "menu": [],
+    "tone": "izakaya",
+    "thumbnail": "",
+    "naverLink": "",
+    "naverCategory": "",
+    "capMin": 5,
+    "capMax": 10,
+    "priceMin": 5,
+    "priceMax": 99,
+    "hasRoom": false,
+    "hasParking": true,
+    "hasReserve": true,
+    "walkable": true
   }
 ]
