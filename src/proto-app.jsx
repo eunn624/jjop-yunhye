@@ -503,13 +503,19 @@ function Result({ filters, set, toggleGenre, toggleCond, places, mealType, onDet
 }
 
 // ───────── DETAIL MODAL ─────────
-function DetailModal({ place, mealType, onClose }) {
-  // Esc로 닫기
+function DetailModal({ place, mealType, onClose, onUpdate, onDelete, toast }) {
+  const [mode, setMode] = useState("view"); // view | edit
+  const [busy, setBusy] = useState(false);
+
+  // Esc로 닫기 (편집 모드에선 비활성화)
   useEffect(() => {
-    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e) => { if (e.key === "Escape" && mode === "view") onClose(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [onClose, mode]);
+
+  // place가 바뀌면 view 모드로 복귀
+  useEffect(() => { setMode("view"); }, [place && place.id]);
 
   if (!place) return null;
   const naverUrl = place.address
@@ -519,111 +525,182 @@ function DetailModal({ place, mealType, onClose }) {
     ? `https://map.kakao.com/?q=${encodeURIComponent(place.address)}`
     : null;
 
+  async function handleSave(form) {
+    if (busy) return;
+    if (!form.name.trim() || !form.address.trim()) {
+      toast && toast("가게 이름과 주소는 필수예요.", "err");
+      return;
+    }
+    setBusy(true);
+    const updated = {
+      ...place,
+      ...form,
+      id: place.id,
+      reports: place.reports,
+      submittedAt: new Date().toISOString(),
+    };
+    try {
+      await postToAppsScript({ action: "update", id: place.id, patch: form });
+      onUpdate && onUpdate(updated);
+      toast && toast("수정 완료!");
+      onClose();
+    } catch (err) {
+      toast && toast(err.message || "수정에 실패했어요.", "err");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (busy) return;
+    if (!window.confirm(`'${place.name}' 항목을 정말 삭제할까요?`)) return;
+    setBusy(true);
+    try {
+      await postToAppsScript({ action: "delete", id: place.id });
+      onDelete && onDelete(place.id);
+      toast && toast("삭제 완료!");
+      onClose();
+    } catch (err) {
+      toast && toast(err.message || "삭제에 실패했어요.", "err");
+    } finally {
+      setBusy(false);
+    }
+  }
+
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <div className="modal-backdrop" onClick={mode === "view" ? onClose : undefined}>
       <div className="modal-panel" onClick={e => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose} aria-label="닫기">✕</button>
-        <div style={{ height: 200, position: 'relative' }}>
-          <FoodTile tone={place.tone} h={200}/>
-          <div style={{ position: 'absolute', bottom: 16, left: 24, color: '#fff' }}>
-            <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 11, padding: '3px 8px', background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>
-                {place.mealType === "lunch" ? "점심" : place.mealType === "dinner" ? "저녁" : "점심·저녁"}
-              </span>
-              {place.hasRoom && <span style={{ fontSize: 11, padding: '3px 8px',
-                background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>룸</span>}
-              {place.hasParking && <span style={{ fontSize: 11, padding: '3px 8px',
-                background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>주차</span>}
-            </div>
-            <div style={{ fontSize: 24, fontWeight: 700, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>{place.name}</div>
-            <div style={{ fontSize: 13, opacity: 0.95 }}>
-              {place.genre}{place.sub ? ` · ${place.sub}` : ""}
-            </div>
+        <button className="modal-close" onClick={onClose} aria-label="닫기" disabled={busy}>✕</button>
+
+        {mode === "edit" ? (
+          <div style={{ padding: '24px 28px 28px' }}>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>맛집 정보 수정</div>
+            <PlaceForm initial={place} submitLabel="저장" busy={busy}
+              onSubmit={handleSave} onCancel={() => setMode("view")}/>
           </div>
-        </div>
-
-        <div style={{ padding: '24px 28px 28px' }}>
-          {place.address && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
-              fontSize: 13, color: '#46474c' }}>
-              <span>📍</span><span>{place.address}</span>
-            </div>
-          )}
-
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 20 }}>
-            <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
-              <div style={{ fontSize: 11, color: '#878a93', marginBottom: 2 }}>인당 예산</div>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>{place.priceRange || "—"}</div>
-            </div>
-            <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
-              <div style={{ fontSize: 11, color: '#878a93', marginBottom: 2 }}>인원</div>
-              <div style={{ fontSize: 14, fontWeight: 600 }}>{place.people || "—"}</div>
-            </div>
-          </div>
-
-          {place.extras && place.extras.length > 0 && (
-            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
-              {place.extras.map(r => (
-                <span key={r} style={{ fontSize: 12, color: '#0054D1', background: '#EAF2FE',
-                  padding: '4px 10px', borderRadius: 999 }}>✓ {r}</span>
-              ))}
-            </div>
-          )}
-
-          {place.comment && (
-            <div style={{ background: '#fffaf0', border: '1px solid #ffe1b3', borderRadius: 10,
-              padding: '14px 16px', marginBottom: 20 }}>
-              <div style={{ fontSize: 14, lineHeight: 1.6, color: '#37383c', marginBottom: 6 }}>
-                "{place.comment}"
-              </div>
-              <div style={{ fontSize: 12, color: '#878a93' }}>
-                — {place.nickname}{place.team ? ` · ${place.team}` : ""}
+        ) : (
+          <React.Fragment>
+            <div style={{ height: 200, position: 'relative' }}>
+              <FoodTile tone={place.tone} h={200}/>
+              <div style={{ position: 'absolute', bottom: 16, left: 24, color: '#fff' }}>
+                <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
+                  <span style={{ fontSize: 11, padding: '3px 8px', background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>
+                    {place.mealType === "lunch" ? "점심" : place.mealType === "dinner" ? "저녁" : "점심·저녁"}
+                  </span>
+                  {place.hasRoom && <span style={{ fontSize: 11, padding: '3px 8px',
+                    background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>룸</span>}
+                  {place.hasParking && <span style={{ fontSize: 11, padding: '3px 8px',
+                    background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>주차</span>}
+                </div>
+                <div style={{ fontSize: 24, fontWeight: 700, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>{place.name}</div>
+                <div style={{ fontSize: 13, opacity: 0.95 }}>
+                  {place.genre}{place.sub ? ` · ${place.sub}` : ""}
+                </div>
               </div>
             </div>
-          )}
 
-          <div style={{ display: 'flex', gap: 8 }}>
-            {naverUrl && (
-              <a className="btn-ghost" href={naverUrl} target="_blank" rel="noopener noreferrer"
-                style={{ flex: 1, justifyContent: 'center', textDecoration: 'none' }}>
-                🗺 네이버 지도
-              </a>
-            )}
-            {kakaoUrl && (
-              <a className="btn-ghost" href={kakaoUrl} target="_blank" rel="noopener noreferrer"
-                style={{ flex: 1, justifyContent: 'center', textDecoration: 'none' }}>
-                🗺 카카오 지도
-              </a>
-            )}
-            {!place.address && (
-              <div style={{ flex: 1, textAlign: 'center', color: '#aeb0b6', fontSize: 13, padding: '12px 0' }}>
-                지도 연결을 위해 주소 정보가 필요해요
+            <div style={{ padding: '24px 28px 28px' }}>
+              {place.address && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
+                  fontSize: 13, color: '#46474c' }}>
+                  <span>📍</span><span>{place.address}</span>
+                </div>
+              )}
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 20 }}>
+                <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
+                  <div style={{ fontSize: 11, color: '#878a93', marginBottom: 2 }}>인당 예산</div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{place.priceRange || "—"}</div>
+                </div>
+                <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
+                  <div style={{ fontSize: 11, color: '#878a93', marginBottom: 2 }}>인원</div>
+                  <div style={{ fontSize: 14, fontWeight: 600 }}>{place.people || "—"}</div>
+                </div>
               </div>
-            )}
-          </div>
-        </div>
+
+              {place.extras && place.extras.length > 0 && (
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
+                  {place.extras.map(r => (
+                    <span key={r} style={{ fontSize: 12, color: '#0054D1', background: '#EAF2FE',
+                      padding: '4px 10px', borderRadius: 999 }}>✓ {r}</span>
+                  ))}
+                </div>
+              )}
+
+              {place.comment && (
+                <div style={{ background: '#fffaf0', border: '1px solid #ffe1b3', borderRadius: 10,
+                  padding: '14px 16px', marginBottom: 20 }}>
+                  <div style={{ fontSize: 14, lineHeight: 1.6, color: '#37383c', marginBottom: 6 }}>
+                    "{place.comment}"
+                  </div>
+                  <div style={{ fontSize: 12, color: '#878a93' }}>
+                    — {place.nickname}{place.team ? ` · ${place.team}` : ""}
+                  </div>
+                </div>
+              )}
+
+              <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+                {naverUrl && (
+                  <a className="btn-ghost" href={naverUrl} target="_blank" rel="noopener noreferrer"
+                    style={{ flex: 1, justifyContent: 'center', textDecoration: 'none' }}>
+                    🗺 네이버 지도
+                  </a>
+                )}
+                {kakaoUrl && (
+                  <a className="btn-ghost" href={kakaoUrl} target="_blank" rel="noopener noreferrer"
+                    style={{ flex: 1, justifyContent: 'center', textDecoration: 'none' }}>
+                    🗺 카카오 지도
+                  </a>
+                )}
+                {!place.address && (
+                  <div style={{ flex: 1, textAlign: 'center', color: '#aeb0b6', fontSize: 13, padding: '12px 0' }}>
+                    지도 연결을 위해 주소 정보가 필요해요
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', gap: 8, paddingTop: 12,
+                borderTop: '1px solid rgba(0,0,0,0.06)' }}>
+                <button className="btn-ghost" onClick={() => setMode("edit")} disabled={busy}
+                  style={{ flex: 1, justifyContent: 'center' }}>✏️ 수정</button>
+                <button className="btn-ghost" onClick={handleDelete} disabled={busy}
+                  style={{ flex: 1, justifyContent: 'center', color: '#d83838', borderColor: 'rgba(216,56,56,0.3)' }}>
+                  🗑 삭제
+                </button>
+              </div>
+            </div>
+          </React.Fragment>
+        )}
       </div>
     </div>
   );
 }
 
 // ───────── REPORT FORM ─────────
-function ReportForm({ toast, mealType, onSubmitted }) {
-  const [form, setForm] = useState({
-    name: "",
-    address: "",
-    genre: "한식",
-    mood: "quiet",
-    mealType: mealType,
-    people: "2~4명 소수팀",
-    priceRange: "1~2만원",
-    extras: [],
-    comment: "",
-    nickname: "",
-    team: "",
-  });
-  const [submitting, setSubmitting] = useState(false);
+// 폼 옵션 상수 (제보/수정 공통)
+const GENRE_OPTS  = ["한식","일식","중식","양식","아시안","고기구이","해산물","분식·면","채식 가능","뷔페"];
+const MOOD_OPTS   = [
+  { id: "quiet",  l: "조용히 먹고 끝내기" },
+  { id: "social", l: "수다 위주" },
+  { id: "formal", l: "격식 있게" },
+  { id: "casual", l: "캐주얼" },
+];
+const PEOPLE_OPTS = ["2~4명 소수팀", "5~10명 팀회식", "11~20명 부서", "20명+ 대규모"];
+const PRICE_OPTS  = ["~1만원", "1~2만원", "2~3만원", "3~5만원", "5만원+"];
+const EXTRA_OPTS  = ["도보 10분 이내","주차 가능","예약 가능","룸/단체석","술 가능","채식 옵션"];
 
+function emptyForm(mealType = "lunch") {
+  return {
+    name: "", address: "", genre: "한식", mood: "quiet", mealType,
+    people: "2~4명 소수팀", priceRange: "1~2만원", extras: [],
+    comment: "", nickname: "", team: "",
+  };
+}
+
+// 제보 폼 / 수정 폼이 공유하는 입력 컴포넌트.
+// onSubmit(form), onCancel() 콜백을 prop으로 받음.
+function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit, onCancel }) {
+  const [form, setForm] = useState(() => ({ ...emptyForm(), ...initial }));
   const set = (patch) => setForm(f => ({ ...f, ...patch }));
   const toggleExtra = (v) =>
     setForm(f => ({
@@ -631,57 +708,10 @@ function ReportForm({ toast, mealType, onSubmitted }) {
       extras: f.extras.includes(v) ? f.extras.filter(x => x !== v) : [...f.extras, v],
     }));
 
-  const genres = ["한식","일식","중식","양식","아시안","고기구이","해산물","분식·면","채식 가능","뷔페"];
-  const moods = [
-    { id: "quiet",  l: "조용히 먹고 끝내기" },
-    { id: "social", l: "수다 위주" },
-    { id: "formal", l: "격식 있게" },
-    { id: "casual", l: "캐주얼" },
-  ];
-  const peopleOpts = ["2~4명 소수팀", "5~10명 팀회식", "11~20명 부서", "20명+ 대규모"];
-  const priceOpts  = ["~1만원", "1~2만원", "2~3만원", "3~5만원", "5만원+"];
-  const extraOpts  = ["도보 10분 이내","주차 가능","예약 가능","룸/단체석","술 가능","채식 옵션"];
-
-  async function submit(e) {
+  function submit(e) {
     e.preventDefault();
-    if (submitting) return;
-    if (!form.name.trim() || !form.address.trim()) {
-      toast("가게 이름과 주소는 필수예요.", "err");
-      return;
-    }
-    setSubmitting(true);
-    const submittedAt = new Date().toISOString();
-    const entry = {
-      ...form,
-      submittedAt,
-      id: `restaurant-${Date.now()}`,
-      reports: 1,
-    };
-    const url = (window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL) || "";
-    if (!url || url === "여기에_URL_입력") {
-      toast("Apps Script URL이 설정되지 않았어요. config.js를 확인해주세요.", "err");
-      setSubmitting(false);
-      return;
-    }
-    try {
-      await fetch(url, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(entry),
-      });
-      toast("제보 등록 완료! 피드에서 바로 확인할 수 있어요 🍚");
-      setForm({
-        name: "", address: "", genre: "한식", mood: "quiet", mealType,
-        people: "2~4명 소수팀", priceRange: "1~2만원", extras: [],
-        comment: "", nickname: "", team: "",
-      });
-      onSubmitted && onSubmitted(entry);
-    } catch (err) {
-      toast("제출에 실패했어요. 잠시 후 다시 시도해주세요.", "err");
-    } finally {
-      setSubmitting(false);
-    }
+    if (busy) return;
+    onSubmit && onSubmit(form);
   }
 
   const label = { fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 8 };
@@ -692,102 +722,154 @@ function ReportForm({ toast, mealType, onSubmitted }) {
   };
 
   return (
+    <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div>
+        <div style={label}>가게 이름 *</div>
+        <input style={input} value={form.name} onChange={e => set({ name: e.target.value })}
+          placeholder="예: 한촌설렁탕 판교점" />
+      </div>
+
+      <div>
+        <div style={label}>주소 *</div>
+        <input style={input} value={form.address} onChange={e => set({ address: e.target.value })}
+          placeholder="예: 경기 성남시 분당구 판교역로 152" />
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div>
+          <div style={label}>점심 / 저녁</div>
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {[{ id: "lunch", l: "🌞 점심" }, { id: "dinner", l: "🌙 저녁" }, { id: "both", l: "둘 다" }].map(m => (
+              <span key={m.id} className={"chip" + (form.mealType === m.id ? " on" : "")}
+                onClick={() => set({ mealType: m.id })}>{m.l}</span>
+            ))}
+          </div>
+        </div>
+        <div>
+          <div style={label}>장르</div>
+          <select style={input} value={form.genre} onChange={e => set({ genre: e.target.value })}>
+            {GENRE_OPTS.map(g => <option key={g} value={g}>{g}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <div style={label}>분위기</div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {MOOD_OPTS.map(m => (
+            <span key={m.id} className={"chip" + (form.mood === m.id ? " on" : "")}
+              onClick={() => set({ mood: m.id })}>{m.l}</span>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div>
+          <div style={label}>적정 인원</div>
+          <select style={input} value={form.people} onChange={e => set({ people: e.target.value })}>
+            {PEOPLE_OPTS.map(o => <option key={o} value={o}>{o}</option>)}
+          </select>
+        </div>
+        <div>
+          <div style={label}>인당 예산</div>
+          <select style={input} value={form.priceRange} onChange={e => set({ priceRange: e.target.value })}>
+            {PRICE_OPTS.map(o => <option key={o} value={o}>{o}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <div style={label}>특징 (해당되는 것 모두)</div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {EXTRA_OPTS.map(x => (
+            <span key={x} className={"chip" + (form.extras.includes(x) ? " on" : "")}
+              onClick={() => toggleExtra(x)}>{x}</span>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div style={label}>한 줄 코멘트</div>
+        <textarea style={{ ...input, height: 80, padding: '10px 12px', resize: 'vertical' }}
+          value={form.comment} onChange={e => set({ comment: e.target.value })}
+          placeholder="예: 12시 5분 도착이 골든타임. 5분만 늦어도 줄."/>
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+        <div>
+          <div style={label}>닉네임</div>
+          <input style={input} value={form.nickname} onChange={e => set({ nickname: e.target.value })}
+            placeholder="예: 쩝쩝박사"/>
+        </div>
+        <div>
+          <div style={label}>팀 / 부서</div>
+          <input style={input} value={form.team} onChange={e => set({ team: e.target.value })}
+            placeholder="예: 개발"/>
+        </div>
+      </div>
+
+      <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+        <button type="submit" className="btn-primary" disabled={busy}>
+          {busy ? "제출 중..." : submitLabel}
+        </button>
+        {onCancel && (
+          <button type="button" className="btn-ghost" onClick={onCancel} disabled={busy}>취소</button>
+        )}
+      </div>
+    </form>
+  );
+}
+
+// Apps Script로 POST. action이 없으면 신규 등록(create), 있으면 update/delete.
+async function postToAppsScript(payload) {
+  const url = (window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL) || "";
+  if (!url || url === "여기에_URL_입력") {
+    throw new Error("Apps Script URL이 설정되지 않았어요. config.js를 확인해주세요.");
+  }
+  await fetch(url, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(payload),
+  });
+}
+
+function ReportForm({ toast, mealType, onSubmitted }) {
+  const [submitting, setSubmitting] = useState(false);
+  const [formKey, setFormKey] = useState(0); // 리셋 트리거
+
+  async function handle(form) {
+    if (submitting) return;
+    if (!form.name.trim() || !form.address.trim()) {
+      toast("가게 이름과 주소는 필수예요.", "err");
+      return;
+    }
+    setSubmitting(true);
+    const entry = {
+      ...form,
+      submittedAt: new Date().toISOString(),
+      id: `restaurant-${Date.now()}`,
+      reports: 1,
+    };
+    try {
+      await postToAppsScript(entry);
+      toast("제보 등록 완료! 피드에서 바로 확인할 수 있어요 🍚");
+      setFormKey(k => k + 1);
+      onSubmitted && onSubmitted(entry);
+    } catch (err) {
+      toast(err.message || "제출에 실패했어요. 잠시 후 다시 시도해주세요.", "err");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
     <div className="wizard-page" style={{ maxWidth: 720 }}>
       <MascotSay mood="hungry">
         새로운 맛집 제보 환영! <b>가게 정보</b>를 알려주세요.
       </MascotSay>
-
-      <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-        <div>
-          <div style={label}>가게 이름 *</div>
-          <input style={input} value={form.name} onChange={e => set({ name: e.target.value })}
-            placeholder="예: 한촌설렁탕 판교점" />
-        </div>
-
-        <div>
-          <div style={label}>주소 *</div>
-          <input style={input} value={form.address} onChange={e => set({ address: e.target.value })}
-            placeholder="예: 경기 성남시 분당구 판교역로 152" />
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <div>
-            <div style={label}>점심 / 저녁</div>
-            <div style={{ display: 'flex', gap: 8 }}>
-              {[{ id: "lunch", l: "🌞 점심" }, { id: "dinner", l: "🌙 저녁" }, { id: "both", l: "둘 다" }].map(m => (
-                <span key={m.id} className={"chip" + (form.mealType === m.id ? " on" : "")}
-                  onClick={() => set({ mealType: m.id })}>{m.l}</span>
-              ))}
-            </div>
-          </div>
-          <div>
-            <div style={label}>장르</div>
-            <select style={input} value={form.genre} onChange={e => set({ genre: e.target.value })}>
-              {genres.map(g => <option key={g} value={g}>{g}</option>)}
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <div style={label}>분위기</div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {moods.map(m => (
-              <span key={m.id} className={"chip" + (form.mood === m.id ? " on" : "")}
-                onClick={() => set({ mood: m.id })}>{m.l}</span>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <div>
-            <div style={label}>적정 인원</div>
-            <select style={input} value={form.people} onChange={e => set({ people: e.target.value })}>
-              {peopleOpts.map(o => <option key={o} value={o}>{o}</option>)}
-            </select>
-          </div>
-          <div>
-            <div style={label}>인당 예산</div>
-            <select style={input} value={form.priceRange} onChange={e => set({ priceRange: e.target.value })}>
-              {priceOpts.map(o => <option key={o} value={o}>{o}</option>)}
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <div style={label}>특징 (해당되는 것 모두)</div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {extraOpts.map(x => (
-              <span key={x} className={"chip" + (form.extras.includes(x) ? " on" : "")}
-                onClick={() => toggleExtra(x)}>{x}</span>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <div style={label}>한 줄 코멘트</div>
-          <textarea style={{ ...input, height: 80, padding: '10px 12px', resize: 'vertical' }}
-            value={form.comment} onChange={e => set({ comment: e.target.value })}
-            placeholder="예: 12시 5분 도착이 골든타임. 5분만 늦어도 줄."/>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-          <div>
-            <div style={label}>닉네임</div>
-            <input style={input} value={form.nickname} onChange={e => set({ nickname: e.target.value })}
-              placeholder="예: 쩝쩝박사"/>
-          </div>
-          <div>
-            <div style={label}>팀 / 부서</div>
-            <input style={input} value={form.team} onChange={e => set({ team: e.target.value })}
-              placeholder="예: 개발"/>
-          </div>
-        </div>
-
-        <button type="submit" className="btn-primary" disabled={submitting}
-          style={{ marginTop: 8, alignSelf: 'flex-start' }}>
-          {submitting ? "제출 중..." : "제보 보내기 →"}
-        </button>
-      </form>
+      <PlaceForm key={formKey} initial={{ mealType }} submitLabel="제보 보내기 →"
+        busy={submitting} onSubmit={handle}/>
     </div>
   );
 }
@@ -903,17 +985,24 @@ const DEFAULT_FILTERS = {
 
 // 낙관적 업데이트용: Apps Script가 JSON에 반영하기 전까지 localStorage에서 유지.
 // 정식 JSON에 같은 id가 등장하면 자동으로 정리됨.
+// pending: 신규 등록 + 로컬 수정본 (id 같으면 JSON보다 우선)
+// deletedIds: 로컬에서 삭제한 id 목록 (JSON에서 사라질 때까지 숨김)
 const PENDING_KEY = "jjop.pending";
-function loadPending() {
+const DELETED_KEY = "jjop.deletedIds";
+function loadJsonArray(key) {
   try {
-    const raw = localStorage.getItem(PENDING_KEY);
+    const raw = localStorage.getItem(key);
     const arr = raw ? JSON.parse(raw) : [];
     return Array.isArray(arr) ? arr : [];
   } catch { return []; }
 }
-function savePending(arr) {
-  try { localStorage.setItem(PENDING_KEY, JSON.stringify(arr)); } catch {}
+function saveJsonArray(key, arr) {
+  try { localStorage.setItem(key, JSON.stringify(arr)); } catch {}
 }
+const loadPending = () => loadJsonArray(PENDING_KEY);
+const savePending = (arr) => saveJsonArray(PENDING_KEY, arr);
+const loadDeletedIds = () => loadJsonArray(DELETED_KEY);
+const saveDeletedIds = (arr) => saveJsonArray(DELETED_KEY, arr);
 
 function App() {
   const [tab, setTab] = useState("추천");
@@ -925,7 +1014,7 @@ function App() {
   const [loadError, setLoadError] = useState(null);
   const [toastEl, toast] = useToast();
 
-  // 데이터 로드 — JSON + localStorage 펜딩 항목 머지
+  // 데이터 로드 — JSON + localStorage 펜딩/삭제 머지
   const loadData = useCallback(() => {
     const path = (window.APP_CONFIG && window.APP_CONFIG.RESTAURANTS_JSON) || "src/data/restaurants.json";
     fetch(path, { cache: "no-cache" })
@@ -933,12 +1022,24 @@ function App() {
       .then(arr => {
         const jsonList = Array.isArray(arr) ? arr.map(dataHelpers.normalize) : [];
         const jsonIds = new Set(jsonList.map(p => p.id));
-        // 펜딩에서 이미 JSON에 반영된 항목은 제거
+
+        // 1) deletedIds 정리: 이미 JSON에서 사라졌으면 더 이상 숨길 필요 없음
+        const deleted = loadDeletedIds();
+        const stillDeleted = deleted.filter(id => jsonIds.has(id));
+        if (stillDeleted.length !== deleted.length) saveDeletedIds(stillDeleted);
+        const deletedSet = new Set(stillDeleted);
+
+        // 2) pending 정리: 같은 id가 JSON에 등장했으면 정식 데이터에 양보
         const pending = loadPending();
         const stillPending = pending.filter(p => !jsonIds.has(p.id));
         if (stillPending.length !== pending.length) savePending(stillPending);
-        // 펜딩이 위로 오도록 합침
-        const merged = [...stillPending.map(dataHelpers.normalize), ...jsonList];
+        const pendingIds = new Set(stillPending.map(p => p.id));
+
+        // 3) 머지: pending(상단) + JSON(deletedSet 제외, pendingIds 와 충돌 안 함)
+        const merged = [
+          ...stillPending.map(dataHelpers.normalize),
+          ...jsonList.filter(p => !deletedSet.has(p.id) && !pendingIds.has(p.id)),
+        ];
         setPlaces(merged);
         setLoadError(null);
       })
@@ -955,10 +1056,28 @@ function App() {
   const handleSubmitted = useCallback((entry) => {
     if (!entry || !entry.id) return;
     const pending = loadPending();
-    const next = [entry, ...pending.filter(p => p.id !== entry.id)];
-    savePending(next);
+    savePending([entry, ...pending.filter(p => p.id !== entry.id)]);
     const normalized = dataHelpers.normalize(entry);
     setPlaces(prev => [normalized, ...prev.filter(p => p.id !== entry.id)]);
+  }, []);
+
+  // 상세 모달에서 수정 성공: pending 에 덮어쓰기 (JSON 보다 우선되도록)
+  const handleUpdated = useCallback((entry) => {
+    if (!entry || !entry.id) return;
+    const pending = loadPending();
+    savePending([entry, ...pending.filter(p => p.id !== entry.id)]);
+    const normalized = dataHelpers.normalize(entry);
+    setPlaces(prev => prev.map(p => p.id === entry.id ? normalized : p));
+  }, []);
+
+  // 상세 모달에서 삭제 성공: 화면에서 제거 + deletedIds 에 기록 + pending 에서도 제거
+  const handleDeleted = useCallback((id) => {
+    if (!id) return;
+    savePending(loadPending().filter(p => p.id !== id));
+    const deleted = loadDeletedIds();
+    if (!deleted.includes(id)) saveDeletedIds([id, ...deleted]);
+    setPlaces(prev => prev.filter(p => p.id !== id));
+    setDetailId(curr => curr === id ? null : curr);
   }, []);
 
   const set = (patch) => setFilters(f => ({ ...f, ...patch }));
@@ -1051,7 +1170,9 @@ function App() {
         )}
         <StepFade stepKey={tab + ":" + recScreen}>{content}</StepFade>
       </div>
-      {detailPlace && <DetailModal place={detailPlace} mealType={mealType} onClose={() => setDetailId(null)}/>}
+      {detailPlace && <DetailModal place={detailPlace} mealType={mealType}
+        onClose={() => setDetailId(null)}
+        onUpdate={handleUpdated} onDelete={handleDeleted} toast={toast}/>}
       {toastEl}
     </div>
   );
