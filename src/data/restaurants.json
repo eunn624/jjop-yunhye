@@ -27,14 +27,25 @@
     "mood": "casual",
     "mealType": "lunch",
     "people": "2~4명 소수팀",
-    "priceRange": "3~5만원",
+    "priceRange": "2~3만원",
     "extras": [
       "도보 10분 이내"
     ],
     "comment": "점심에만 즉석떡볶이 판매. 순대튀김 2인1개 필수임!",
     "nickname": "zi0_zzang",
     "team": "UX디자인팀",
-    "submittedAt": "2026-05-12T09:25:58.027Z",
-    "reports": 1
+    "submittedAt": "2026-05-12T09:28:27.513Z",
+    "reports": 1,
+    "sub": "",
+    "menu": [],
+    "tone": "soup",
+    "capMin": 2,
+    "capMax": 4,
+    "priceMin": 3,
+    "priceMax": 5,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": true
   }
 ]
