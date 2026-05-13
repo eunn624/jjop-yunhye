@@ -843,5 +843,34 @@
     "reports": 1,
     "naverLink": "https://map.naver.com/p/search/%EC%B0%AC/place/1444510727?c=15.00,0,0,0,dh&placePath=/home?bk_query=%EC%B0%AC&entry=bmp&from=map&fromPanelNum=2&timestamp=202605131323&locale=ko&svcName=map_pcv5&searchText=%EC%B0%AC",
     "naverLinkManual": true
+  },
+  {
+    "id": "restaurant-1778646315974",
+    "name": "생활맥주 판교역점",
+    "address": "경기 성남시 분당구 판교역로192번길 16 판교타워",
+    "genre": "튀김류",
+    "mood": "social",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "~1만원",
+      "1~2만원"
+    ],
+    "extras": [
+      "역 근처",
+      "2차 추천",
+      "늦게까지"
+    ],
+    "comment": "감자튀김이랑 망고아이스크림 맛있음. 간단히 먹을 때 좋음",
+    "nickname": "zizon시은",
+    "team": "UX디자인",
+    "submittedAt": "2026-05-13T04:25:15.974Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/Gmb6N8Oa",
+    "naverLinkManual": true,
+    "naverCategory": "맥주,호프",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20241016_262/1729063185827Du6Bz_JPEG/%B8%DE%B4%BA%C0%FC%C3%BC%C4%C6_4.jpg"
   }
 ]
