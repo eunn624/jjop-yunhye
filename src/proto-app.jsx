@@ -47,8 +47,8 @@ function TopNav({ active, onNav }) {
 function EmptyState({ onReport, title, body }) {
   return (
     <div style={{
-      background: '#fff', borderRadius: 16, padding: '56px 32px', textAlign: 'center',
-      border: '1px solid rgba(0,0,0,0.06)', maxWidth: 520, margin: '40px auto',
+      background: '#fff', borderRadius: 20, padding: '72px 40px', textAlign: 'center',
+      border: '1px solid rgba(0,0,0,0.06)', maxWidth: 560, margin: '56px auto',
     }}>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
         <MeoksungMascot size={120} mood="sleepy"/>
@@ -79,14 +79,14 @@ function Stepper({ step, total = 4 }) {
             <div style={{
               display: 'flex', alignItems: 'center', gap: 8,
               color: state === "now" ? '#B07900' : state === "done" ? '#37383c' : '#aeb0b6',
-              fontWeight: state === "now" ? 600 : 500, fontSize: 13,
+              fontWeight: state === "now" ? 600 : 500, fontSize: 14,
             }}>
               <div style={{
                 width: 24, height: 24, borderRadius: '50%',
                 background: state === "now" ? '#FFC107' : state === "done" ? '#37383c' : '#e1e2e4',
                 color: state !== "todo" ? '#fff' : '#878a93',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 12, fontWeight: 700, transition: 'all .25s',
+                fontSize: 14, fontWeight: 700, transition: 'all .25s',
               }}>{state === "done" ? '✓' : n}</div>
               {l}
             </div>
@@ -150,7 +150,7 @@ function Landing({ onStart, onBrowse, places, onNav }) {
     <div className="landing-pad">
       <div className="landing-hero">
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 13, color: '#B07900', fontWeight: 600, marginBottom: 16 }}>
+          <div style={{ fontSize: 14, color: '#B07900', fontWeight: 600, marginBottom: 16 }}>
             조직운영비, 알차게 쓰자 🐒
           </div>
           <h1 style={{ font: 'var(--text-display-2)', letterSpacing: '-0.02em', margin: '0 0 16px', lineHeight: 1.1 }}>
@@ -168,17 +168,26 @@ function Landing({ onStart, onBrowse, places, onNav }) {
             <button className="btn-primary" onClick={onStart}>먹숭이한테 물어보기 →</button>
             <button className="btn-ghost" onClick={onBrowse}>그냥 둘러볼래요</button>
           </div>
-          <div style={{ display: 'flex', gap: 24, marginTop: 40, fontSize: 13, color: '#70737c', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 24, marginTop: 40, fontSize: 14, color: '#70737c', flexWrap: 'wrap' }}>
             <span>⏱ 평균 38초</span>
             <span>· 등록 가게 {places.length}곳</span>
             <span>· 이번주 신규 제보 {recent}건</span>
           </div>
         </div>
-        <div style={{ flex: '0 0 auto', position: 'relative', marginLeft: -20 }}>
-          <div style={{ position: 'absolute', top: -8, right: -16, background: '#fff',
-            border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12, padding: '8px 14px',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.06)', fontSize: 13, fontWeight: 500 }}>
+        <div className="mascot-float" style={{ flex: '0 0 auto', position: 'relative', marginLeft: -20 }}>
+          <div className="bubble-bob"
+            style={{ position: 'absolute', top: -8, right: -24, background: '#fff',
+              border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px 16px 4px 16px',
+              padding: '10px 16px', boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
+              fontSize: 14, fontWeight: 600, color: '#37383c', whiteSpace: 'nowrap', zIndex: 1 }}>
             오늘 어디 긁어? 🍌
+          </div>
+          <div className="bubble-bob delay"
+            style={{ position: 'absolute', bottom: 24, left: -32, background: '#fff',
+              border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px 16px 16px 4px',
+              padding: '10px 16px', boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
+              fontSize: 14, fontWeight: 600, color: '#37383c', whiteSpace: 'nowrap', zIndex: 1 }}>
+            법카 챙겼지? 💳
           </div>
           <MeoksungMascot size={400} mood="full"/>
         </div>
@@ -190,7 +199,7 @@ function Landing({ onStart, onBrowse, places, onNav }) {
         </div>
       ) : (
         <div className="landing-foot">
-          <div style={{ fontSize: 12, color: '#70737c', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+          <div style={{ fontSize: 14, color: '#70737c', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             동료들이 알려준 가게 {places.length}곳
           </div>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -235,10 +244,10 @@ function StepMode({ filters, set, next, back }) {
               }}>
               {on && <div style={{ position: 'absolute', top: 12, right: 12, width: 22, height: 22,
                 borderRadius: '50%', background: '#FFC107', color: '#1b1c1e',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
+                display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>✓</div>}
               <div style={{ fontSize: 38, marginBottom: 8, opacity: on ? 1 : 0.7 }}>{o.ico}</div>
               <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{o.title}</div>
-              <div style={{ fontSize: 13, color: '#70737c', lineHeight: 1.5 }}>{o.desc}</div>
+              <div style={{ fontSize: 14, color: '#70737c', lineHeight: 1.5 }}>{o.desc}</div>
             </div>
           );
         })}
@@ -288,10 +297,10 @@ function StepPeople({ filters, togglePeople, next, back }) {
               <div style={{ fontSize: 28 }}>{b.ico}</div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 2 }}>{b.l}</div>
-                <div style={{ fontSize: 12, color: '#70737c' }}>{b.desc}</div>
+                <div style={{ fontSize: 14, color: '#70737c' }}>{b.desc}</div>
               </div>
               {on && <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#FFC107',
-                color: '#1b1c1e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
+                color: '#1b1c1e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>✓</div>}
             </div>
           );
         })}
@@ -342,10 +351,10 @@ function StepMood({ filters, set, next, back }) {
               <div style={{ fontSize: 30 }}>{m.ico}</div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 2 }}>{m.label}</div>
-                <div style={{ fontSize: 12, color: '#70737c' }}>{m.desc}</div>
+                <div style={{ fontSize: 14, color: '#70737c' }}>{m.desc}</div>
               </div>
               {on && <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#FFC107',
-                color: '#1b1c1e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13 }}>✓</div>}
+                color: '#1b1c1e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>✓</div>}
             </div>
           );
         })}
@@ -386,13 +395,13 @@ function StepGenre({ filters, toggleGenre, toggleBudget, toggleCond, finish, bac
                 borderRadius: 12, padding: '14px 8px', cursor: 'pointer', textAlign: 'center',
               }}>
               <div style={{ fontSize: 26, marginBottom: 4 }}>{genreIcons[g] || "🍽"}</div>
-              <div style={{ fontSize: 13, fontWeight: on ? 600 : 500 }}>{g}</div>
+              <div style={{ fontSize: 14, fontWeight: on ? 600 : 500 }}>{g}</div>
             </div>
           );
         })}
       </div>
 
-      <div style={{ fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 12 }}>
+      <div style={{ fontSize: 14, color: '#37383c', fontWeight: 600, marginBottom: 12 }}>
         예산 (인당) <span style={{ color: '#aeb0b6', fontWeight: 400 }}>· 여러 개 선택 가능</span>
       </div>
       <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
@@ -402,7 +411,7 @@ function StepGenre({ filters, toggleGenre, toggleBudget, toggleCond, finish, bac
         ))}
       </div>
 
-      <div style={{ fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 12 }}>추가 조건</div>
+      <div style={{ fontSize: 14, color: '#37383c', fontWeight: 600, marginBottom: 12 }}>추가 조건</div>
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         {EXTRA_OPTS.map(c => (
           <span key={c} className={"chip" + (filters.conditions.includes(c) ? " on" : "")}
@@ -439,7 +448,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
           <MeoksungMascot size={56} mood="happy"/>
           <div>
-            <div style={{ fontSize: 13, color: '#B07900', fontWeight: 600 }}>
+            <div style={{ fontSize: 14, color: '#B07900', fontWeight: 600 }}>
               먹숭이의 추천 · {filtered.length}곳 매칭
             </div>
             <h2 style={{ font: 'var(--text-h2)', margin: '4px 0 0', letterSpacing: '-0.01em' }}>
@@ -448,25 +457,25 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
           </div>
           <div style={{ flex: 1 }}/>
           {onBack && (
-            <button className="btn-ghost" style={{ height: 38, fontSize: 13 }} onClick={onBack}>← 조건 다시</button>
+            <button className="btn-ghost" style={{ height: 38, fontSize: 14 }} onClick={onBack}>← 조건 다시</button>
           )}
         </div>
 
         {/* 실시간 필터 칩들 — 폼 옵션과 동일 */}
-        <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 12,
-          padding: 12, marginBottom: 18 }}>
+        <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 16,
+          padding: 18, marginBottom: 24 }}>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
-            <span style={{ fontSize: 12, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>장르:</span>
+            <span style={{ fontSize: 14, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>장르:</span>
             {GENRE_OPTS.map(g => (
               <span key={g} className={"chip" + (filters.genres.includes(g) ? " on" : "")}
-                onClick={() => toggleGenre(g)} style={{ fontSize: 12, height: 28 }}>{g}</span>
+                onClick={() => toggleGenre(g)} style={{ fontSize: 14, height: 28 }}>{g}</span>
             ))}
           </div>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-            <span style={{ fontSize: 12, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>조건:</span>
+            <span style={{ fontSize: 14, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>조건:</span>
             {EXTRA_OPTS.map(c => (
               <span key={c} className={"chip" + (filters.conditions.includes(c) ? " on" : "")}
-                onClick={() => toggleCond(c)} style={{ fontSize: 12, height: 28 }}>{c}</span>
+                onClick={() => toggleCond(c)} style={{ fontSize: 14, height: 28 }}>{c}</span>
             ))}
           </div>
         </div>
@@ -474,7 +483,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
         {places.length === 0 ? (
           <EmptyState onReport={() => onNav("제보하기")}/>
         ) : filtered.length === 0 ? (
-          <div style={{ background: '#fff', borderRadius: 16, padding: 60, textAlign: 'center',
+          <div style={{ background: '#fff', borderRadius: 20, padding: 72, textAlign: 'center',
             border: '1px solid rgba(0,0,0,0.06)' }}>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <MeoksungMascot size={120} mood="sleepy"/>
@@ -490,7 +499,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
               const cnt = likeCount(serverLikes, optimisticDelta, p.id);
               return (
                 <div key={p.id} className="opt-card result-card" style={{
-                  background: '#fff', borderRadius: 16, padding: 20,
+                  background: '#fff', borderRadius: 16, padding: 24,
                   border: '1px solid rgba(0,0,0,0.06)',
                   boxShadow: i === 0 ? '0 8px 24px rgba(0,102,255,0.08)' : 'none',
                   cursor: 'pointer',
@@ -499,16 +508,16 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
                   <div style={{ flex: 1, minWidth: 0 }}>
                     {i < 3 && (
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                        <span style={{ fontSize: 13, fontWeight: 700,
+                        <span style={{ fontSize: 14, fontWeight: 700,
                           color: i === 0 ? '#FF9200' : i === 1 ? '#878a93' : '#a78368' }}>
                           {["🥇 No.1","🥈 No.2","🥉 No.3"][i]}
                         </span>
-                        {i === 0 && <span style={{ fontSize: 11, padding: '2px 8px', background: '#FEF4E6',
+                        {i === 0 && <span style={{ fontSize: 14, padding: '2px 8px', background: '#FEF4E6',
                           color: '#D17600', borderRadius: 4, fontWeight: 600 }}>먹숭이's PICK</span>}
                       </div>
                     )}
                     <div style={{ font: 'var(--text-title-1)', marginBottom: 4 }}>{p.name}</div>
-                    <div style={{ display: 'flex', gap: 12, fontSize: 13, color: '#70737c', marginBottom: 10, flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', gap: 12, fontSize: 14, color: '#70737c', marginBottom: 10, flexWrap: 'wrap' }}>
                       <span>{p.genre}{p.sub ? ` · ${p.sub}` : ""}</span>
                       {p.priceRange && <><span>·</span><span>{p.priceRange}</span></>}
                       {p.people && <><span>·</span><span>{p.people}</span></>}
@@ -516,8 +525,8 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
                     </div>
                     {p.comment && (
                       <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px', marginBottom: 10 }}>
-                        <div style={{ fontSize: 13, lineHeight: 1.5, color: '#37383c' }}>"{p.comment}"</div>
-                        <div style={{ fontSize: 11, color: '#878a93', marginTop: 4 }}>
+                        <div style={{ fontSize: 14, lineHeight: 1.5, color: '#37383c' }}>"{p.comment}"</div>
+                        <div style={{ fontSize: 14, color: '#878a93', marginTop: 4 }}>
                           — {p.nickname}{p.team ? ` · ${p.team}` : ""} · 제보 {p.reports}건
                         </div>
                       </div>
@@ -525,7 +534,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
                     {p.extras && p.extras.length > 0 && (
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                         {p.extras.slice(0, 4).map(r => (
-                          <span key={r} style={{ fontSize: 11, color: '#B07900', background: '#FFF8E1',
+                          <span key={r} style={{ fontSize: 14, color: '#B07900', background: '#FFF8E1',
                             padding: '3px 8px', borderRadius: 4 }}>✓ {r}</span>
                         ))}
                       </div>
@@ -537,7 +546,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
                       toggleLike(p.id);
                     }}
                       aria-label={liked ? "좋아요 취소" : "좋아요"}
-                      style={{ minWidth: 56, height: 36, padding: '0 10px', borderRadius: 8,
+                      style={{ minWidth: 64, height: 38, padding: '0 14px', borderRadius: 9999,
                         border: '1px solid ' + (liked ? '#ff4d6d' : 'rgba(0,0,0,0.1)'),
                         background: liked ? '#fff0f3' : '#fff', cursor: 'pointer',
                         display: 'inline-flex', alignItems: 'center', gap: 6,
@@ -546,7 +555,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
                       <span style={{ fontWeight: 600 }}>{cnt}</span>
                     </button>
                     <button className="btn-primary" onClick={e => { e.stopPropagation(); onDetail(p.id); }}
-                      style={{ height: 36, padding: '0 14px', fontSize: 13 }}>상세 →</button>
+                      style={{ height: 36, padding: '0 14px', fontSize: 14 }}>상세 →</button>
                   </div>
                 </div>
               );
@@ -609,7 +618,7 @@ function CommentsSection({ placeId, comments, onAddComment }) {
 
   const inputStyle = {
     width: '100%', height: 36, padding: '0 10px', borderRadius: 8,
-    border: '1px solid rgba(0,0,0,0.12)', fontSize: 13, fontFamily: 'inherit',
+    border: '1px solid rgba(0,0,0,0.12)', fontSize: 14, fontFamily: 'inherit',
     background: '#fff', boxSizing: 'border-box', color: '#1b1c1e',
   };
 
@@ -618,7 +627,7 @@ function CommentsSection({ placeId, comments, onAddComment }) {
       <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
         <span>댓글</span>
         {comments.length > 0 && (
-          <span style={{ color: '#878a93', fontWeight: 400, fontSize: 13 }}>{comments.length}</span>
+          <span style={{ color: '#878a93', fontWeight: 400, fontSize: 14 }}>{comments.length}</span>
         )}
       </div>
 
@@ -626,8 +635,8 @@ function CommentsSection({ placeId, comments, onAddComment }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
           {comments.map(c => (
             <div key={c.id} style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
-              <div style={{ fontSize: 13, color: '#37383c', lineHeight: 1.5, marginBottom: 4, whiteSpace: 'pre-wrap' }}>{c.text}</div>
-              <div style={{ fontSize: 11, color: '#878a93' }}>
+              <div style={{ fontSize: 14, color: '#37383c', lineHeight: 1.5, marginBottom: 4, whiteSpace: 'pre-wrap' }}>{c.text}</div>
+              <div style={{ fontSize: 14, color: '#878a93' }}>
                 {c.nickname || "익명"}{c.team ? ` · ${c.team}` : ""}
                 {c.createdAt && ` · ${formatTimeAgo(c.createdAt)}`}
               </div>
@@ -635,7 +644,7 @@ function CommentsSection({ placeId, comments, onAddComment }) {
           ))}
         </div>
       ) : (
-        <div style={{ fontSize: 12, color: '#aeb0b6', marginBottom: 16 }}>
+        <div style={{ fontSize: 14, color: '#aeb0b6', marginBottom: 16 }}>
           아직 댓글이 없어요. 첫 댓글을 남겨보세요.
         </div>
       )}
@@ -662,7 +671,7 @@ function CommentsSection({ placeId, comments, onAddComment }) {
         />
         <button className="btn-primary" type="button" onClick={submit}
           disabled={!draft.text.trim()}
-          style={{ height: 36, padding: '0 14px', fontSize: 13 }}>
+          style={{ height: 36, padding: '0 14px', fontSize: 14 }}>
           보내기
         </button>
       </div>
@@ -737,7 +746,7 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [],
         <button className="modal-close" onClick={onClose} aria-label="닫기" disabled={busy}>✕</button>
 
         {mode === "edit" ? (
-          <div style={{ padding: '24px 28px 28px' }}>
+          <div style={{ padding: '32px 36px 36px' }}>
             <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>맛집 정보 수정</div>
             <PlaceForm initial={place} submitLabel="저장" busy={busy}
               existingPlaces={places}
@@ -757,38 +766,38 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [],
                 background: 'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,0.55))' }}/>
               <div style={{ position: 'absolute', bottom: 16, left: 24, right: 24, color: '#fff' }}>
                 <div style={{ display: 'flex', gap: 6, marginBottom: 8, flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 11, padding: '3px 8px', background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>
+                  <span style={{ fontSize: 14, padding: '3px 8px', background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>
                     {place.mealType === "lunch" ? "점심" : place.mealType === "dinner" ? "저녁" : "점심·저녁"}
                   </span>
-                  {place.hasRoom && <span style={{ fontSize: 11, padding: '3px 8px',
+                  {place.hasRoom && <span style={{ fontSize: 14, padding: '3px 8px',
                     background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>룸</span>}
-                  {place.hasParking && <span style={{ fontSize: 11, padding: '3px 8px',
+                  {place.hasParking && <span style={{ fontSize: 14, padding: '3px 8px',
                     background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>주차</span>}
-                  {place.naverCategory && <span style={{ fontSize: 11, padding: '3px 8px',
+                  {place.naverCategory && <span style={{ fontSize: 14, padding: '3px 8px',
                     background: 'rgba(0,0,0,0.4)', borderRadius: 4 }}>{place.naverCategory}</span>}
                 </div>
                 <div style={{ fontSize: 24, fontWeight: 700, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>{place.name}</div>
-                <div style={{ fontSize: 13, opacity: 0.95 }}>
+                <div style={{ fontSize: 14, opacity: 0.95 }}>
                   {place.genre}{place.sub ? ` · ${place.sub}` : ""}
                 </div>
               </div>
             </div>
 
-            <div style={{ padding: '24px 28px 28px' }}>
+            <div style={{ padding: '32px 36px 36px' }}>
               {place.address && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16,
-                  fontSize: 13, color: '#46474c' }}>
+                  fontSize: 14, color: '#46474c' }}>
                   <span>📍</span><span>{place.address}</span>
                 </div>
               )}
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, marginBottom: 20 }}>
                 <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
-                  <div style={{ fontSize: 11, color: '#878a93', marginBottom: 2 }}>인당 예산</div>
+                  <div style={{ fontSize: 14, color: '#878a93', marginBottom: 2 }}>인당 예산</div>
                   <div style={{ fontSize: 14, fontWeight: 600 }}>{place.priceRange || "—"}</div>
                 </div>
                 <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
-                  <div style={{ fontSize: 11, color: '#878a93', marginBottom: 2 }}>인원</div>
+                  <div style={{ fontSize: 14, color: '#878a93', marginBottom: 2 }}>인원</div>
                   <div style={{ fontSize: 14, fontWeight: 600 }}>{place.people || "—"}</div>
                 </div>
               </div>
@@ -796,7 +805,7 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [],
               {place.extras && place.extras.length > 0 && (
                 <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
                   {place.extras.map(r => (
-                    <span key={r} style={{ fontSize: 12, color: '#B07900', background: '#FFF8E1',
+                    <span key={r} style={{ fontSize: 14, color: '#B07900', background: '#FFF8E1',
                       padding: '4px 10px', borderRadius: 999 }}>✓ {r}</span>
                   ))}
                 </div>
@@ -808,7 +817,7 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [],
                   <div style={{ fontSize: 14, lineHeight: 1.6, color: '#37383c', marginBottom: 6 }}>
                     "{place.comment}"
                   </div>
-                  <div style={{ fontSize: 12, color: '#878a93' }}>
+                  <div style={{ fontSize: 14, color: '#878a93' }}>
                     — {place.nickname}{place.team ? ` · ${place.team}` : ""}
                   </div>
                 </div>
@@ -821,7 +830,7 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [],
                     🗺 네이버 지도에서 보기
                   </a>
                 ) : (
-                  <div style={{ flex: 1, textAlign: 'center', color: '#aeb0b6', fontSize: 13, padding: '12px 0' }}>
+                  <div style={{ flex: 1, textAlign: 'center', color: '#aeb0b6', fontSize: 14, padding: '12px 0' }}>
                     지도 연결을 위해 주소 정보가 필요해요
                   </div>
                 )}
@@ -918,7 +927,7 @@ function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit,
         (p.name || "").trim().toLowerCase() === trimmedName.toLowerCase())
     : null;
 
-  const label = { fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 8 };
+  const label = { fontSize: 14, color: '#37383c', fontWeight: 600, marginBottom: 8 };
   const input = {
     width: '100%', height: 42, padding: '0 12px', borderRadius: 8,
     border: '1px solid rgba(0,0,0,0.12)', fontSize: 14, fontFamily: 'inherit',
@@ -941,7 +950,7 @@ function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit,
           <div style={{
             marginTop: 8, padding: '8px 12px', borderRadius: 8,
             background: '#fdecec', border: '1px solid #f5b6b6', color: '#a52424',
-            fontSize: 13, lineHeight: 1.4,
+            fontSize: 14, lineHeight: 1.4,
           }}>
             ⚠️ <b>{dupPlace.name}</b> 은(는) 이미 등록되어 있어요
             {dupPlace.nickname ? ` (${dupPlace.nickname}${dupPlace.team ? ` · ${dupPlace.team}` : ""} 제보)` : ""}.
@@ -961,7 +970,7 @@ function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit,
           value={form.naverLink || ""}
           onChange={e => set({ naverLink: e.target.value })}
           placeholder="예: https://map.naver.com/p/entry/place/..."/>
-        <div style={{ fontSize: 11, color: '#878a93', marginTop: 6, lineHeight: 1.5 }}>
+        <div style={{ fontSize: 14, color: '#878a93', marginTop: 6, lineHeight: 1.5 }}>
           네이버 지도에서 가게 페이지 주소를 복사해 붙여넣으면 자동 매칭 대신 그 링크를 씁니다. 비워두면 가게명으로 자동 매칭해요.
         </div>
       </div>
@@ -1142,24 +1151,24 @@ function ReportFeed({ places, onDetail, onNav,
 
         {/* 필터 strip — 장르 + 조건 */}
         {places.length > 0 && (
-          <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 12,
-            padding: 12, marginBottom: 18 }}>
+          <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 16,
+            padding: 18, marginBottom: 24 }}>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
-              <span style={{ fontSize: 12, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>장르:</span>
+              <span style={{ fontSize: 14, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>장르:</span>
               {GENRE_OPTS.map(g => (
                 <span key={g} className={"chip" + (feedFilters.genres.includes(g) ? " on" : "")}
-                  onClick={() => toggleGenre(g)} style={{ fontSize: 12, height: 28 }}>{g}</span>
+                  onClick={() => toggleGenre(g)} style={{ fontSize: 14, height: 28 }}>{g}</span>
               ))}
             </div>
             <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-              <span style={{ fontSize: 12, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>조건:</span>
+              <span style={{ fontSize: 14, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>조건:</span>
               {EXTRA_OPTS.map(c => (
                 <span key={c} className={"chip" + (feedFilters.conditions.includes(c) ? " on" : "")}
-                  onClick={() => toggleCond(c)} style={{ fontSize: 12, height: 28 }}>{c}</span>
+                  onClick={() => toggleCond(c)} style={{ fontSize: 14, height: 28 }}>{c}</span>
               ))}
               {filterActive && (
                 <button onClick={clearFilters} type="button"
-                  style={{ marginLeft: 'auto', fontSize: 12, color: '#70737c',
+                  style={{ marginLeft: 'auto', fontSize: 14, color: '#70737c',
                     background: 'transparent', border: 0, cursor: 'pointer',
                     textDecoration: 'underline', fontFamily: 'inherit' }}>
                   필터 초기화
@@ -1178,7 +1187,7 @@ function ReportFeed({ places, onDetail, onNav,
               <MeoksungMascot size={96} mood="sleepy"/>
             </div>
             <h3 style={{ font: 'var(--text-h3)', marginTop: 12, marginBottom: 4 }}>조건에 맞는 가게가 없어요</h3>
-            <p style={{ color: '#70737c', fontSize: 13, margin: '0 0 16px' }}>조건을 조금 풀어볼까요?</p>
+            <p style={{ color: '#70737c', fontSize: 14, margin: '0 0 16px' }}>조건을 조금 풀어볼까요?</p>
             <button className="btn-primary" onClick={clearFilters}>필터 초기화</button>
           </div>
         ) : (
@@ -1190,9 +1199,9 @@ function ReportFeed({ places, onDetail, onNav,
               const extras = (p.extras || []).slice(0, 4);
               return (
                 <div key={p.id} className="opt-card" onClick={() => onDetail(p.id)}
-                  style={{ background: '#fff', borderRadius: 12, padding: 14,
+                  style={{ background: '#fff', borderRadius: 16, padding: 18,
                     border: '1px solid rgba(0,0,0,0.06)',
-                    display: 'flex', flexDirection: 'column', gap: 10,
+                    display: 'flex', flexDirection: 'column', gap: 12,
                     cursor: 'pointer', minWidth: 0 }}>
                   <PlaceThumb place={p} h={140} rounded={8}/>
                   <div style={{ minWidth: 0 }}>
@@ -1204,23 +1213,23 @@ function ReportFeed({ places, onDetail, onNav,
                         </div>
                       </div>
                       {commentCnt > 0 && (
-                        <span style={{ fontSize: 12, color: '#46474c', fontWeight: 600,
+                        <span style={{ fontSize: 14, color: '#46474c', fontWeight: 600,
                           flexShrink: 0, marginTop: 2 }}>💬 {commentCnt}</span>
                       )}
                       <button onClick={e => { e.stopPropagation(); toggleLike && toggleLike(p.id); }}
                         aria-label={liked ? "좋아요 취소" : "좋아요"}
-                        style={{ flexShrink: 0, minWidth: 48, height: 28, padding: '0 8px',
-                          borderRadius: 6,
+                        style={{ flexShrink: 0, minWidth: 56, height: 32, padding: '0 12px',
+                          borderRadius: 9999,
                           border: '1px solid ' + (liked ? '#ff4d6d' : 'rgba(0,0,0,0.1)'),
                           background: liked ? '#fff0f3' : '#fff', cursor: 'pointer',
                           display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 4,
-                          fontSize: 12, color: liked ? '#c2185b' : '#37383c', fontFamily: 'inherit',
+                          fontSize: 14, color: liked ? '#c2185b' : '#37383c', fontFamily: 'inherit',
                           fontWeight: 600 }}>
                         <span>{liked ? "❤️" : "🤍"}</span>
                         <span>{cnt}</span>
                       </button>
                     </div>
-                    <div style={{ fontSize: 12, color: '#70737c', marginBottom: extras.length > 0 ? 6 : 8,
+                    <div style={{ fontSize: 14, color: '#70737c', marginBottom: extras.length > 0 ? 6 : 8,
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {p.genre} · {p.priceRange || "예산 미정"}
                       {p.nickname && ` · ${p.nickname}`}
@@ -1228,19 +1237,19 @@ function ReportFeed({ places, onDetail, onNav,
                     {extras.length > 0 && (
                       <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
                         {extras.map(r => (
-                          <span key={r} style={{ fontSize: 11, color: '#B07900',
+                          <span key={r} style={{ fontSize: 14, color: '#B07900',
                             background: '#FFF8E1', padding: '2px 7px', borderRadius: 4 }}>
                             ✓ {r}
                           </span>
                         ))}
                         {p.extras && p.extras.length > 4 && (
-                          <span style={{ fontSize: 11, color: '#878a93',
+                          <span style={{ fontSize: 14, color: '#878a93',
                             padding: '2px 4px' }}>+{p.extras.length - 4}</span>
                         )}
                       </div>
                     )}
                     {p.comment && (
-                      <div style={{ fontSize: 13, color: '#37383c', lineHeight: 1.4,
+                      <div style={{ fontSize: 14, color: '#37383c', lineHeight: 1.4,
                         overflow: 'hidden', textOverflow: 'ellipsis',
                         display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
                         "{p.comment}"
@@ -1285,7 +1294,7 @@ function HotPicks({ places, onDetail, onNav, serverLikes = {}, optimisticDelta =
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {sorted.map((p, i) => (
               <div key={p.id} className="opt-card result-card" style={{
-                background: '#fff', borderRadius: 16, padding: 20,
+                background: '#fff', borderRadius: 16, padding: 24,
                 border: '1px solid rgba(0,0,0,0.06)',
                 boxShadow: i === 0 ? '0 8px 24px rgba(0,102,255,0.08)' : 'none',
                 cursor: 'pointer',
@@ -1293,21 +1302,21 @@ function HotPicks({ places, onDetail, onNav, serverLikes = {}, optimisticDelta =
                 <div className="result-card-img"><PlaceThumb place={p} h={140}/></div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700,
+                    <span style={{ fontSize: 14, fontWeight: 700,
                       color: i === 0 ? '#FF9200' : i === 1 ? '#878a93' : '#a78368' }}>
                       #{i + 1}
                     </span>
-                    <span style={{ fontSize: 12, color: '#c2185b', fontWeight: 600 }}>
+                    <span style={{ fontSize: 14, color: '#c2185b', fontWeight: 600 }}>
                       ❤️ {likeCount(serverLikes, optimisticDelta, p.id)}
                     </span>
                   </div>
                   <div style={{ font: 'var(--text-title-1)', marginBottom: 4 }}>{p.name}</div>
-                  <div style={{ fontSize: 13, color: '#70737c', marginBottom: 8 }}>
+                  <div style={{ fontSize: 14, color: '#70737c', marginBottom: 8 }}>
                     {p.genre}{p.sub ? ` · ${p.sub}` : ""} · {p.priceRange || "예산 미정"}
                   </div>
                   {p.comment && (
                     <div style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
-                      <div style={{ fontSize: 13, color: '#37383c' }}>"{p.comment}"</div>
+                      <div style={{ fontSize: 14, color: '#37383c' }}>"{p.comment}"</div>
                     </div>
                   )}
                 </div>
@@ -1702,7 +1711,7 @@ function App() {
       <div className="body">
         {loadError && (
           <div style={{ background: '#fff3cd', color: '#7a5a00', padding: '10px 16px',
-            fontSize: 13, textAlign: 'center', borderBottom: '1px solid #f0e0a0' }}>
+            fontSize: 14, textAlign: 'center', borderBottom: '1px solid #f0e0a0' }}>
             데이터를 불러오지 못했어요: {loadError} (HTTP 서버로 열어야 동작해요)
           </div>
         )}
