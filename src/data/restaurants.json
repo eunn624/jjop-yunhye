@@ -372,5 +372,38 @@
     "naverLinkManual": true,
     "naverCategory": "돼지고기구이",
     "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/750_750_20240608015112208_photo_592629a97138.webp"
+  },
+  {
+    "id": "restaurant-1778643946988",
+    "name": "숙성도 판교점",
+    "address": "경기 성남시 분당구 백현동 540",
+    "genre": "고기구이",
+    "mood": "quiet",
+    "mealType": "lunch",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식",
+      "11~20명 부서"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원"
+    ],
+    "extras": [
+      "역 근처",
+      "주차 가능",
+      "예약 가능",
+      "룸/단체석",
+      "술 가능"
+    ],
+    "comment": "돼지고기는 여기가 제일 맛있긴 함.",
+    "nickname": "zizon시은",
+    "team": "UX디자인팀",
+    "submittedAt": "2026-05-13T03:45:46.988Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/F74VxSNk",
+    "naverLinkManual": true,
+    "naverCategory": "돼지고기구이",
+    "thumbnail": "http://imgnews.naver.net/image/243/2024/03/29/0000057931_001_20240329114301273.jpeg"
   }
 ]
