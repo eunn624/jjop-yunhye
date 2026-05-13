@@ -1677,5 +1677,32 @@
     "naverLinkManual": true,
     "naverCategory": "돈가스",
     "thumbnail": "https://shop-phinf.pstatic.net/20260223_114/1771826099192Kdw9n_JPEG/26377647284042277_1261541307.jpeg"
+  },
+  {
+    "id": "restaurant-1778675429148",
+    "name": "황제바지락짬뽕",
+    "address": "성남 사송동",
+    "genre": "한식",
+    "mood": "social",
+    "mealType": "lunch",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "~1만원",
+      "1~2만원"
+    ],
+    "extras": [
+      "주차 가능",
+      "야외 테라스"
+    ],
+    "comment": "판교 인근 짬뽕 1티어 집 / 차량 필수 ",
+    "nickname": "추천인",
+    "team": "슈터플랫폼실",
+    "submittedAt": "2026-05-13T12:30:29.148Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%ED%99%A9%EC%A0%9C%EB%B0%94%EC%A7%80%EB%9D%BD%EC%A7%AC%EB%BD%95",
+    "naverCategory": "중식당",
+    "thumbnail": "https://d2uja84sd90jmv.cloudfront.net/posts/7u_trKXOLZ3XD-ZKL4ywxg/ms.jpg?updated=-62167392000"
   }
 ]
