@@ -792,5 +792,30 @@
     "naverLinkManual": true,
     "naverCategory": "베트남음식",
     "thumbnail": "https://ldb-phinf.pstatic.net/20230927_119/1695775153781r9JRi_JPEG/%C5%A9%B1%E2%BA%AF%C8%AF0227-0131.jpg"
+  },
+  {
+    "id": "restaurant-1778646223710",
+    "name": "김밥천국",
+    "address": "경기 성남시 분당구 판교역로 231 에이치스퀘어 에스동 지하1층 119호",
+    "genre": "분식·면",
+    "mood": "casual",
+    "mealType": "lunch",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "~1만원",
+      "1~2만원"
+    ],
+    "extras": [
+      "도보 10분 이내"
+    ],
+    "comment": "디자인팀회식담당의 이모가 운영하는곳",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T04:23:43.710Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EA%B9%80%EB%B0%A5%EC%B2%9C%EA%B5%AD/place/1300125642?c=15.61,0,0,0,dh&placePath=/home?bk_query=%EA%B9%80%EB%B0%A5%EC%B2%9C%EA%B5%AD&entry=bmp&from=map&fromPanelNum=2&timestamp=202605131322&locale=ko&svcName=map_pcv5&searchText=%EA%B9%80%EB%B0%A5%EC%B2%9C%EA%B5%AD",
+    "naverLinkManual": true
   }
 ]
