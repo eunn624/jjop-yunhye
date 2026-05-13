@@ -28,6 +28,14 @@ const ID_COL = 13; // M열
 function _likesSheetName() { return "Likes"; }
 function _commentsSheetName() { return "Comments"; }
 
+// 시트 셀에 쓰기 위한 직렬화: 배열은 ", " 결합, 그 외는 빈 문자열 안전 처리.
+// (자바스크립트 배열을 그대로 appendRow에 넘기면 자바 브릿지가 toString 해서
+//  "[Ljava.lang.Object;@..." 같은 문자열로 박힘.)
+function _toCell(v) {
+  if (Array.isArray(v)) return v.join(", ");
+  return v == null ? "" : String(v);
+}
+
 // ───── 라우팅 ─────
 
 function doPost(e) {
@@ -217,12 +225,13 @@ function handleCreate(data) {
 
   entry = enrichWithNaver(entry);
 
-  // 1) 시트
+  // 1) 시트 — 배열 필드(people/priceRange/extras)는 _toCell 로 직렬화해서 넣어야
+  //         자바 브릿지의 "[Ljava.lang.Object;@..." 폴백을 피할 수 있음
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(SHEET_NAME);
   sheet.appendRow([
     submittedAt, entry.name, entry.address, entry.genre, entry.mood,
-    entry.mealType, entry.people, entry.priceRange,
-    (entry.extras || []).join(", "), entry.comment, entry.nickname, entry.team,
+    entry.mealType, _toCell(entry.people), _toCell(entry.priceRange),
+    _toCell(entry.extras), entry.comment, entry.nickname, entry.team,
     id,
   ]);
 
@@ -333,8 +342,8 @@ function updateSheetRow(id, entry) {
   if (row < 0) return;
   sheet.getRange(row, 1, 1, 13).setValues([[
     entry.submittedAt, entry.name, entry.address, entry.genre, entry.mood,
-    entry.mealType, entry.people, entry.priceRange,
-    (entry.extras || []).join(", "), entry.comment, entry.nickname, entry.team,
+    entry.mealType, _toCell(entry.people), _toCell(entry.priceRange),
+    _toCell(entry.extras), entry.comment, entry.nickname, entry.team,
     id,
   ]]);
 }
@@ -579,6 +588,21 @@ function testUpdate() {
 function testDelete() {
   const r = handleDelete("restaurant-XXXXXXX");
   Logger.log(r.getContent());
+}
+
+// 이미 시트에 박힌 "[Ljava.lang.Object;@..." 같은 깨진 row를 JSON 기준으로 다시 칠하는 일회성 복구.
+// 편집기에서 수동으로 한 번 실행하면 됨.
+function repairSheetCellsFromJson() {
+  const { current } = fetchJson();
+  let fixed = 0;
+  current.forEach(function(entry) {
+    if (!entry || !entry.id) return;
+    const found = findSheetRowById(entry.id);
+    if (found.row < 0) return;
+    updateSheetRow(entry.id, entry);
+    fixed++;
+  });
+  Logger.log("repaired " + fixed + " rows from JSON");
 }
 
 // 좋아요 동작 확인용

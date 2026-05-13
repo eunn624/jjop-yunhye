@@ -12,6 +12,7 @@ const GENRE_TONE = {
   "고기구이": "grilled",
   "해산물": "seafood",
   "분식·면": "soup",
+  "튀김류": "warm",
   "채식 가능": "veg",
   "뷔페": "izakaya",
 };
