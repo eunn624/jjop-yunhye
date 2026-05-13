@@ -1494,56 +1494,5 @@
     "reports": 1,
     "naverLink": "https://naver.me/FsRsJvNJ",
     "naverLinkManual": true
-  },
-  {
-    "id": "restaurant-1778656836591",
-    "name": "블루샹하이",
-    "address": "경기 성남시 분당구 정자일로 197",
-    "genre": "한식",
-    "mood": "formal",
-    "mealType": "both",
-    "people": [
-      "2~4명 소수팀",
-      "5~10명 팀회식"
-    ],
-    "priceRange": [
-      "2~3만원",
-      "3~5만원",
-      "5만원+"
-    ],
-    "extras": [
-      "술 가능",
-      "주차 가능",
-      "룸/단체석"
-    ],
-    "comment": "여경래 셰프님이 운영하는 중식당. 운 좋으면 만날 수 있다고 함. 전체적으로 맛있음",
-    "nickname": "익명",
-    "team": "",
-    "submittedAt": "2026-05-13T07:21:29.365Z",
-    "reports": 1,
-    "naverLink": "https://naver.me/GYC9iZue",
-    "naverCategory": "중식당",
-    "thumbnail": "https://i1.ruliweb.com/img/20/05/05/171e479089629c8.jpg",
-    "sub": "",
-    "peopleLabels": [
-      "2~4명 소수팀",
-      "5~10명 팀회식"
-    ],
-    "priceRangeLabels": [
-      "2~3만원",
-      "3~5만원",
-      "5만원+"
-    ],
-    "menu": [],
-    "tone": "warm",
-    "capMin": 2,
-    "capMax": 10,
-    "priceMin": 2,
-    "priceMax": 99,
-    "hasRoom": true,
-    "hasParking": true,
-    "hasReserve": false,
-    "walkable": false,
-    "naverLinkManual": true
   }
 ]
