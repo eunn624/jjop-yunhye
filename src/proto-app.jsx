@@ -1112,7 +1112,9 @@ function ReportForm({ toast, onSubmitted, places = [] }) {
 }
 
 // ───────── REPORT FEED ─────────
-function ReportFeed({ places, onDetail, onNav, serverLikes = {}, optimisticDelta = {}, comments = {} }) {
+function ReportFeed({ places, onDetail, onNav,
+  serverLikes = {}, optimisticDelta = {}, comments = {},
+  likedSet = {}, toggleLike }) {
   const filtered = useMemo(() => dataHelpers.sortByRecent(places), [places]);
 
   return (
@@ -1131,6 +1133,8 @@ function ReportFeed({ places, onDetail, onNav, serverLikes = {}, optimisticDelta
             {filtered.map(p => {
               const cnt = likeCount(serverLikes, optimisticDelta, p.id);
               const commentCnt = (comments[p.id] || []).length;
+              const liked = !!likedSet[p.id];
+              const extras = (p.extras || []).slice(0, 4);
               return (
                 <div key={p.id} className="opt-card" onClick={() => onDetail(p.id)}
                   style={{ background: '#fff', borderRadius: 12, padding: 14,
@@ -1139,25 +1143,49 @@ function ReportFeed({ places, onDetail, onNav, serverLikes = {}, optimisticDelta
                     cursor: 'pointer', minWidth: 0 }}>
                   <PlaceThumb place={p} h={140} rounded={8}/>
                   <div style={{ minWidth: 0 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                      <div style={{ fontSize: 15, fontWeight: 600, flex: 1,
-                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {p.name}
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 8, marginBottom: 4 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 15, fontWeight: 600,
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {p.name}
+                        </div>
                       </div>
-                      {cnt > 0 && (
-                        <span style={{ fontSize: 12, color: '#c2185b', fontWeight: 600,
-                          flexShrink: 0 }}>❤️ {cnt}</span>
-                      )}
                       {commentCnt > 0 && (
                         <span style={{ fontSize: 12, color: '#46474c', fontWeight: 600,
-                          flexShrink: 0 }}>💬 {commentCnt}</span>
+                          flexShrink: 0, marginTop: 2 }}>💬 {commentCnt}</span>
                       )}
+                      <button onClick={e => { e.stopPropagation(); toggleLike && toggleLike(p.id); }}
+                        aria-label={liked ? "좋아요 취소" : "좋아요"}
+                        style={{ flexShrink: 0, minWidth: 48, height: 28, padding: '0 8px',
+                          borderRadius: 6,
+                          border: '1px solid ' + (liked ? '#ff4d6d' : 'rgba(0,0,0,0.1)'),
+                          background: liked ? '#fff0f3' : '#fff', cursor: 'pointer',
+                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+                          fontSize: 12, color: liked ? '#c2185b' : '#37383c', fontFamily: 'inherit',
+                          fontWeight: 600 }}>
+                        <span>{liked ? "❤️" : "🤍"}</span>
+                        <span>{cnt}</span>
+                      </button>
                     </div>
-                    <div style={{ fontSize: 12, color: '#70737c', marginBottom: 8,
+                    <div style={{ fontSize: 12, color: '#70737c', marginBottom: extras.length > 0 ? 6 : 8,
                       overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {p.genre} · {p.priceRange || "예산 미정"}
                       {p.nickname && ` · ${p.nickname}`}
                     </div>
+                    {extras.length > 0 && (
+                      <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
+                        {extras.map(r => (
+                          <span key={r} style={{ fontSize: 11, color: '#B07900',
+                            background: '#FFF8E1', padding: '2px 7px', borderRadius: 4 }}>
+                            ✓ {r}
+                          </span>
+                        ))}
+                        {p.extras && p.extras.length > 4 && (
+                          <span style={{ fontSize: 11, color: '#878a93',
+                            padding: '2px 4px' }}>+{p.extras.length - 4}</span>
+                        )}
+                      </div>
+                    )}
                     {p.comment && (
                       <div style={{ fontSize: 13, color: '#37383c', lineHeight: 1.4,
                         overflow: 'hidden', textOverflow: 'ellipsis',
@@ -1544,10 +1572,9 @@ function App() {
   };
 
   const handleStart = () => setRecScreen("step1");
-  const handleBrowse = () => {
-    resetFilters();
-    setRecScreen("result");
-  };
+  // "그냥 둘러볼래요" — 위저드 없이 둘러보기는 제보 피드 탭이 같은 역할을 함.
+  // 별도 result browse-all 페이지 대신 피드로 보낸다.
+  const handleBrowse = () => handleNav("제보 피드");
   const handleHome = () => {
     setTab("추천");
     setRecScreen("landing");
@@ -1606,6 +1633,7 @@ function App() {
   } else if (tab === "제보 피드") {
     content = <ReportFeed places={places}
       serverLikes={serverLikes} optimisticDelta={optimisticDelta} comments={comments}
+      likedSet={likedSet} toggleLike={toggleLike}
       onDetail={id => setDetailId(id)} onNav={handleNav}/>;
   } else if (tab === "제보하기") {
     content = <ReportForm toast={toast} onSubmitted={handleSubmitted} places={places}/>;
