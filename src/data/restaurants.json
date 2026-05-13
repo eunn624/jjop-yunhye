@@ -286,25 +286,30 @@
     "priceRange": [
       "2~3만원"
     ],
-    "extras": [],
+    "extras": [
+      "도보 10분 이내",
+      "예약 가능"
+    ],
     "comment": "제일 가까운 중식당",
     "nickname": "회식왕",
     "team": "디자인팀",
-    "submittedAt": "2026-05-13T05:47:17.472Z",
+    "submittedAt": "2026-05-13T06:18:16.521Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/search/%EC%99%95%EC%8A%A4%EB%8D%95%20%ED%8C%90%EA%B5%90%EC%A0%90",
     "naverCategory": "중식당",
     "thumbnail": "https://ldb-phinf.pstatic.net/20230118_298/1674033320192vKeJj_JPEG/%C5%A9%B1%E2%BA%AF%C8%AF_MG_8896.jpg",
     "sub": "",
     "peopleLabels": [
-      "11~20명 부서"
+      "11~20명 부서",
+      "5~10명 팀회식",
+      "2~4명 소수팀"
     ],
     "priceRangeLabels": [
       "2~3만원"
     ],
     "menu": [],
     "tone": "warm",
-    "capMin": 11,
+    "capMin": 2,
     "capMax": 20,
     "priceMin": 2,
     "priceMax": 3,
