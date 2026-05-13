@@ -50,7 +50,9 @@ function EmptyState({ onReport, title, body }) {
       background: '#fff', borderRadius: 16, padding: '56px 32px', textAlign: 'center',
       border: '1px solid rgba(0,0,0,0.06)', maxWidth: 520, margin: '40px auto',
     }}>
-      <MeoksungMascot size={120} mood="sleepy"/>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <MeoksungMascot size={120} mood="sleepy"/>
+      </div>
       <h3 style={{ font: 'var(--text-h3)', marginTop: 16, marginBottom: 8 }}>
         {title || "아직 아무도 제보 안 했어요."}
       </h3>
@@ -172,13 +174,13 @@ function Landing({ onStart, onBrowse, places, onNav }) {
             <span>· 이번주 신규 제보 {recent}건</span>
           </div>
         </div>
-        <div style={{ flex: '0 0 auto', position: 'relative' }}>
+        <div style={{ flex: '0 0 auto', position: 'relative', marginLeft: -20 }}>
           <div style={{ position: 'absolute', top: -8, right: -16, background: '#fff',
             border: '1px solid rgba(0,0,0,0.08)', borderRadius: 12, padding: '8px 14px',
             boxShadow: '0 4px 16px rgba(0,0,0,0.06)', fontSize: 13, fontWeight: 500 }}>
             오늘 어디 긁어? 🍌
           </div>
-          <MeoksungMascot size={320} mood="full"/>
+          <MeoksungMascot size={400} mood="full"/>
         </div>
       </div>
 
@@ -417,9 +419,9 @@ function StepGenre({ filters, toggleGenre, toggleBudget, toggleCond, finish, bac
 }
 
 // ───────── RESULT (with live filter editing) ─────────
-function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onReset, onBack, onNav, toast }) {
+function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onReset, onBack, onNav, toast,
+  likedSet = {}, serverLikes = {}, optimisticDelta = {}, toggleLike }) {
   const filtered = useMemo(() => dataHelpers.filterPlaces(places, filters), [places, filters]);
-  const [saved, setSaved] = useState(new Set());
 
   const mealType = filters.mealType;
   const summary = [
@@ -474,7 +476,9 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
         ) : filtered.length === 0 ? (
           <div style={{ background: '#fff', borderRadius: 16, padding: 60, textAlign: 'center',
             border: '1px solid rgba(0,0,0,0.06)' }}>
-            <MeoksungMascot size={120} mood="sleepy"/>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <MeoksungMascot size={120} mood="sleepy"/>
+            </div>
             <h3 style={{ font: 'var(--text-h3)', marginTop: 16 }}>조건에 맞는 가게가 없어요</h3>
             <p style={{ color: '#70737c' }}>조건을 조금 풀어볼까요?</p>
             <button className="btn-primary" onClick={onReset} style={{ marginTop: 8 }}>필터 초기화</button>
@@ -482,7 +486,8 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             {filtered.map((p, i) => {
-              const isSaved = saved.has(p.id);
+              const liked = !!likedSet[p.id];
+              const cnt = likeCount(serverLikes, optimisticDelta, p.id);
               return (
                 <div key={p.id} className="opt-card result-card" style={{
                   background: '#fff', borderRadius: 16, padding: 20,
@@ -529,14 +534,16 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'flex-end' }}>
                     <button onClick={e => {
                       e.stopPropagation();
-                      const next = new Set(saved);
-                      if (isSaved) { next.delete(p.id); toast("저장 해제"); }
-                      else { next.add(p.id); toast(`'${p.name}' 저장됨`); }
-                      setSaved(next);
-                    }} style={{ width: 36, height: 36, borderRadius: 8,
-                      border: '1px solid ' + (isSaved ? '#FFC107' : 'rgba(0,0,0,0.1)'),
-                      background: isSaved ? '#FFF8E1' : '#fff', cursor: 'pointer', fontSize: 16 }}>
-                      {isSaved ? "★" : "☆"}
+                      toggleLike(p.id);
+                    }}
+                      aria-label={liked ? "좋아요 취소" : "좋아요"}
+                      style={{ minWidth: 56, height: 36, padding: '0 10px', borderRadius: 8,
+                        border: '1px solid ' + (liked ? '#ff4d6d' : 'rgba(0,0,0,0.1)'),
+                        background: liked ? '#fff0f3' : '#fff', cursor: 'pointer',
+                        display: 'inline-flex', alignItems: 'center', gap: 6,
+                        fontSize: 14, color: liked ? '#c2185b' : '#37383c', fontFamily: 'inherit' }}>
+                      <span style={{ fontSize: 15 }}>{liked ? "❤️" : "🤍"}</span>
+                      <span style={{ fontWeight: 600 }}>{cnt}</span>
                     </button>
                     <button className="btn-primary" onClick={e => { e.stopPropagation(); onDetail(p.id); }}
                       style={{ height: 36, padding: '0 14px', fontSize: 13 }}>상세 →</button>
@@ -556,7 +563,7 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
 }
 
 // ───────── DETAIL MODAL ─────────
-function DetailModal({ place, onClose, onUpdate, onDelete, toast }) {
+function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [] }) {
   const [mode, setMode] = useState("view"); // view | edit
   const [busy, setBusy] = useState(false);
 
@@ -624,6 +631,7 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast }) {
           <div style={{ padding: '24px 28px 28px' }}>
             <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 20 }}>맛집 정보 수정</div>
             <PlaceForm initial={place} submitLabel="저장" busy={busy}
+              existingPlaces={places}
               onSubmit={handleSave} onCancel={() => setMode("view")}/>
           </div>
         ) : (
@@ -751,7 +759,8 @@ function emptyForm(mealType = "lunch") {
 
 // 제보 폼 / 수정 폼이 공유하는 입력 컴포넌트.
 // onSubmit(form), onCancel() 콜백을 prop으로 받음.
-function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit, onCancel }) {
+// existingPlaces — 중복 가게명 검사용. 수정 모드에서는 자기 자신(initial.id)은 제외한다.
+function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit, onCancel, existingPlaces = [] }) {
   const [form, setForm] = useState(() => {
     const base = { ...emptyForm(), ...initial };
     // 다중 선택 필드 — 문자열/배열 둘 다 들어올 수 있어서 라벨 배열로 정규화한다.
@@ -777,6 +786,15 @@ function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit,
     onSubmit && onSubmit(form);
   }
 
+  // 가게 이름 중복 — 공백/대소문자 무시. 수정 중인 자기 자신은 제외.
+  const trimmedName = (form.name || "").trim();
+  const currentId = initial && initial.id;
+  const dupPlace = trimmedName
+    ? existingPlaces.find(p =>
+        p.id !== currentId &&
+        (p.name || "").trim().toLowerCase() === trimmedName.toLowerCase())
+    : null;
+
   const label = { fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 8 };
   const input = {
     width: '100%', height: 42, padding: '0 12px', borderRadius: 8,
@@ -788,8 +806,24 @@ function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit,
     <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <div>
         <div style={label}>가게 이름 *</div>
-        <input style={input} value={form.name} onChange={e => set({ name: e.target.value })}
+        <input
+          style={{
+            ...input,
+            borderColor: dupPlace ? '#d83838' : input.border ? input.border : 'rgba(0,0,0,0.12)',
+          }}
+          value={form.name}
+          onChange={e => set({ name: e.target.value })}
           placeholder="예: 법카로 다녀온 그 가게" />
+        {dupPlace && (
+          <div style={{
+            marginTop: 8, padding: '8px 12px', borderRadius: 8,
+            background: '#fdecec', border: '1px solid #f5b6b6', color: '#a52424',
+            fontSize: 13, lineHeight: 1.4,
+          }}>
+            ⚠️ <b>{dupPlace.name}</b> 은(는) 이미 등록되어 있어요
+            {dupPlace.nickname ? ` (${dupPlace.nickname}${dupPlace.team ? ` · ${dupPlace.team}` : ""} 제보)` : ""}.
+          </div>
+        )}
       </div>
 
       <div>
@@ -913,7 +947,7 @@ async function postToAppsScript(payload) {
   });
 }
 
-function ReportForm({ toast, onSubmitted }) {
+function ReportForm({ toast, onSubmitted, places = [] }) {
   const [submitting, setSubmitting] = useState(false);
   const [formKey, setFormKey] = useState(0); // 리셋 트리거
 
@@ -944,11 +978,11 @@ function ReportForm({ toast, onSubmitted }) {
 
   return (
     <div className="wizard-page" style={{ maxWidth: 720 }}>
-      <MascotSay mood="hungry">
+      <MascotSay mood="hungry" size={128}>
         팀비 잘 쓰는 법, 동료들이 궁금해해요. <b>가게 정보</b>를 알려주세요.
       </MascotSay>
       <PlaceForm key={formKey} submitLabel="제보 올리기"
-        busy={submitting} onSubmit={handle}/>
+        busy={submitting} onSubmit={handle} existingPlaces={places}/>
     </div>
   );
 }
@@ -999,8 +1033,17 @@ function ReportFeed({ places, onDetail, onNav }) {
 }
 
 // ───────── HOT PICKS ─────────
-function HotPicks({ places, onDetail, onNav }) {
-  const sorted = useMemo(() => dataHelpers.sortByReports(places), [places]);
+function HotPicks({ places, onDetail, onNav, serverLikes = {}, optimisticDelta = {} }) {
+  // 좋아요 누적 카운트(서버 + 세션 누적치)로 정렬. 동률은 제보 수 → 최신순.
+  const sorted = useMemo(() => {
+    const recent = dataHelpers.sortByRecent(places);
+    return [...recent].sort((a, b) => {
+      const la = likeCount(serverLikes, optimisticDelta, a.id);
+      const lb = likeCount(serverLikes, optimisticDelta, b.id);
+      if (lb !== la) return lb - la;
+      return (b.reports || 0) - (a.reports || 0);
+    });
+  }, [places, serverLikes, optimisticDelta]);
 
   return (
     <div className="result-page">
@@ -1009,7 +1052,7 @@ function HotPicks({ places, onDetail, onNav }) {
           🔥 이번주 핫픽
         </h2>
         <p style={{ color: '#70737c', margin: '0 0 24px' }}>
-          동료들 사이에서 제보가 가장 많이 들어온 가게들이에요.
+          좋아요를 많이 받은 가게들이에요.
         </p>
         {sorted.length === 0 ? (
           <EmptyState onReport={() => onNav("제보하기")}/>
@@ -1029,8 +1072,9 @@ function HotPicks({ places, onDetail, onNav }) {
                       color: i === 0 ? '#FF9200' : i === 1 ? '#878a93' : '#a78368' }}>
                       #{i + 1}
                     </span>
-                    <span style={{ fontSize: 11, padding: '2px 8px', background: '#FFF1DB',
-                      color: '#D17600', borderRadius: 4, fontWeight: 600 }}>제보 {p.reports}건</span>
+                    <span style={{ fontSize: 12, color: '#c2185b', fontWeight: 600 }}>
+                      ❤️ {likeCount(serverLikes, optimisticDelta, p.id)}
+                    </span>
                   </div>
                   <div style={{ font: 'var(--text-title-1)', marginBottom: 4 }}>{p.name}</div>
                   <div style={{ fontSize: 13, color: '#70737c', marginBottom: 8 }}>
@@ -1064,6 +1108,32 @@ const DEFAULT_FILTERS = {
 // deletedIds: 로컬에서 삭제한 id 목록 (JSON에서 사라질 때까지 숨김)
 const PENDING_KEY = "jjop.pending";
 const DELETED_KEY = "jjop.deletedIds";
+// 좋아요 — Apps Script 백엔드와 동기화.
+//   localStorage `jjop.likes.v2` : 현재 사용자가 하트를 누른 placeId Set (liked-by-me)
+//   서버 카운트              : 마운트 시 GET ?what=likes 로 fetch, 메모리에 보관
+//   optimisticDelta          : 이번 세션에서 +/-1 한 합 (다음 페이지 로드 시 서버 카운트에 흡수됨)
+// 표시 카운트 = serverLikes[id] + optimisticDelta[id]
+const LIKES_KEY = "jjop.likes.v2";
+function loadLikedSet() {
+  try {
+    const raw = localStorage.getItem(LIKES_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      // 구버전(배열) 마이그레이션
+      const out = {};
+      for (const id of parsed) out[id] = true;
+      return out;
+    }
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch { return {}; }
+}
+function saveLikedSet(o) {
+  try { localStorage.setItem(LIKES_KEY, JSON.stringify(o)); } catch {}
+}
+function likeCount(serverLikes, optDelta, id) {
+  return ((serverLikes && serverLikes[id]) || 0) + ((optDelta && optDelta[id]) || 0);
+}
 function loadJsonArray(key) {
   try {
     const raw = localStorage.getItem(key);
@@ -1161,7 +1231,55 @@ function App() {
   const [detailId, setDetailId] = useState(null);
   const [places, setPlaces] = useState([]);
   const [loadError, setLoadError] = useState(null);
+  const [likedSet, setLikedSet] = useState(loadLikedSet); // { placeId: true } — 내가 누른 상태
+  const [serverLikes, setServerLikes] = useState({});     // { placeId: count }
+  const [optimisticDelta, setOptimisticDelta] = useState({}); // 이번 세션 +/- 합
   const [toastEl, toast] = useToast();
+
+  // 마운트 시 서버 좋아요 카운트 fetch (Apps Script GET ?what=likes)
+  useEffect(() => {
+    const url = (window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL) || "";
+    if (!url || url === "여기에_URL_입력") return;
+    fetch(url + (url.indexOf("?") >= 0 ? "&" : "?") + "what=likes", { cache: "no-cache" })
+      .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
+      .then(body => {
+        const map = body && body.likes && typeof body.likes === "object" ? body.likes : {};
+        setServerLikes(map);
+        // 새 페이지 로드라 이번 세션 누적치는 의미 없음 — 리셋
+        setOptimisticDelta({});
+      })
+      .catch(() => { /* 실패 시 조용히 — 카운트는 0으로 표시 */ });
+  }, []);
+
+  const toggleLike = useCallback((id) => {
+    let willBeLiked = false;
+    setLikedSet(prev => {
+      const liked = !prev[id];
+      willBeLiked = liked;
+      const next = { ...prev };
+      if (liked) next[id] = true; else delete next[id];
+      saveLikedSet(next);
+      return next;
+    });
+    // optimistic delta (다음 GET 으로 흡수)
+    const delta = willBeLiked ? 1 : -1;
+    setOptimisticDelta(prev => {
+      const cur = prev[id] || 0;
+      const nextVal = cur + delta;
+      const next = { ...prev };
+      if (nextVal === 0) delete next[id]; else next[id] = nextVal;
+      return next;
+    });
+    // 서버로 fire-and-forget (no-cors)
+    const url = (window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL) || "";
+    if (!url || url === "여기에_URL_입력") return;
+    fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: "like", placeId: id, delta }),
+    }).catch(() => {});
+  }, []);
 
   // 데이터 로드 — JSON + localStorage 펜딩/삭제 머지
   const loadData = useCallback(() => {
@@ -1302,15 +1420,18 @@ function App() {
         onReset={() => { resetFilters(); }}
         onBack={() => setRecScreen("step4")}
         onNav={handleNav}
-        toast={toast}/>;
+        toast={toast}
+        likedSet={likedSet} serverLikes={serverLikes} optimisticDelta={optimisticDelta}
+        toggleLike={toggleLike}/>;
     }
   } else if (tab === "제보 피드") {
     content = <ReportFeed places={places}
       onDetail={id => setDetailId(id)} onNav={handleNav}/>;
   } else if (tab === "제보하기") {
-    content = <ReportForm toast={toast} onSubmitted={handleSubmitted}/>;
+    content = <ReportForm toast={toast} onSubmitted={handleSubmitted} places={places}/>;
   } else if (tab === "이번주 핫픽") {
     content = <HotPicks places={places}
+      serverLikes={serverLikes} optimisticDelta={optimisticDelta}
       onDetail={id => setDetailId(id)} onNav={handleNav}/>;
   }
 
@@ -1327,7 +1448,7 @@ function App() {
         <StepFade stepKey={tab + ":" + recScreen}>{content}</StepFade>
       </div>
       {detailPlace && <DetailModal place={detailPlace}
-        onClose={() => setDetailId(null)}
+        onClose={() => setDetailId(null)} places={places}
         onUpdate={handleUpdated} onDelete={handleDeleted} toast={toast}/>}
       {toastEl}
       <BgmPlayer/>

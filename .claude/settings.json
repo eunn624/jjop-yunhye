@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push *)",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(curl -s -o /dev/null -w \"proto-app: %{http_code}\\\\n\" http://localhost:5173/src/proto-app.jsx)",
+      "Bash(curl -s -o /dev/null -w \"Code.gs: %{http_code}\\\\n\" http://localhost:5173/apps-script/Code.gs)"
+    ]
+  }
+}
