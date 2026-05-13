@@ -26,20 +26,51 @@ function useToast() {
 // ───────── Top nav ─────────
 function TopNav({ active, onNav }) {
   return (
-    <div className="topnav">
-      <span onClick={() => onNav("추천")} style={{ cursor: 'pointer' }}><BrandA/></span>
-      <div className="navlinks">
-        {TABS.map(l => (
-          <a key={l} className={l === active ? "active" : ""} onClick={() => onNav(l)}>{l}</a>
-        ))}
+    <header className="fixed top-4 left-0 right-0 w-full z-[100] px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto glass-nav rounded-full h-16 flex items-center justify-between px-2 pr-4 transition-all">
+        {/* Logo */}
+        <a onClick={() => onNav("추천")}
+          className="flex items-center gap-2 pl-3 group cursor-pointer">
+          <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center overflow-hidden
+            group-hover:scale-110 transition-transform duration-500">
+            <MeoksungMascot size={32} mood="happy"/>
+          </div>
+          <span className="font-bold tracking-tight text-lg">먹숭이</span>
+        </a>
+
+        {/* Desktop tabs */}
+        <nav className="hidden md:flex items-center gap-1 bg-zinc-100/50 p-1 rounded-full border border-zinc-200/50">
+          {TABS.map(l => {
+            const on = l === active;
+            const isHot = l === "이번주 핫픽";
+            return (
+              <a key={l} onClick={() => onNav(l)}
+                className={
+                  "px-5 py-2 rounded-full text-sm font-semibold tracking-tight cursor-pointer transition-colors flex items-center gap-1.5 " +
+                  (on
+                    ? "bg-white shadow-sm text-zinc-900"
+                    : "text-zinc-500 hover:text-zinc-900")
+                }>
+                {isHot && (
+                  <iconify-icon icon="solar:fire-bold-duotone" className="text-like"></iconify-icon>
+                )}
+                {l}
+              </a>
+            );
+          })}
+        </nav>
+
+        {/* Right meta */}
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-100 border border-zinc-200 text-xs font-semibold text-zinc-600">
+            <iconify-icon icon="solar:map-point-bold-duotone" className="text-primary-accent"></iconify-icon>
+            넥슨 판교
+          </div>
+          <div className="w-9 h-9 rounded-full border-2 border-white shadow-sm"
+            style={{ background: 'linear-gradient(135deg, #ffb86b, #ff6b6b)' }}/>
+        </div>
       </div>
-      <div className="spacer"/>
-      <span className="pill">
-        <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#00BF40' }}/>
-        넥슨 판교
-      </span>
-      <div className="avatar"/>
-    </div>
+    </header>
   );
 }
 
@@ -144,71 +175,408 @@ function StepFade({ stepKey, children }) {
 }
 
 // ───────── LANDING ─────────
-function Landing({ onStart, onBrowse, places, onNav }) {
+function Landing({ onStart, onBrowse, places, onNav, serverLikes = {}, optimisticDelta = {} }) {
   const recent = dataHelpers.recentSubmissionCount(places);
-  return (
-    <div className="landing-pad">
-      <div className="landing-hero">
-        <div style={{ flex: 1 }}>
-          <div style={{ fontSize: 14, color: '#B07900', fontWeight: 600, marginBottom: 16 }}>
-            조직운영비, 알차게 쓰자 🐒
-          </div>
-          <h1 style={{ font: 'var(--text-display-2)', letterSpacing: '-0.02em', margin: '0 0 16px', lineHeight: 1.1 }}>
-            팀비 어디 쓰지<span style={{ color: '#FFC107' }}>?</span><br/>
-            <span style={{ color: 'rgba(0,0,0,0.5)', fontSize: 32, fontWeight: 500 }}>
-              먹숭이가 동료 추천만 모았어요.
-            </span>
-          </h1>
-          <p style={{ color: '#46474c', fontSize: 16, lineHeight: 1.65, margin: '0 0 32px', maxWidth: 440 }}>
-            법카 긁어본 사람들이 직접 남긴 한 줄 추천.<br/>
-            팀장님도 만족하고, 팀비도 살아남는<br/>
-            <b>회식 한 끼</b>를 4가지 질문으로 찾아드려요.
-          </p>
-          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-            <button className="btn-primary" onClick={onStart}>먹숭이한테 물어보기 →</button>
-            <button className="btn-ghost" onClick={onBrowse}>그냥 둘러볼래요</button>
-          </div>
-          <div style={{ display: 'flex', gap: 24, marginTop: 40, fontSize: 14, color: '#70737c', flexWrap: 'wrap' }}>
-            <span>⏱ 평균 38초</span>
-            <span>· 등록 가게 {places.length}곳</span>
-            <span>· 이번주 신규 제보 {recent}건</span>
-          </div>
-        </div>
-        <div className="mascot-float" style={{ flex: '0 0 auto', position: 'relative', marginLeft: -20 }}>
-          <div className="bubble-bob"
-            style={{ position: 'absolute', top: -8, right: -24, background: '#fff',
-              border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px 16px 4px 16px',
-              padding: '10px 16px', boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
-              fontSize: 14, fontWeight: 600, color: '#37383c', whiteSpace: 'nowrap', zIndex: 1 }}>
-            오늘 어디 긁어? 🍌
-          </div>
-          <div className="bubble-bob delay"
-            style={{ position: 'absolute', bottom: 24, left: -32, background: '#fff',
-              border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px 16px 16px 4px',
-              padding: '10px 16px', boxShadow: '0 6px 20px rgba(0,0,0,0.08)',
-              fontSize: 14, fontWeight: 600, color: '#37383c', whiteSpace: 'nowrap', zIndex: 1 }}>
-            법카 챙겼지? 💳
-          </div>
-          <MeoksungMascot size={400} mood="full"/>
-        </div>
-      </div>
 
-      {places.length === 0 ? (
-        <div className="landing-foot">
-          <EmptyState onReport={() => onNav("제보하기")}/>
-        </div>
-      ) : (
-        <div className="landing-foot">
-          <div style={{ fontSize: 14, color: '#70737c', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            동료들이 알려준 가게 {places.length}곳
+  // 핫픽 미리보기 top 2
+  const hotPicks = useMemo(() => {
+    const sorted = [...places].sort((a, b) =>
+      likeCount(serverLikes, optimisticDelta, b.id) - likeCount(serverLikes, optimisticDelta, a.id)
+    );
+    return sorted.slice(0, 2);
+  }, [places, serverLikes, optimisticDelta]);
+
+  // 피드 미리보기 latest 3
+  const feedPreview = useMemo(() => dataHelpers.sortByRecent(places).slice(0, 3), [places]);
+
+  return (
+    <div className="overflow-hidden">
+      {/* HERO */}
+      <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 flex items-center overflow-hidden">
+        <div className="absolute top-1/4 -right-64 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div className="absolute bottom-0 -left-32 w-[400px] h-[400px] bg-like-bg rounded-full blur-3xl pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-8 items-center">
+
+            {/* Left */}
+            <div className="flex flex-col items-start">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/15 text-primary-accent font-semibold text-sm mb-8">
+                <iconify-icon icon="solar:wallet-money-bold-duotone" width="18"></iconify-icon>
+                조직운영비, 알차게 쓰자
+              </div>
+
+              <h1 className="text-5xl md:text-6xl lg:text-[72px] font-bold tracking-tight leading-[1.1] text-zinc-900 mb-6"
+                style={{ wordBreak: 'keep-all' }}>
+                팀비<br/>어디 쓰지<span className="text-primary">?</span>
+              </h1>
+
+              <p className="text-lg md:text-xl text-zinc-500 font-medium mb-8">
+                먹숭이가 동료 추천만 모았어요.
+              </p>
+
+              <p className="text-base md:text-lg text-zinc-600 leading-relaxed max-w-[45ch] mb-10"
+                style={{ wordBreak: 'keep-all' }}>
+                법카 긁어본 사람들이 직접 남긴 한 줄 추천.<br/>
+                팀장님도 만족하고, 팀비도 살아남는 <strong>회식 한 끼</strong>를
+                3가지 질문으로 빠르게 찾아드려요.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+                <button onClick={onStart}
+                  className="w-full sm:w-auto px-8 py-4 rounded-full bg-primary text-zinc-900 font-bold text-lg hover:bg-primary-hover hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 shadow-[0_0_40px_rgba(255,193,7,0.3)]">
+                  먹숭이한테 물어보기
+                  <iconify-icon icon="solar:arrow-right-linear" width="20"></iconify-icon>
+                </button>
+                <button onClick={onBrowse}
+                  className="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-zinc-600 font-bold text-lg border border-zinc-200 hover:bg-zinc-50 hover:text-zinc-900 transition-all">
+                  그냥 둘러볼래요
+                </button>
+              </div>
+
+              {/* Stats */}
+              <div className="mt-16 flex items-center gap-6 md:gap-10 border-t border-zinc-200/60 pt-8 w-full">
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1.5 text-zinc-400 mb-1">
+                    <iconify-icon icon="solar:stopwatch-bold-duotone"></iconify-icon>
+                    <span className="text-xs font-semibold uppercase tracking-wider">평균 매칭</span>
+                  </div>
+                  <span className="text-xl font-bold text-zinc-800">38초</span>
+                </div>
+                <div className="w-px h-8 bg-zinc-200"></div>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1.5 text-zinc-400 mb-1">
+                    <iconify-icon icon="solar:shop-bold-duotone"></iconify-icon>
+                    <span className="text-xs font-semibold uppercase tracking-wider">등록 가게</span>
+                  </div>
+                  <span className="text-xl font-bold text-zinc-800">{places.length}곳</span>
+                </div>
+                <div className="w-px h-8 bg-zinc-200"></div>
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-1.5 text-zinc-400 mb-1">
+                    <iconify-icon icon="solar:pen-new-round-bold-duotone"></iconify-icon>
+                    <span className="text-xs font-semibold uppercase tracking-wider">주간 신규</span>
+                  </div>
+                  <span className="text-xl font-bold text-zinc-800">{recent}건</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Mascot in frame */}
+            <div className="hidden lg:block relative">
+              <div className="relative w-full aspect-square max-w-[500px] mx-auto animate-float-slow">
+                {/* Main frame */}
+                <div className="absolute inset-0 rounded-[3rem] overflow-hidden border-8 border-white shadow-2xl z-10 transform rotate-[-2deg] flex items-center justify-center"
+                  style={{ background: 'linear-gradient(135deg, #FFF8E1 0%, #FFE082 60%, #FFB300 100%)' }}>
+                  <MeoksungMascot size={420} mood="full"/>
+                </div>
+
+                {/* Floating bubble 1 */}
+                <div className="absolute -top-6 -right-12 z-20 animate-bubble-1">
+                  <div className="bg-white rounded-2xl rounded-bl-none px-6 py-4 shadow-xl border border-zinc-100 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-primary-light flex items-center justify-center text-primary-accent">
+                      <iconify-icon icon="solar:card-2-bold-duotone" width="20"></iconify-icon>
+                    </div>
+                    <span className="font-bold text-zinc-800 whitespace-nowrap">오늘 어디 긁어?</span>
+                  </div>
+                </div>
+
+                {/* Floating bubble 2 */}
+                <div className="absolute -bottom-8 -left-8 z-20 animate-bubble-2">
+                  <div className="bg-zinc-900 rounded-2xl rounded-tr-none px-6 py-4 shadow-xl border border-zinc-800 flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-primary">
+                      <iconify-icon icon="solar:star-bold-duotone" width="20"></iconify-icon>
+                    </div>
+                    <span className="font-bold text-white whitespace-nowrap">법카 챙겼지?</span>
+                  </div>
+                </div>
+
+                {/* Pick badge */}
+                <div className="absolute top-1/2 -left-12 z-20 transform -translate-y-1/2">
+                  <div className="w-24 h-24 rounded-full bg-primary flex items-center justify-center shadow-lg transform -rotate-12 border-4 border-white">
+                    <span className="block text-xl font-black text-zinc-900 leading-none">Pick!</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            {places.slice(0, 6).map(p => (
-              <span key={p.id} className="chip" onClick={onBrowse}>{p.name} · {p.genre}</span>
-            ))}
+        </div>
+      </section>
+
+      {/* 3-STEP BENTO */}
+      <section className="py-24 md:py-32 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-16 text-center max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight leading-snug text-zinc-900 mb-4"
+              style={{ wordBreak: 'keep-all' }}>
+              딱 3가지 질문이면 충분해요
+            </h2>
+            <p className="text-lg text-zinc-500" style={{ wordBreak: 'keep-all' }}>
+              먹숭이와 대화하듯 조건을 고르면, 동료들이 다녀온 가게를 매칭해드려요.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+            {/* Step 1 */}
+            <div className="md:col-span-8 double-bezel group">
+              <div className="double-bezel-inner h-full p-8 md:p-12 flex flex-col justify-between overflow-hidden relative">
+                <div className="relative z-10">
+                  <span className="inline-block px-3 py-1 rounded-full bg-zinc-100 text-zinc-500 text-xs font-bold mb-4">STEP 1</span>
+                  <h3 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-8">언제 가는 거예요?</h3>
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="rounded-xl border-2 border-primary bg-primary-light/30 p-6 relative">
+                      <div className="absolute top-4 right-4 w-6 h-6 bg-primary rounded-full flex items-center justify-center text-white">
+                        <iconify-icon icon="solar:check-read-linear" width="16"></iconify-icon>
+                      </div>
+                      <iconify-icon icon="solar:sun-2-bold-duotone" width="32" className="text-primary-accent mb-4"></iconify-icon>
+                      <h4 className="font-bold text-lg text-zinc-900 mb-2">팀 점심 / 캐주얼</h4>
+                      <p className="text-sm text-zinc-500 leading-relaxed">도보 10분 안, 회전 빠른 곳 · 메뉴 단가 부담 적음</p>
+                    </div>
+                    <div className="rounded-xl border border-zinc-200 bg-white p-6 relative">
+                      <iconify-icon icon="solar:moon-bold-duotone" width="32" className="text-zinc-400 mb-4"></iconify-icon>
+                      <h4 className="font-bold text-lg text-zinc-900 mb-2">본 회식 / 법카 디너</h4>
+                      <p className="text-sm text-zinc-500 leading-relaxed">술 가능, 룸·단체석 · 늦게까지 가능 · 2차 연계</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute -right-8 -bottom-8 opacity-5 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none">
+                  <iconify-icon icon="solar:sun-2-bold-duotone" width="240"></iconify-icon>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 2 */}
+            <div className="md:col-span-4 double-bezel group">
+              <div className="double-bezel-inner h-full p-8 flex flex-col justify-between overflow-hidden relative">
+                <div className="relative z-10">
+                  <span className="inline-block px-3 py-1 rounded-full bg-zinc-100 text-zinc-500 text-xs font-bold mb-4">STEP 2</span>
+                  <h3 className="text-2xl font-bold text-zinc-900 mb-6">총 몇 명?</h3>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex items-center justify-between p-4 rounded-xl border border-zinc-200 bg-zinc-50">
+                      <span className="font-semibold text-zinc-700">2~4명 소수팀</span>
+                      <iconify-icon icon="solar:users-group-two-rounded-bold-duotone" className="text-zinc-400" width="20"></iconify-icon>
+                    </div>
+                    <div className="flex items-center justify-between p-4 rounded-xl border-2 border-primary bg-primary-light/30">
+                      <span className="font-bold text-zinc-900">5~10명 팀회식</span>
+                      <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center text-white">
+                        <iconify-icon icon="solar:check-read-linear" width="14"></iconify-icon>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-4 rounded-xl border border-zinc-200 bg-zinc-50">
+                      <span className="font-semibold text-zinc-700">11~20명 부서</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Step 3 */}
+            <div className="md:col-span-12 double-bezel group">
+              <div className="double-bezel-inner h-full p-8 md:p-12 flex flex-col md:flex-row items-center gap-12 overflow-hidden relative">
+                <div className="w-full md:w-1/3 relative z-10">
+                  <span className="inline-block px-3 py-1 rounded-full bg-zinc-100 text-zinc-500 text-xs font-bold mb-4">STEP 3</span>
+                  <h3 className="text-2xl md:text-3xl font-bold text-zinc-900 mb-4" style={{ wordBreak: 'keep-all' }}>땡기는 게 있어요?</h3>
+                  <p className="text-zinc-500" style={{ wordBreak: 'keep-all' }}>장르, 예산, 추가 조건을 자유롭게 골라주세요.</p>
+                </div>
+                <div className="w-full md:w-2/3 relative z-10 flex flex-wrap gap-3">
+                  <div className="px-5 py-3 rounded-full border border-zinc-200 bg-white font-semibold text-zinc-600 shadow-sm">한식</div>
+                  <div className="px-5 py-3 rounded-full border-2 border-primary bg-primary-light/30 font-bold text-primary-accent shadow-sm">고기구이</div>
+                  <div className="px-5 py-3 rounded-full border border-zinc-200 bg-white font-semibold text-zinc-600 shadow-sm">일식</div>
+                  <div className="px-5 py-3 rounded-full border border-zinc-200 bg-white font-semibold text-zinc-600 shadow-sm">양식</div>
+                  <div className="px-5 py-3 rounded-full border-2 border-primary bg-primary-light/30 font-bold text-primary-accent shadow-sm">룸/단체석</div>
+                  <div className="px-5 py-3 rounded-full border border-zinc-200 bg-white font-semibold text-zinc-600 shadow-sm">주차 가능</div>
+                  <div className="px-5 py-3 rounded-full border-2 border-primary bg-primary-light/30 font-bold text-primary-accent shadow-sm">3~5만원</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
+
+      {/* HOT PICKS PREVIEW */}
+      {hotPicks.length > 0 && (
+        <section className="py-24 md:py-32 bg-white relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col md:flex-row items-end justify-between mb-16">
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <iconify-icon icon="solar:fire-bold-duotone" className="text-like text-2xl"></iconify-icon>
+                  <span className="text-sm font-bold tracking-widest text-like uppercase">Hot Picks</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-zinc-900">이번주 핫픽</h2>
+              </div>
+              <a onClick={() => onNav("이번주 핫픽")}
+                className="mt-6 md:mt-0 text-primary-accent font-semibold flex items-center gap-1 hover:text-zinc-900 transition-colors cursor-pointer">
+                전체 순위 보기 <iconify-icon icon="solar:arrow-right-linear"></iconify-icon>
+              </a>
+            </div>
+
+            <div className="grid gap-6">
+              {hotPicks.map((p, i) => (
+                <div key={p.id} onClick={() => onNav("이번주 핫픽")}
+                  className="flex flex-col md:flex-row bg-surface rounded-[2rem] p-4 gap-6 md:gap-10 items-center hover:-translate-y-1 transition-transform duration-500 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] border border-zinc-100 cursor-pointer">
+                  <div className="w-full md:w-[280px] h-[200px] rounded-2xl overflow-hidden relative shrink-0">
+                    {p.thumbnail ? (
+                      <img src={p.thumbnail} alt={p.name} className="w-full h-full object-cover"/>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center"
+                        style={{ background: 'linear-gradient(135deg, #FFF8E1, #FFE082)' }}>
+                        <MeoksungMascot size={120} mood="happy"/>
+                      </div>
+                    )}
+                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
+                      {i === 0 && <iconify-icon icon="solar:medal-star-bold-duotone" className="text-primary"></iconify-icon>}
+                      <span className="font-black text-sm text-zinc-900">No.{i + 1}</span>
+                    </div>
+                  </div>
+                  <div className="flex-1 py-2 pr-4 w-full">
+                    <div className="flex items-center gap-2 mb-3">
+                      {i === 0 && <span className="px-2.5 py-1 rounded bg-[#FEF4E6] text-[#D17600] text-xs font-bold tracking-tight">먹숭이's PICK</span>}
+                      <span className="text-zinc-400 text-sm font-medium">{p.genre}{p.priceRange ? ` · ${p.priceRange}` : ""}</span>
+                    </div>
+                    <div className="flex items-start justify-between gap-4 mb-4">
+                      <h3 className="text-2xl font-bold text-zinc-900 line-clamp-1">{p.name}</h3>
+                      <div className="flex items-center gap-1.5 text-like font-bold shrink-0 bg-like-bg px-3 py-1.5 rounded-full">
+                        <iconify-icon icon="solar:heart-bold"></iconify-icon>
+                        {likeCount(serverLikes, optimisticDelta, p.id)}
+                      </div>
+                    </div>
+                    {p.extras && p.extras.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mb-5">
+                        {p.extras.slice(0, 3).map(r => (
+                          <span key={r} className="px-2 py-1 bg-white rounded text-xs font-semibold text-zinc-600 border border-zinc-200">✓ {r}</span>
+                        ))}
+                      </div>
+                    )}
+                    {p.comment && (
+                      <div className="comment-box p-4 rounded-xl relative">
+                        <iconify-icon icon="solar:quote-left-bold-duotone" className="absolute top-3 left-3 text-primary/30 text-2xl"></iconify-icon>
+                        <p className="text-zinc-700 font-medium pl-8 leading-relaxed relative z-10 text-sm md:text-base" style={{ wordBreak: 'keep-all' }}>
+                          {p.comment}
+                        </p>
+                        <div className="pl-8 mt-2 text-xs text-zinc-500">
+                          {p.nickname}{p.team ? ` · ${p.team}` : ""}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
       )}
+
+      {/* FEED PREVIEW (dark) */}
+      {feedPreview.length > 0 && (
+        <section className="py-24 md:py-32 relative bg-zinc-900">
+          <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-zinc-900 to-zinc-900 pointer-events-none"></div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="flex flex-col md:flex-row items-end justify-between mb-16 border-b border-zinc-800 pb-8">
+              <div>
+                <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-4" style={{ wordBreak: 'keep-all' }}>
+                  동료들의 실시간 제보
+                </h2>
+                <p className="text-zinc-400">최근 업데이트된 진짜 후기들을 모아봤어요.</p>
+              </div>
+              <button onClick={() => onNav("제보 피드")}
+                className="mt-6 md:mt-0 px-6 py-3 rounded-full bg-zinc-800 text-white font-medium hover:bg-zinc-700 transition-colors">
+                제보 피드 둘러보기
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {feedPreview.map(p => {
+                const cnt = likeCount(serverLikes, optimisticDelta, p.id);
+                return (
+                  <div key={p.id} onClick={() => onNav("제보 피드")}
+                    className="bg-zinc-800/50 rounded-2xl overflow-hidden border border-zinc-700/50 hover:bg-zinc-800 transition-colors group cursor-pointer">
+                    <div className="h-40 overflow-hidden relative">
+                      {p.thumbnail ? (
+                        <img src={p.thumbnail} alt={p.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center group-hover:scale-105 transition-transform duration-700"
+                          style={{ background: 'linear-gradient(135deg, #1f1f23, #2a2a30)' }}>
+                          <MeoksungMascot size={80} mood="happy"/>
+                        </div>
+                      )}
+                      <div className="absolute top-3 right-3 bg-zinc-900/80 backdrop-blur-sm px-2.5 py-1 rounded-full flex items-center gap-1">
+                        <iconify-icon icon={cnt > 0 ? "solar:heart-bold" : "solar:heart-linear"} className={cnt > 0 ? "text-like text-sm" : "text-zinc-400 text-sm"}></iconify-icon>
+                        <span className="text-white text-xs font-bold">{cnt}</span>
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <h4 className="text-xl font-bold text-white mb-1 truncate">{p.name}</h4>
+                      <div className="text-zinc-400 text-sm mb-4 truncate">
+                        {p.genre}{p.priceRange ? ` · ${p.priceRange}` : ""}{p.nickname ? ` · ${p.nickname}` : ""}
+                      </div>
+                      {p.extras && p.extras.length > 0 && (
+                        <div className="flex gap-1 mb-4 overflow-hidden">
+                          {p.extras.slice(0, 2).map(r => (
+                            <span key={r} className="px-2 py-1 bg-zinc-900 rounded text-xs font-medium text-zinc-300 whitespace-nowrap">✓ {r}</span>
+                          ))}
+                        </div>
+                      )}
+                      {p.comment && (
+                        <p className="text-zinc-300 text-sm line-clamp-2 leading-relaxed" style={{ wordBreak: 'keep-all' }}>
+                          {p.comment}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* CTA */}
+      <section className="py-32 md:py-48 bg-primary relative overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10 text-center">
+          <div className="w-20 h-20 bg-white rounded-full mx-auto mb-8 flex items-center justify-center text-primary-accent shadow-xl">
+            <iconify-icon icon="solar:pen-new-round-bold-duotone" width="40"></iconify-icon>
+          </div>
+          <h2 className="text-5xl md:text-7xl font-bold tracking-tight text-zinc-900 mb-6 leading-[1.1]"
+            style={{ wordBreak: 'keep-all' }}>
+            나만 아는 맛집,<br/>혼자만 알기 아쉽다면?
+          </h2>
+          <p className="text-xl md:text-2xl text-primary-accent font-medium mb-12"
+            style={{ wordBreak: 'keep-all' }}>
+            팀비 잘 쓰는 법, 동료들이 궁금해해요. 가게 정보를 알려주세요.
+          </p>
+          <button onClick={() => onNav("제보하기")}
+            className="px-10 py-5 rounded-full bg-zinc-900 text-white font-bold text-xl hover:bg-black hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mx-auto shadow-2xl">
+            가게 제보하기
+            <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+              <iconify-icon icon="solar:arrow-right-linear" width="20"></iconify-icon>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-surface py-12 border-t border-zinc-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-zinc-200 flex items-center justify-center overflow-hidden">
+              <MeoksungMascot size={28} mood="happy"/>
+            </div>
+            <span className="font-bold text-zinc-800">먹숭이</span>
+          </div>
+          <p className="text-zinc-500 text-sm font-medium">
+            넥슨 판교 사내 맛집 추천. 만든 이: 권윤혜.
+          </p>
+          <div className="flex gap-4">
+            <a className="text-zinc-400 hover:text-zinc-900 transition-colors cursor-pointer">
+              <iconify-icon icon="solar:figma-bold" width="24"></iconify-icon>
+            </a>
+            <a className="text-zinc-400 hover:text-zinc-900 transition-colors cursor-pointer">
+              <iconify-icon icon="solar:github-bold" width="24"></iconify-icon>
+            </a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
@@ -1638,7 +2006,8 @@ function App() {
   if (tab === "추천") {
     if (recScreen === "landing") {
       content = <Landing onStart={handleStart} onBrowse={handleBrowse}
-        places={places} onNav={handleNav}/>;
+        places={places} onNav={handleNav}
+        serverLikes={serverLikes} optimisticDelta={optimisticDelta}/>;
     } else if (recScreen === "step1") {
       content = <StepMode filters={filters} set={set}
         next={() => setRecScreen("step2")} back={handleHome}/>;
