@@ -766,5 +766,31 @@
     "naverLinkManual": true,
     "naverCategory": "육류,고기요리",
     "thumbnail": "https://ldb-phinf.pstatic.net/20260427_200/1777283088389II5I7_JPEG/260421_%BC%DB%B5%B5%B0%A5%BA%F1_%B8%DE%B4%BA%BA%CF_%B8%AE%B4%BA%BE%F3_%C5%EB%C7%D5_%C6%C7%B1%B3_P_7.jpg"
+  },
+  {
+    "id": "restaurant-1778645614247",
+    "name": "아시안퀴진 똠 판교점",
+    "address": "경기 성남시 분당구 대왕판교로645번길 36 NS홈쇼핑별관 지하1층",
+    "genre": "아시안",
+    "mood": "casual",
+    "mealType": "lunch",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "1~2만원",
+      "2~3만원"
+    ],
+    "extras": [],
+    "comment": "푸팟퐁커리랑 코코넛치킨튀김이 엄청 맛있음. 다른 것도 다 무난무난 맛있는 편. NS라 넥슨인 할인도 됨.",
+    "nickname": "zizon시은",
+    "team": "UX디자인팀",
+    "submittedAt": "2026-05-13T04:13:34.247Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/5oE5LiPM",
+    "naverLinkManual": true,
+    "naverCategory": "베트남음식",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20230927_119/1695775153781r9JRi_JPEG/%C5%A9%B1%E2%BA%AF%C8%AF0227-0131.jpg"
   }
 ]
