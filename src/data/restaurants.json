@@ -522,7 +522,7 @@
     "name": "빈티지1988",
     "address": "경기 성남시 분당구 판교역로 231 에이치스퀘어 에스동 101호 빈티지1988",
     "genre": "양식",
-    "mood": "formal",
+    "mood": "quiet",
     "mealType": "lunch",
     "people": [
       "2~4명 소수팀"
@@ -537,11 +537,28 @@
     "comment": "우아하게 양식이 먹고싶다면 빈티지 1988. 판교에서 오래 살아남는다는것? 맛있다는것",
     "nickname": "디자인팀회식담당",
     "team": "디자인팀",
-    "submittedAt": "2026-05-13T03:57:18.835Z",
+    "submittedAt": "2026-05-13T03:57:34.204Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/entry/place/38309897?c=15.62,0,0,0,dh&placePath=/home?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202605131255&locale=ko&svcName=map_pcv5",
     "naverLinkManual": true,
     "naverCategory": "양식",
-    "thumbnail": "https://img.siksinhot.com/place/1493273276069044.jpg"
+    "thumbnail": "https://img.siksinhot.com/place/1493273276069044.jpg",
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀"
+    ],
+    "priceRangeLabels": [
+      "2~3만원"
+    ],
+    "menu": [],
+    "tone": "warm",
+    "capMin": 2,
+    "capMax": 4,
+    "priceMin": 2,
+    "priceMax": 3,
+    "hasRoom": false,
+    "hasParking": true,
+    "hasReserve": false,
+    "walkable": true
   }
 ]
