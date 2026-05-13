@@ -620,7 +620,8 @@
     "mood": "quiet",
     "mealType": "lunch",
     "people": [
-      "2~4명 소수팀"
+      "2~4명 소수팀",
+      "5~10명 팀회식"
     ],
     "priceRange": [
       "2~3만원"
@@ -632,7 +633,7 @@
     "comment": "우아하게 양식이 먹고싶다면 빈티지 1988. 판교에서 오래 살아남는다는것? 맛있다는것",
     "nickname": "디자인팀회식담당",
     "team": "디자인팀",
-    "submittedAt": "2026-05-13T03:57:34.204Z",
+    "submittedAt": "2026-05-13T09:06:40.794Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/entry/place/38309897?c=15.62,0,0,0,dh&placePath=/home?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202605131255&locale=ko&svcName=map_pcv5",
     "naverLinkManual": true,
