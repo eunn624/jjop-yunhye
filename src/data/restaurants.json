@@ -1359,5 +1359,35 @@
     "naverLinkManual": true,
     "naverCategory": "육류,고기요리",
     "thumbnail": "https://ldb-phinf.pstatic.net/20200318_220/1584495132804DnGoz_JPEG/ZIYA7P1hbmunlYqLEbCZ51zD.jpg"
+  },
+  {
+    "id": "restaurant-1778655630207",
+    "name": "판교왕징양다리양꼬치식당",
+    "address": "경기 성남시 분당구 대왕판교로606번길 10 205호, 206호",
+    "genre": "중식",
+    "mood": "social",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원"
+    ],
+    "extras": [
+      "역 근처",
+      "술 가능",
+      "예약 가능"
+    ],
+    "comment": "양다리를 통째로 먹을 수 있는 곳 맛있고 비주얼도 좋은데 시끄러움",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-13T07:00:30.207Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/502MZy2z",
+    "naverLinkManual": true,
+    "naverCategory": "양꼬치",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20240109_289/1704778227760i6zn8_JPEG/1000011743.jpg"
   }
 ]
