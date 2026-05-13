@@ -346,5 +346,31 @@
     "naverLinkManual": true,
     "naverCategory": "일식당",
     "thumbnail": "http://img1.daumcdn.net/kakaotv/KAKAOACCOUNT/132387254/thumb/20190422222639"
+  },
+  {
+    "id": "restaurant-1778643809123",
+    "name": "허니피그",
+    "address": "경기 성남시 분당구 동판교로52번길 3-8 1층 허니피그",
+    "genre": "고기구이",
+    "mood": "casual",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "1~2만원"
+    ],
+    "extras": [
+      "술 가능"
+    ],
+    "comment": "동네사람만 아는 판교 돼지고기 찐맛집. 버터김치볶음이 킥.",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T03:43:29.123Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/entry/place/20819240?lng=127.1150514&lat=37.3876588&placePath=/home?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202605131241&locale=ko&svcName=map_pcv5&searchType=place&c=15.00,0,0,0,dh",
+    "naverLinkManual": true,
+    "naverCategory": "돼지고기구이",
+    "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/750_750_20240608015112208_photo_592629a97138.webp"
   }
 ]
