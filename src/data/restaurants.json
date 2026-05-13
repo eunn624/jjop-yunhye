@@ -1326,5 +1326,38 @@
     "naverLinkManual": true,
     "naverCategory": "맥주,호프",
     "thumbnail": "https://ldb-phinf.pstatic.net/20250501_290/1746091222868q3xH3_JPEG/KakaoTalk_Image_2022-07-03-11-08-46.jpeg"
+  },
+  {
+    "id": "restaurant-1778654334345",
+    "name": "서현궁 백현점",
+    "address": "경기 성남시 분당구 판교백현로 63",
+    "genre": "고기구이",
+    "mood": "formal",
+    "mealType": "both",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식",
+      "11~20명 부서",
+      "20명+ 대규모"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원",
+      "5만원+"
+    ],
+    "extras": [
+      "예약 가능",
+      "주차 가능",
+      "룸/단체석"
+    ],
+    "comment": "반찬도 맛있고 구워줘서 좋음. 차 타고 가야한다는 점이 아쉬움",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-13T06:38:54.345Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/FqWtcjej",
+    "naverLinkManual": true,
+    "naverCategory": "육류,고기요리",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20200318_220/1584495132804DnGoz_JPEG/ZIYA7P1hbmunlYqLEbCZ51zD.jpg"
   }
 ]
