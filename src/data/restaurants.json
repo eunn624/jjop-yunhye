@@ -1494,5 +1494,38 @@
     "reports": 1,
     "naverLink": "https://naver.me/FsRsJvNJ",
     "naverLinkManual": true
+  },
+  {
+    "id": "restaurant-1778657081106",
+    "name": "블루샹하이",
+    "address": "경기 성남시 분당구 정자동 16-2",
+    "genre": "중식",
+    "mood": "formal",
+    "mealType": "both",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원",
+      "5만원+"
+    ],
+    "extras": [
+      "주차 가능",
+      "술 가능",
+      "예약 가능",
+      "룸/단체석",
+      "역 근처"
+    ],
+    "comment": "여경래 쉐프님이 운영한다는 중식당. 운 좋으면 만날 수 있다고 함",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-13T07:24:41.106Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/GYC9iZue",
+    "naverLinkManual": true,
+    "naverCategory": "중식당",
+    "thumbnail": "https://i1.ruliweb.com/img/20/05/05/171e479089629c8.jpg"
   }
 ]
