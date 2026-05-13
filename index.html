@@ -185,6 +185,19 @@
     outline: 2px solid #FFC107; outline-offset: 2px;
   }
 
+  /* 제보 피드 — 3열 카드 그리드 (responsive) */
+  .feed-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 900px) {
+    .feed-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 600px) {
+    .feed-grid { grid-template-columns: 1fr; }
+  }
+
   /* BGM toggle (fixed bottom-right) */
   .bgm-toggle {
     position: fixed; bottom: 24px; right: 24px; z-index: 50;

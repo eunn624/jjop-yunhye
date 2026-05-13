@@ -988,7 +988,7 @@ function ReportForm({ toast, onSubmitted, places = [] }) {
 }
 
 // ───────── REPORT FEED ─────────
-function ReportFeed({ places, onDetail, onNav }) {
+function ReportFeed({ places, onDetail, onNav, serverLikes = {}, optimisticDelta = {} }) {
   const filtered = useMemo(() => dataHelpers.sortByRecent(places), [places]);
 
   return (
@@ -1003,28 +1003,43 @@ function ReportFeed({ places, onDetail, onNav }) {
         {filtered.length === 0 ? (
           <EmptyState onReport={() => onNav("제보하기")}/>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {filtered.map(p => (
-              <div key={p.id} className="opt-card" onClick={() => onDetail(p.id)}
-                style={{ background: '#fff', borderRadius: 12, padding: 16,
-                  border: '1px solid rgba(0,0,0,0.06)', display: 'flex', gap: 14, cursor: 'pointer' }}>
-                <div style={{ width: 80, flex: '0 0 80px' }}><PlaceThumb place={p} h={64} rounded={6}/></div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 15, fontWeight: 600 }}>{p.name}</div>
-                  <div style={{ fontSize: 12, color: '#70737c', marginTop: 2, marginBottom: 6 }}>
-                    {p.genre} · {p.priceRange || "예산 미정"}
-                    {p.nickname && ` · ${p.nickname}`}
-                  </div>
-                  {p.comment && (
-                    <div style={{ fontSize: 13, color: '#37383c', lineHeight: 1.4,
-                      overflow: 'hidden', textOverflow: 'ellipsis',
-                      display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                      "{p.comment}"
+          <div className="feed-grid">
+            {filtered.map(p => {
+              const cnt = likeCount(serverLikes, optimisticDelta, p.id);
+              return (
+                <div key={p.id} className="opt-card" onClick={() => onDetail(p.id)}
+                  style={{ background: '#fff', borderRadius: 12, padding: 14,
+                    border: '1px solid rgba(0,0,0,0.06)',
+                    display: 'flex', flexDirection: 'column', gap: 10,
+                    cursor: 'pointer', minWidth: 0 }}>
+                  <PlaceThumb place={p} h={140} rounded={8}/>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                      <div style={{ fontSize: 15, fontWeight: 600, flex: 1,
+                        overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {p.name}
+                      </div>
+                      {cnt > 0 && (
+                        <span style={{ fontSize: 12, color: '#c2185b', fontWeight: 600,
+                          flexShrink: 0 }}>❤️ {cnt}</span>
+                      )}
                     </div>
-                  )}
+                    <div style={{ fontSize: 12, color: '#70737c', marginBottom: 8,
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {p.genre} · {p.priceRange || "예산 미정"}
+                      {p.nickname && ` · ${p.nickname}`}
+                    </div>
+                    {p.comment && (
+                      <div style={{ fontSize: 13, color: '#37383c', lineHeight: 1.4,
+                        overflow: 'hidden', textOverflow: 'ellipsis',
+                        display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                        "{p.comment}"
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -1236,6 +1251,11 @@ function App() {
   const [optimisticDelta, setOptimisticDelta] = useState({}); // 이번 세션 +/- 합
   const [toastEl, toast] = useToast();
 
+  // setLikedSet 업데이터가 비동기라 바깥에서 같은 tick에 willBeLiked를 읽으면 안 됨.
+  // ref로 항상 최신 likedSet을 보게 한다.
+  const likedSetRef = useRef(likedSet);
+  likedSetRef.current = likedSet;
+
   // 마운트 시 서버 좋아요 카운트 fetch (Apps Script GET ?what=likes)
   useEffect(() => {
     const url = (window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL) || "";
@@ -1248,21 +1268,20 @@ function App() {
         // 새 페이지 로드라 이번 세션 누적치는 의미 없음 — 리셋
         setOptimisticDelta({});
       })
-      .catch(() => { /* 실패 시 조용히 — 카운트는 0으로 표시 */ });
+      .catch(err => console.warn("[likes] GET failed (서버 좋아요 카운트 로드 실패):", err));
   }, []);
 
   const toggleLike = useCallback((id) => {
-    let willBeLiked = false;
+    // ref로 현재 liked 상태를 읽어서 delta 먼저 결정 (setState 업데이터 비동기 race 회피)
+    const willBeLiked = !likedSetRef.current[id];
+    const delta = willBeLiked ? 1 : -1;
+
     setLikedSet(prev => {
-      const liked = !prev[id];
-      willBeLiked = liked;
       const next = { ...prev };
-      if (liked) next[id] = true; else delete next[id];
+      if (willBeLiked) next[id] = true; else delete next[id];
       saveLikedSet(next);
       return next;
     });
-    // optimistic delta (다음 GET 으로 흡수)
-    const delta = willBeLiked ? 1 : -1;
     setOptimisticDelta(prev => {
       const cur = prev[id] || 0;
       const nextVal = cur + delta;
@@ -1270,6 +1289,7 @@ function App() {
       if (nextVal === 0) delete next[id]; else next[id] = nextVal;
       return next;
     });
+
     // 서버로 fire-and-forget (no-cors)
     const url = (window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL) || "";
     if (!url || url === "여기에_URL_입력") return;
@@ -1278,7 +1298,7 @@ function App() {
       mode: "no-cors",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({ action: "like", placeId: id, delta }),
-    }).catch(() => {});
+    }).catch(err => console.warn("[likes] POST failed:", err));
   }, []);
 
   // 데이터 로드 — JSON + localStorage 펜딩/삭제 머지
@@ -1426,6 +1446,7 @@ function App() {
     }
   } else if (tab === "제보 피드") {
     content = <ReportFeed places={places}
+      serverLikes={serverLikes} optimisticDelta={optimisticDelta}
       onDetail={id => setDetailId(id)} onNav={handleNav}/>;
   } else if (tab === "제보하기") {
     content = <ReportForm toast={toast} onSubmitted={handleSubmitted} places={places}/>;

@@ -8,7 +8,8 @@
       "Bash(wait)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:5173/src/proto-app.jsx)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(curl -s -o /dev/null -w \"proto-app: %{http_code}\\\\nindex: %{http_code}\\\\n\" http://localhost:5173/src/proto-app.jsx)"
     ]
   }
 }
