@@ -577,14 +577,31 @@
     "extras": [
       "주차 가능"
     ],
-    "comment": "판교역,유스페이스를 벗어나고 싶을때는 여기. 운중동에서 꽤나 유명한 양식집. 분위기가 좋다",
+    "comment": "포도샐러드는 꼭 먹기. 운중동에서 꽤나 유명한 양식집. 분위기가 좋다",
     "nickname": "디자인팀회식담당",
     "team": "디자인팀",
-    "submittedAt": "2026-05-13T04:01:05.584Z",
+    "submittedAt": "2026-05-13T04:01:29.088Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/entry/place/20747211?c=16.43,0,0,0,dh&placePath=/home?bookmarkId=3900353849&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202605131259&locale=ko&svcName=map_pcv5",
     "naverLinkManual": true,
     "naverCategory": "이탈리아음식",
-    "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/20240310175310_photo1_98fb6cdacf33.webp"
+    "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/20240310175310_photo1_98fb6cdacf33.webp",
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀"
+    ],
+    "priceRangeLabels": [
+      "2~3만원"
+    ],
+    "menu": [],
+    "tone": "warm",
+    "capMin": 2,
+    "capMax": 4,
+    "priceMin": 2,
+    "priceMax": 3,
+    "hasRoom": false,
+    "hasParking": true,
+    "hasReserve": false,
+    "walkable": false
   }
 ]
