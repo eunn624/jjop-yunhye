@@ -927,5 +927,31 @@
     "naverLinkManual": true,
     "naverCategory": "요리주점",
     "thumbnail": "https://www.diningcode.com/_next/image?url=https%3A%2F%2Fd12zq4w4guyljn.cloudfront.net%2F750_750_20220327030706_photo2_8e6bfe6820d3.webp&w=1080&q=75"
+  },
+  {
+    "id": "restaurant-1778646616939",
+    "name": "야키토리 화련",
+    "address": "경기 성남시 분당구 판교역로192번길 22 1층 106호",
+    "genre": "일식",
+    "mood": "casual",
+    "mealType": "lunch",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "2~3만원"
+    ],
+    "extras": [
+      "역 근처"
+    ],
+    "comment": "시원한 일본 맥주가 땡길때. 꼬치류도 대체로 맛있다.",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T04:30:16.939Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EC%95%BC%ED%82%A4%ED%86%A0%EB%A6%AC/place/1288737397?c=15.00,0,0,0,dh&placePath=/home?entry=bmp&n_ad_group_type=10&n_query=%EC%95%BC%ED%82%A4%ED%86%A0%EB%A6%AC&from=map&fromPanelNum=2&timestamp=202605131328&locale=ko&svcName=map_pcv5&searchText=%EC%95%BC%ED%82%A4%ED%86%A0%EB%A6%AC",
+    "naverLinkManual": true,
+    "naverCategory": "이자카야",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20251114_48/1763054967080x7ehz_JPEG/IMG_5020.jpeg"
   }
 ]
