@@ -208,7 +208,7 @@ function Landing({ onStart, onBrowse, places, onNav, serverLikes = {}, optimisti
 
               <h1 className="text-5xl md:text-6xl lg:text-[72px] font-bold tracking-tight leading-[1.1] text-zinc-900 mb-6"
                 style={{ wordBreak: 'keep-all' }}>
-                팀비<br/>어디 쓰지<span className="text-primary">?</span>
+                팀비<br/>어디에 쓰지<span className="text-primary">?</span>
               </h1>
 
               <p className="text-lg md:text-xl text-zinc-500 font-medium mb-8">
@@ -565,7 +565,7 @@ function Landing({ onStart, onBrowse, places, onNav, serverLikes = {}, optimisti
             <span className="font-bold text-zinc-800">먹숭이</span>
           </div>
           <p className="text-zinc-500 text-sm font-medium">
-            넥슨 판교 사내 맛집 추천. 만든 이: 권윤혜.
+            넥슨 판교 사내 맛집 추천. 만든 이: 김시은
           </p>
           <div className="flex gap-4">
             <a className="text-zinc-400 hover:text-zinc-900 transition-colors cursor-pointer">
