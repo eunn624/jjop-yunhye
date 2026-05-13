@@ -1034,5 +1034,38 @@
     "naverLinkManual": true,
     "naverCategory": "조개요리",
     "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipOCPRSlDpDCaN6e_Zbu-RwT1h8Vk803vWxoFD0d=w800-h1060-k-no"
+  },
+  {
+    "id": "restaurant-1778648293519",
+    "name": "됐소 판교점",
+    "address": "경기 성남시 분당구 대왕판교로 670 유스페이스2 A동 B101호",
+    "genre": "고기구이",
+    "mood": "social",
+    "mealType": "dinner",
+    "people": [
+      "5~10명 팀회식",
+      "11~20명 부서",
+      "20명+ 대규모"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원"
+    ],
+    "extras": [
+      "도보 10분 이내",
+      "주차 가능",
+      "예약 가능",
+      "룸/단체석",
+      "술 가능"
+    ],
+    "comment": "단체로 가기 좋은 고깃집. 회사랑 가깝기도 하고 룸이 있어서 모임하기 좋다.",
+    "nickname": "회식왕",
+    "team": "UX디자인",
+    "submittedAt": "2026-05-13T04:58:13.519Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/FhULrpQQ",
+    "naverLinkManual": true,
+    "naverCategory": "육류,고기요리",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20230308_156/1678249766145rUDnF_JPEG/%B5%C6%BC%D2%B8%F0%B5%EB1.jpg"
   }
 ]
