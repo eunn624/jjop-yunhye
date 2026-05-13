@@ -839,10 +839,31 @@
     "comment": "유스페이스 중식당 맛집. 만만하게 가기 좋다",
     "nickname": "디자인팀회식담당",
     "team": "디자인팀",
-    "submittedAt": "2026-05-13T04:24:50.072Z",
+    "submittedAt": "2026-05-13T04:37:18.235Z",
     "reports": 1,
-    "naverLink": "https://map.naver.com/p/search/%EC%B0%AC/place/1444510727?c=15.00,0,0,0,dh&placePath=/home?bk_query=%EC%B0%AC&entry=bmp&from=map&fromPanelNum=2&timestamp=202605131323&locale=ko&svcName=map_pcv5&searchText=%EC%B0%AC",
-    "naverLinkManual": true
+    "naverLink": "https://naver.me/GYC9oBqS",
+    "naverLinkManual": true,
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRangeLabels": [
+      "1~2만원",
+      "2~3만원"
+    ],
+    "menu": [],
+    "tone": "soup",
+    "thumbnail": "",
+    "naverCategory": "",
+    "capMin": 2,
+    "capMax": 10,
+    "priceMin": 1,
+    "priceMax": 3,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": true
   },
   {
     "id": "restaurant-1778646315974",
