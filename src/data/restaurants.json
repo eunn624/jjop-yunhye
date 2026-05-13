@@ -278,17 +278,39 @@
     "genre": "한식",
     "mood": "formal",
     "mealType": "both",
-    "people": "11~20명 부서",
-    "priceRange": "1~2만원",
+    "people": [
+      "11~20명 부서"
+    ],
+    "priceRange": [
+      "2~3만원"
+    ],
     "extras": [],
     "comment": "제일 가까운 중식당",
     "nickname": "회식왕",
     "team": "디자인팀",
-    "submittedAt": "2026-05-12T11:29:09.580Z",
+    "submittedAt": "2026-05-13T05:46:58.259Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/search/%EC%99%95%EC%8A%A4%EB%8D%95%20%ED%8C%90%EA%B5%90%EC%A0%90",
     "naverCategory": "중식당",
-    "thumbnail": "https://ldb-phinf.pstatic.net/20230118_298/1674033320192vKeJj_JPEG/%C5%A9%B1%E2%BA%AF%C8%AF_MG_8896.jpg"
+    "thumbnail": "https://ldb-phinf.pstatic.net/20230118_298/1674033320192vKeJj_JPEG/%C5%A9%B1%E2%BA%AF%C8%AF_MG_8896.jpg",
+    "sub": "",
+    "peopleLabels": [
+      "11~20명 부서"
+    ],
+    "priceRangeLabels": [
+      "1~2만원"
+    ],
+    "menu": [],
+    "tone": "warm",
+    "capMin": 11,
+    "capMax": 20,
+    "priceMin": 1,
+    "priceMax": 2,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": false,
+    "naverLinkManual": true
   },
   {
     "id": "restaurant-1778585425952",
