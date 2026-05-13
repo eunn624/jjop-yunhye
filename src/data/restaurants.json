@@ -320,5 +320,31 @@
     "hasParking": false,
     "hasReserve": false,
     "walkable": false
+  },
+  {
+    "id": "restaurant-1778639451709",
+    "name": "소바니우동",
+    "address": "경기 성남시 분당구 대왕판교로 660 지하1층 122호",
+    "genre": "일식",
+    "mood": "quiet",
+    "mealType": "lunch",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "1~2만원"
+    ],
+    "extras": [
+      "도보 10분 이내"
+    ],
+    "comment": "우동 먹고 싶은날 추천! 카레도 맛있다",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T02:30:51.709Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EC%86%8C%EB%B0%94%EB%8B%88%EC%9A%B0%EB%8F%99/place/36459479?placePath=/home?bk_query=%EC%86%8C%EB%B0%94%EB%8B%88%EC%9A%B0%EB%8F%99&entry=pll&from=map&fromNxList=true&fromPanelNum=2&timestamp=202605131128&locale=ko&svcName=map_pcv5&searchText=%EC%86%8C%EB%B0%94%EB%8B%88%EC%9A%B0%EB%8F%99&searchType=place&c=15.00,0,0,0,dh",
+    "naverLinkManual": true,
+    "naverCategory": "일식당",
+    "thumbnail": "http://img1.daumcdn.net/kakaotv/KAKAOACCOUNT/132387254/thumb/20190422222639"
   }
 ]
