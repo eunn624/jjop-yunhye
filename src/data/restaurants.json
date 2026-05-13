@@ -1168,5 +1168,31 @@
     "hasParking": false,
     "hasReserve": false,
     "walkable": false
+  },
+  {
+    "id": "restaurant-1778651869857",
+    "name": "앗싸곱창 분당",
+    "address": "경기 성남시 분당구 매화로 55",
+    "genre": "한식",
+    "mood": "social",
+    "mealType": "both",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "1~2만원"
+    ],
+    "extras": [
+      "포장 가능"
+    ],
+    "comment": "매장이 작아서 소수인원 추천합니다. 포장가능, 배달X, 우리집으로 포장해오면 같이 먹어드림.",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-13T05:57:49.857Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/IxsqMwdm",
+    "naverLinkManual": true,
+    "naverCategory": "곱창,막창,양",
+    "thumbnail": "https://pup-post-phinf.pstatic.net/MjAyNjA0MjBfMTgw/MDAxNzc2NjU4MDA0MjQ4.cKGVaqAj5ciZsmwSG-ogzCXzitbKOl--YsK0nyzK3lAg.nrizEuWBB2tEdafX_ZbalY1SA1NPf3HqocGkxDVbCgkg.JPEG/0245CCB2-B103-4602-BA23-3EBA4C74489C.jpg"
   }
 ]
