@@ -376,7 +376,16 @@ function StepGenre({ filters, toggleGenre, toggleBudget, toggleCond, finish, bac
 // ───────── RESULT (with live filter editing) ─────────
 function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onReset, onBack, onNav, toast,
   likedSet = {}, serverLikes = {}, optimisticDelta = {}, toggleLike }) {
-  const filtered = useMemo(() => dataHelpers.filterPlaces(places, filters), [places, filters]);
+  // 필터 적용 후 좋아요 누적 카운트 내림차순 정렬 (동률은 제보 수)
+  const filtered = useMemo(() => {
+    const matched = dataHelpers.filterPlaces(places, filters);
+    return [...matched].sort((a, b) => {
+      const la = likeCount(serverLikes, optimisticDelta, a.id);
+      const lb = likeCount(serverLikes, optimisticDelta, b.id);
+      if (lb !== la) return lb - la;
+      return (b.reports || 0) - (a.reports || 0);
+    });
+  }, [places, filters, serverLikes, optimisticDelta]);
 
   const mealType = filters.mealType;
   const summary = [
