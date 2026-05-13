@@ -852,7 +852,8 @@
     "mealType": "lunch",
     "people": [
       "2~4명 소수팀",
-      "5~10명 팀회식"
+      "5~10명 팀회식",
+      "11~20명 부서"
     ],
     "priceRange": [
       "1~2만원",
@@ -862,12 +863,31 @@
     "comment": "푸팟퐁커리랑 코코넛치킨튀김이 엄청 맛있음. 다른 것도 다 무난무난 맛있는 편. NS라 넥슨인 할인도 됨.",
     "nickname": "zizon시은",
     "team": "UX디자인팀",
-    "submittedAt": "2026-05-13T04:13:34.247Z",
+    "submittedAt": "2026-05-13T09:05:56.870Z",
     "reports": 1,
     "naverLink": "https://naver.me/5oE5LiPM",
     "naverLinkManual": true,
     "naverCategory": "베트남음식",
-    "thumbnail": "https://ldb-phinf.pstatic.net/20230927_119/1695775153781r9JRi_JPEG/%C5%A9%B1%E2%BA%AF%C8%AF0227-0131.jpg"
+    "thumbnail": "https://ldb-phinf.pstatic.net/20251211_80/1765414835801O5Shg_JPEG/%C3%E1%B1%C7.jpg",
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRangeLabels": [
+      "1~2만원",
+      "2~3만원"
+    ],
+    "menu": [],
+    "tone": "veg",
+    "capMin": 2,
+    "capMax": 10,
+    "priceMin": 1,
+    "priceMax": 3,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": false
   },
   {
     "id": "restaurant-1778646223710",
