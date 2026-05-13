@@ -622,5 +622,33 @@
     "hasParking": true,
     "hasReserve": false,
     "walkable": false
+  },
+  {
+    "id": "restaurant-1778644989825",
+    "name": "운중본가 장수촌",
+    "address": "경기 성남시 분당구 산운로32번길 14 운중본가 장수촌",
+    "genre": "한식",
+    "mood": "casual",
+    "mealType": "lunch",
+    "people": [
+      "5~10명 팀회식",
+      "11~20명 부서"
+    ],
+    "priceRange": [
+      "2~3만원"
+    ],
+    "extras": [
+      "주차 가능",
+      "룸/단체석"
+    ],
+    "comment": "팀장님이 맛있다고 데려가준 누룽지 백숙 맛집. 과연 맛있다.도토리묵은 꼭 추가하기.",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T04:03:09.825Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/entry/place/13475407?c=16.43,0,0,0,dh&placePath=/home?bookmarkId=4370991051&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202605131301&locale=ko&svcName=map_pcv5",
+    "naverLinkManual": true,
+    "naverCategory": "닭요리",
+    "thumbnail": "http://imgnews.naver.net/image/5039/2010/10/13/2010080503141943.jpg"
   }
 ]
