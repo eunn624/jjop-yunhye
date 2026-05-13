@@ -1128,7 +1128,7 @@
   },
   {
     "id": "restaurant-1778651736624",
-    "name": "야탑 탑차이",
+    "name": "야탑 탑차이나",
     "address": "경기 성남시 분당구 야탑동 162",
     "genre": "중식",
     "mood": "quiet",
@@ -1145,9 +1145,28 @@
     "comment": "호텔 출신 쉐프가 운영하는집. 문여는 시간이 많지 않아 타이밍 맞아야 먹을 수 있어요.",
     "nickname": "익명",
     "team": "",
-    "submittedAt": "2026-05-13T05:55:36.624Z",
+    "submittedAt": "2026-05-13T05:56:19.524Z",
     "reports": 1,
     "naverLink": "https://naver.me/Fr7w45Px",
-    "naverLinkManual": true
+    "naverLinkManual": true,
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀"
+    ],
+    "priceRangeLabels": [
+      "2~3만원"
+    ],
+    "menu": [],
+    "tone": "soup",
+    "thumbnail": "http://shop1.phinf.naver.net/20251021_290/1761022322431nSjAh_JPEG/95155262578523714_171584487.jpg",
+    "naverCategory": "중식당",
+    "capMin": 2,
+    "capMax": 4,
+    "priceMin": 2,
+    "priceMax": 3,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": false
   }
 ]
