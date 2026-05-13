@@ -405,5 +405,33 @@
     "naverLinkManual": true,
     "naverCategory": "돼지고기구이",
     "thumbnail": "http://imgnews.naver.net/image/243/2024/03/29/0000057931_001_20240329114301273.jpeg"
+  },
+  {
+    "id": "restaurant-1778644064479",
+    "name": "꾸면돼지",
+    "address": "경기 성남시 분당구 동판교로 91",
+    "genre": "고기구이",
+    "mood": "quiet",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원"
+    ],
+    "extras": [
+      "야외 테라스",
+      "술 가능"
+    ],
+    "comment": "판교에서 귀한 야장 고기집. 날이 좋다면 무조건 여기로.",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T03:47:44.479Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EA%BE%B8%EB%A9%B4%EB%8F%BC%EC%A7%80/place/1809937189?placePath=/home?bk_query=%EA%BE%B8%EB%A9%B4%EB%8F%BC%EC%A7%80&entry=pll&from=map&fromNxList=true&fromPanelNum=2&timestamp=202605131246&locale=ko&svcName=map_pcv5&searchText=%EA%BE%B8%EB%A9%B4%EB%8F%BC%EC%A7%80&searchType=place",
+    "naverLinkManual": true,
+    "naverCategory": "돼지고기구이",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20231216_91/17027133699266dFoh_JPEG/KakaoTalk_20231120_172035552_06.jpg"
   }
 ]
