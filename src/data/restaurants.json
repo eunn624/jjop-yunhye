@@ -433,5 +433,35 @@
     "naverLinkManual": true,
     "naverCategory": "돼지고기구이",
     "thumbnail": "https://ldb-phinf.pstatic.net/20231216_91/17027133699266dFoh_JPEG/KakaoTalk_20231120_172035552_06.jpg"
+  },
+  {
+    "id": "restaurant-1778644205730",
+    "name": "삼대곱창",
+    "address": "경기 성남시 분당구 대왕판교로 660 유스페이스1A동 202호",
+    "genre": "한식",
+    "mood": "casual",
+    "mealType": "dinner",
+    "people": [
+      "5~10명 팀회식",
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "3~5만원",
+      "2~3만원"
+    ],
+    "extras": [
+      "도보 10분 이내",
+      "주차 가능",
+      "술 가능"
+    ],
+    "comment": "꽉찬곱. 가까운거리.",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T03:50:05.730Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EC%82%BC%EB%8C%80%EA%B3%B1%EC%B0%BD/place/34582866?c=15.00,0,0,0,dh&placePath=/home?bk_query=%EC%82%BC%EB%8C%80%EA%B3%B1%EC%B0%BD&entry=bmp&from=map&fromPanelNum=2&timestamp=202605131248&locale=ko&svcName=map_pcv5&searchText=%EC%82%BC%EB%8C%80%EA%B3%B1%EC%B0%BD",
+    "naverLinkManual": true,
+    "naverCategory": "곱창,막창,양",
+    "thumbnail": "https://img.siksinhot.com/place/1610587017238106.jpg"
   }
 ]
