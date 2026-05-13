@@ -1067,5 +1067,39 @@
     "naverLinkManual": true,
     "naverCategory": "육류,고기요리",
     "thumbnail": "https://ldb-phinf.pstatic.net/20230308_156/1678249766145rUDnF_JPEG/%B5%C6%BC%D2%B8%F0%B5%EB1.jpg"
+  },
+  {
+    "id": "restaurant-1778648397255",
+    "name": "펀비어킹 분당 판교테크노벨리점",
+    "address": "경기 성남시 분당구 대왕판교로 660 유스페이스1, 1층",
+    "genre": "분식·면",
+    "mood": "social",
+    "mealType": "dinner",
+    "people": [
+      "5~10명 팀회식",
+      "11~20명 부서",
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원",
+      "5만원+"
+    ],
+    "extras": [
+      "도보 10분 이내",
+      "룸/단체석",
+      "늦게까지",
+      "2차 추천",
+      "술 가능"
+    ],
+    "comment": "새벽 4시까지 영업함. 넓어서 단체로 가기에도 좋음.",
+    "nickname": "회식왕",
+    "team": "UX디자인팀",
+    "submittedAt": "2026-05-13T04:59:57.255Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/F6lTMs3i",
+    "naverLinkManual": true,
+    "naverCategory": "맥주,호프",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20240710_79/1720572536991a3Wy4_PNG/%C6%C7%B1%B3_%BE%DF%C0%E5.png"
   }
 ]
