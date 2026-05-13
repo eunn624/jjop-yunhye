@@ -237,18 +237,14 @@
 
 /* ============================================================
    TYPOGRAPHY
-   Wanted's product (wanted.co.kr) uses "Spoqa Han Sans Neo"
-   for Korean + Latin. We pull it via CDN; for body fallback
-   we use Pretendard (open-source Korean/Latin) and Inter.
-   The Montage repo itself does NOT ship a webfont — the
-   product/site loads Spoqa Han Sans Neo from spoqa.github.io.
+   본 프로젝트는 Pretendard (오픈소스 한글/라틴) 를 메인 폰트로 사용.
+   CDN으로 web font를 로드한다.
    ============================================================ */
 
-@import url('https://cdn.jsdelivr.net/gh/spoqa/spoqa-han-sans@latest/css/SpoqaHanSansNeo.css');
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.min.css');
 
 :root {
-  --font-sans: "Spoqa Han Sans Neo", "Pretendard", -apple-system, BlinkMacSystemFont,
+  --font-sans: "Pretendard", -apple-system, BlinkMacSystemFont,
                "Apple SD Gothic Neo", "Helvetica Neue", Arial, sans-serif;
   --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
 
