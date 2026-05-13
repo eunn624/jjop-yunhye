@@ -813,10 +813,30 @@
     "comment": "디자인팀회식담당의 이모가 운영하는곳",
     "nickname": "디자인팀회식담당",
     "team": "디자인팀",
-    "submittedAt": "2026-05-13T04:23:43.710Z",
+    "submittedAt": "2026-05-13T04:37:34.037Z",
     "reports": 1,
-    "naverLink": "https://map.naver.com/p/search/%EA%B9%80%EB%B0%A5%EC%B2%9C%EA%B5%AD/place/1300125642?c=15.61,0,0,0,dh&placePath=/home?bk_query=%EA%B9%80%EB%B0%A5%EC%B2%9C%EA%B5%AD&entry=bmp&from=map&fromPanelNum=2&timestamp=202605131322&locale=ko&svcName=map_pcv5&searchText=%EA%B9%80%EB%B0%A5%EC%B2%9C%EA%B5%AD",
-    "naverLinkManual": true
+    "naverLink": "https://naver.me/F1rCo4wG",
+    "naverLinkManual": true,
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀"
+    ],
+    "priceRangeLabels": [
+      "~1만원",
+      "1~2만원"
+    ],
+    "menu": [],
+    "tone": "soup",
+    "thumbnail": "",
+    "naverCategory": "",
+    "capMin": 2,
+    "capMax": 4,
+    "priceMin": 0,
+    "priceMax": 2,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": true
   },
   {
     "id": "restaurant-1778646290072",
