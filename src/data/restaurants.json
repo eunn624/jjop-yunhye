@@ -220,17 +220,23 @@
     "genre": "해산물",
     "mood": "quiet",
     "mealType": "dinner",
-    "people": "5~10명 팀회식",
-    "priceRange": "5만원+",
+    "people": [
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "5만원+",
+      "3~5만원",
+      "2~3만원"
+    ],
     "extras": [
       "주차 가능",
       "예약 가능",
       "술 가능"
     ],
-    "comment": "나도 모르게 속마음 털어 놓을 수 있음.",
+    "comment": "나도 모르게 속마음 털어 놓을 수 있음. 겨울철 석화구이 추천",
     "nickname": "zi0_zzang",
     "team": "UX디자인팀",
-    "submittedAt": "2026-05-12T10:01:43.535Z",
+    "submittedAt": "2026-05-13T01:43:39.899Z",
     "reports": 1,
     "sub": "",
     "menu": [],
@@ -245,7 +251,13 @@
     "hasRoom": false,
     "hasParking": true,
     "hasReserve": true,
-    "walkable": false
+    "walkable": false,
+    "peopleLabels": [
+      "5~10명 팀회식"
+    ],
+    "priceRangeLabels": [
+      "5만원+"
+    ]
   },
   {
     "id": "restaurant-1778585349580",
