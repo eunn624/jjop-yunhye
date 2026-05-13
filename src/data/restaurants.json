@@ -146,27 +146,6 @@
     "walkable": true
   },
   {
-    "id": "restaurant-1778579217317",
-    "name": "쭈꾸미 손사장 본점",
-    "address": "경기 성남시 중원구 산성대로 336-2",
-    "genre": "해산물",
-    "mood": "social",
-    "mealType": "both",
-    "people": "2~4명 소수팀",
-    "priceRange": "2~3만원",
-    "extras": [
-      "술 가능"
-    ],
-    "comment": "양념이 감칠맛이 아주 좋습니다. 10년째 단골이예요.",
-    "nickname": "하식빵",
-    "team": "UX디자인팀",
-    "submittedAt": "2026-05-12T09:46:57.317Z",
-    "reports": 1,
-    "naverLink": "https://map.naver.com/p/search/%EC%AD%88%EA%BE%B8%EB%AF%B8%EC%86%90%EC%82%AC%EC%9E%A5%20%EB%B3%B8%EC%A0%90",
-    "naverCategory": "주꾸미요리",
-    "thumbnail": "https://ldb-phinf.pstatic.net/20201107_240/1604757405705SqCLD_JPEG/cjTk6CcRxsROJwN6h5UogiMo.jpg"
-  },
-  {
     "id": "restaurant-1778579540852",
     "name": "제로투나인",
     "address": "경기 성남시 분당구 운중로146번길 19-3",
