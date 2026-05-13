@@ -185,6 +185,23 @@
     outline: 2px solid #FFC107; outline-offset: 2px;
   }
 
+  /* BGM toggle (fixed bottom-right) */
+  .bgm-toggle {
+    position: fixed; bottom: 24px; right: 24px; z-index: 50;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: #FFC107; color: #1b1c1e;
+    border: 0; font-size: 18px; cursor: pointer; font-family: inherit;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .12s, background .15s, box-shadow .15s;
+  }
+  .bgm-toggle:hover { background: #FFB300; transform: scale(1.05);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.22); }
+  .bgm-toggle:active { transform: scale(0.95); }
+  @media (max-width: 600px) {
+    .bgm-toggle { width: 44px; height: 44px; bottom: 16px; right: 16px; font-size: 16px; }
+  }
+
   /* Modal */
   .modal-backdrop {
     position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 100;

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{size_download}\\\\n\" http://localhost:5173/src/proto-app.jsx)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{size_download}\\\\n\" http://localhost:5173/src/proto-data.jsx)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{size_download}\\\\n\" http://localhost:5173/bgm.mp3)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code} %{size_download}\\\\n\" http://localhost:5173/index.html)",
+      "Bash(wait)"
+    ]
+  }
+}

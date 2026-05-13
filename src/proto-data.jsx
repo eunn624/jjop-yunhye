@@ -44,11 +44,33 @@ function parsePriceRange(label) {
   return [0, 99];
 }
 
+// 문자열 또는 배열(또는 비어있음)을 라벨 배열로 변환.
+// "1~2만원, 3만원+" 처럼 쉼표로 구분된 문자열도 분해한다.
+function toLabelArray(v) {
+  if (Array.isArray(v)) return v.map(x => String(x).trim()).filter(Boolean);
+  if (typeof v === "string") return v.split(/,\s*/).map(x => x.trim()).filter(Boolean);
+  return [];
+}
+
+// 라벨 여러 개의 합집합 범위 — 최소 lo, 최대 hi
+function unionRange(labels, parser, fallback) {
+  if (!labels.length) return fallback;
+  let lo = Infinity, hi = -Infinity;
+  for (const l of labels) {
+    const [a, b] = parser(l);
+    if (a < lo) lo = a;
+    if (b > hi) hi = b;
+  }
+  return [lo, hi];
+}
+
 // 제보 한 건을 카드에서 쓰기 좋은 형태로 정규화
 function normalize(r) {
   const extras = Array.isArray(r.extras) ? r.extras : [];
-  const peopleRange = parsePeopleRange(r.people);
-  const priceRange = parsePriceRange(r.priceRange);
+  const peopleLabels = toLabelArray(r.people);
+  const priceLabels = toLabelArray(r.priceRange);
+  const [capMin, capMax] = unionRange(peopleLabels, parsePeopleRange, [1, 99]);
+  const [priceMin, priceMax] = unionRange(priceLabels, parsePriceRange, [0, 99]);
   return {
     id: r.id || (r.submittedAt + "-" + (r.name || "")),
     name: r.name || "이름 없음",
@@ -57,8 +79,12 @@ function normalize(r) {
     sub: r.sub || "",
     mood: r.mood || "",
     mealType: r.mealType || "lunch",
-    people: r.people || "",
-    priceRange: r.priceRange || "",
+    // 표시용 — 항상 쉼표 결합된 문자열 (배열로 들어와도 카드/모달은 그대로 렌더)
+    people: peopleLabels.join(", "),
+    priceRange: priceLabels.join(", "),
+    // 원본 라벨 배열 — 폼 수정/필터 매칭에서 사용
+    peopleLabels,
+    priceRangeLabels: priceLabels,
     extras,
     comment: r.comment || "",
     nickname: r.nickname || "익명",
@@ -70,10 +96,7 @@ function normalize(r) {
     thumbnail: r.thumbnail || "",
     naverLink: r.naverLink || "",
     naverCategory: r.naverCategory || "",
-    capMin: peopleRange[0],
-    capMax: peopleRange[1],
-    priceMin: priceRange[0],
-    priceMax: priceRange[1],
+    capMin, capMax, priceMin, priceMax,
     hasRoom: extras.includes("룸/단체석") || extras.includes("room"),
     hasParking: extras.includes("주차 가능") || extras.includes("parking"),
     hasReserve: extras.includes("예약 가능") || extras.includes("reserve"),
@@ -89,17 +112,22 @@ function supportsMealType(r, mealType) {
 
 // 필터 적용 (글로벌 mealType + 위저드 필터)
 // 위저드 입력은 제보 폼과 동일한 한국어 라벨을 사용한다:
-//   - filters.people    : "2~4명 소수팀" 같은 버킷 라벨 (또는 null)
-//   - filters.budget    : "1~2만원" 같은 라벨 (또는 null)
+//   - filters.people    : 버킷 라벨 배열 (예: ["2~4명 소수팀", "5~10명 팀회식"])
+//   - filters.budget    : 가격 라벨 배열 (예: ["1~2만원", "3~5만원"])
 //   - filters.conditions: 한국어 라벨 배열 ("도보 10분 이내", "주차 가능" 등)
 function filterPlaces(places, filters) {
+  const peopleArr = toLabelArray(filters.people);
+  const budgetArr = toLabelArray(filters.budget);
   return places.filter(p => {
     if (!supportsMealType(p, filters.mealType)) return false;
 
-    // 인원: 위저드/폼 둘 다 버킷 → 범위 겹침 검사
-    if (filters.people) {
-      const [flo, fhi] = parsePeopleRange(filters.people);
-      if (p.capMax < flo || p.capMin > fhi) return false;
+    // 인원: 선택된 버킷 중 하나라도 가게의 수용 범위와 겹치면 통과
+    if (peopleArr.length > 0) {
+      const ok = peopleArr.some(label => {
+        const [flo, fhi] = parsePeopleRange(label);
+        return !(p.capMax < flo || p.capMin > fhi);
+      });
+      if (!ok) return false;
     }
 
     // 분위기: 단일 값 일치
@@ -110,10 +138,13 @@ function filterPlaces(places, filters) {
       if (!filters.genres.includes(p.genre)) return false;
     }
 
-    // 예산: 범위 겹침
-    if (filters.budget) {
-      const [lo, hi] = parsePriceRange(filters.budget);
-      if (p.priceMax < lo || p.priceMin > hi) return false;
+    // 예산: 선택된 가격대 중 하나라도 가게의 가격 범위와 겹치면 통과
+    if (budgetArr.length > 0) {
+      const ok = budgetArr.some(label => {
+        const [lo, hi] = parsePriceRange(label);
+        return !(p.priceMax < lo || p.priceMin > hi);
+      });
+      if (!ok) return false;
     }
 
     // 조건: 폼의 extras 라벨과 1:1 매칭 (선택된 모든 조건이 포함되어야 함)
@@ -156,5 +187,6 @@ window.dataHelpers = {
   recentSubmissionCount,
   parsePeopleRange,
   parsePriceRange,
+  toLabelArray,
   GENRE_TONE,
 };

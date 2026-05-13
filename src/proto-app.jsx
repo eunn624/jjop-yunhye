@@ -252,13 +252,16 @@ function StepMode({ filters, set, next, back }) {
 
 // ───────── STEP 2: people ─────────
 // 제보 폼과 동일한 버킷(`PEOPLE_OPTS`)을 그대로 사용한다.
-function StepPeople({ filters, set, next, back }) {
+// 여러 버킷을 동시에 선택할 수 있다 (예: 점심은 소규모지만 가끔 부서급도 같이 보고 싶을 때).
+function StepPeople({ filters, togglePeople, next, back }) {
   const buckets = [
     { l: "2~4명 소수팀",  ico: "👥", desc: "회의 전후 빠른 식사, 4인 테이블 한 개로 충분" },
     { l: "5~10명 팀회식", ico: "🍻", desc: "테이블 두 개 붙이기 / 작은 룸 정도" },
     { l: "11~20명 부서",  ico: "🎉", desc: "룸·단체석 필수, 예약 권장" },
     { l: "20명+ 대규모",  ico: "🏛️", desc: "한정식·중식 대형룸·고기집 위주" },
   ];
+
+  const peopleSel = filters.people || [];
 
   return (
     <div className="wizard-page">
@@ -267,13 +270,13 @@ function StepPeople({ filters, set, next, back }) {
         {filters.mealType === "lunch" ? "팀 점심이군요 🌞" : "본 회식이군요 🌙"} — <b>몇 명</b> 가요?
       </MascotSay>
       <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 8px', letterSpacing: '-0.01em' }}>총 몇 명?</h2>
-      <p style={{ color: '#70737c', margin: '0 0 32px' }}>제보된 가게의 적정 인원과 매칭해서 찾아드려요.</p>
+      <p style={{ color: '#70737c', margin: '0 0 32px' }}>여러 개 선택 가능 · 비워두면 인원 무관으로 찾아드려요.</p>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 24 }}>
         {buckets.map(b => {
-          const on = filters.people === b.l;
+          const on = peopleSel.includes(b.l);
           return (
-            <div key={b.l} className="opt-card" onClick={() => set({ people: on ? null : b.l })}
+            <div key={b.l} className="opt-card" onClick={() => togglePeople(b.l)}
               style={{
                 border: on ? '2px solid #FFC107' : '1px solid rgba(0,0,0,0.1)',
                 background: on ? '#FFFDF0' : '#fff',
@@ -312,7 +315,9 @@ function StepMood({ filters, set, next, back }) {
     <div className="wizard-page">
       <Stepper step={3}/>
       <MascotSay mood="wink">
-        {filters.people ? `${filters.people}이군요. ` : ""}<b>어떤 자리</b>로 만들 거예요?
+        {filters.people && filters.people.length > 0
+          ? `${filters.people.join(" · ")}이군요. `
+          : ""}<b>어떤 자리</b>로 만들 거예요?
       </MascotSay>
       <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 8px', letterSpacing: '-0.01em' }}>
         오늘은 어떤 분위기예요?
@@ -354,7 +359,7 @@ function StepMood({ filters, set, next, back }) {
 
 // ───────── STEP 3: genre + budget + conditions ─────────
 // 예산·조건 옵션 모두 제보 폼(PRICE_OPTS, EXTRA_OPTS)과 동일한 라벨을 사용한다.
-function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back }) {
+function StepGenre({ filters, toggleGenre, toggleBudget, toggleCond, finish, back }) {
   const genreIcons = {
     "한식": "🍚", "일식": "🍣", "중식": "🥟", "양식": "🍝", "아시안": "🍜",
     "고기구이": "🥩", "해산물": "🦐", "분식·면": "🍱", "채식 가능": "🥗", "뷔페": "🍽",
@@ -385,11 +390,13 @@ function StepGenre({ filters, set, toggleGenre, toggleCond, finish, back }) {
         })}
       </div>
 
-      <div style={{ fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 12 }}>예산 (인당)</div>
+      <div style={{ fontSize: 13, color: '#37383c', fontWeight: 600, marginBottom: 12 }}>
+        예산 (인당) <span style={{ color: '#aeb0b6', fontWeight: 400 }}>· 여러 개 선택 가능</span>
+      </div>
       <div style={{ display: 'flex', gap: 8, marginBottom: 24, flexWrap: 'wrap' }}>
         {PRICE_OPTS.map(b => (
-          <span key={b} className={"chip" + (filters.budget === b ? " on" : "")}
-            onClick={() => set({ budget: filters.budget === b ? null : b })}>{b}</span>
+          <span key={b} className={"chip" + ((filters.budget || []).includes(b) ? " on" : "")}
+            onClick={() => toggleBudget(b)}>{b}</span>
         ))}
       </div>
 
@@ -417,10 +424,10 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
   const mealType = filters.mealType;
   const summary = [
     mealType === "lunch" ? "🌞 팀 점심" : mealType === "dinner" ? "🌙 본 회식" : null,
-    filters.people,
+    ...(filters.people || []),
     filters.mood ? { quiet: "조용히", social: "수다", formal: "격식", casual: "캐주얼" }[filters.mood] : null,
     ...filters.genres,
-    filters.budget,
+    ...(filters.budget || []),
     ...filters.conditions,
   ].filter(Boolean);
 
@@ -737,7 +744,7 @@ function emptyForm(mealType = "lunch") {
   return {
     name: "", address: "", naverLink: "",
     genre: "한식", mood: "quiet", mealType,
-    people: "2~4명 소수팀", priceRange: "1~2만원", extras: [],
+    people: [], priceRange: [], extras: [],
     comment: "", nickname: "", team: "",
   };
 }
@@ -745,13 +752,24 @@ function emptyForm(mealType = "lunch") {
 // 제보 폼 / 수정 폼이 공유하는 입력 컴포넌트.
 // onSubmit(form), onCancel() 콜백을 prop으로 받음.
 function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit, onCancel }) {
-  const [form, setForm] = useState(() => ({ ...emptyForm(), ...initial }));
+  const [form, setForm] = useState(() => {
+    const base = { ...emptyForm(), ...initial };
+    // 다중 선택 필드 — 문자열/배열 둘 다 들어올 수 있어서 라벨 배열로 정규화한다.
+    // (수정 모달에서 받는 initial은 normalize된 place라 string으로 들어옴)
+    base.people = dataHelpers.toLabelArray(base.people);
+    base.priceRange = dataHelpers.toLabelArray(base.priceRange);
+    if (!Array.isArray(base.extras)) base.extras = [];
+    return base;
+  });
   const set = (patch) => setForm(f => ({ ...f, ...patch }));
-  const toggleExtra = (v) =>
+  const toggleIn = (key, v) =>
     setForm(f => ({
       ...f,
-      extras: f.extras.includes(v) ? f.extras.filter(x => x !== v) : [...f.extras, v],
+      [key]: f[key].includes(v) ? f[key].filter(x => x !== v) : [...f[key], v],
     }));
+  const toggleExtra = (v) => toggleIn("extras", v);
+  const togglePeople = (v) => toggleIn("people", v);
+  const togglePrice = (v) => toggleIn("priceRange", v);
 
   function submit(e) {
     e.preventDefault();
@@ -819,18 +837,23 @@ function PlaceForm({ initial, submitLabel = "보내기", busy = false, onSubmit,
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-        <div>
-          <div style={label}>적정 인원</div>
-          <select style={input} value={form.people} onChange={e => set({ people: e.target.value })}>
-            {PEOPLE_OPTS.map(o => <option key={o} value={o}>{o}</option>)}
-          </select>
+      <div>
+        <div style={label}>적정 인원 <span style={{ color: '#aeb0b6', fontWeight: 400 }}>(여러 개 선택 가능)</span></div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {PEOPLE_OPTS.map(o => (
+            <span key={o} className={"chip" + (form.people.includes(o) ? " on" : "")}
+              onClick={() => togglePeople(o)}>{o}</span>
+          ))}
         </div>
-        <div>
-          <div style={label}>인당 예산</div>
-          <select style={input} value={form.priceRange} onChange={e => set({ priceRange: e.target.value })}>
-            {PRICE_OPTS.map(o => <option key={o} value={o}>{o}</option>)}
-          </select>
+      </div>
+
+      <div>
+        <div style={label}>인당 예산 <span style={{ color: '#aeb0b6', fontWeight: 400 }}>(여러 개 선택 가능)</span></div>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          {PRICE_OPTS.map(o => (
+            <span key={o} className={"chip" + (form.priceRange.includes(o) ? " on" : "")}
+              onClick={() => togglePrice(o)}>{o}</span>
+          ))}
         </div>
       </div>
 
@@ -1030,8 +1053,9 @@ function HotPicks({ places, onDetail, onNav }) {
 
 // ───────── APP ─────────
 // 위저드 필터는 제보 폼과 동일한 한국어 라벨을 저장한다 (필터/폼 일치)
+// people/budget 도 다중 선택을 지원하므로 배열.
 const DEFAULT_FILTERS = {
-  mode: null, people: null, mood: null, genres: [], budget: null, conditions: [],
+  mode: null, people: [], mood: null, genres: [], budget: [], conditions: [],
 };
 
 // 낙관적 업데이트용: Apps Script가 JSON에 반영하기 전까지 localStorage에서 유지.
@@ -1054,6 +1078,67 @@ const loadPending = () => loadJsonArray(PENDING_KEY);
 const savePending = (arr) => saveJsonArray(PENDING_KEY, arr);
 const loadDeletedIds = () => loadJsonArray(DELETED_KEY);
 const saveDeletedIds = (arr) => saveJsonArray(DELETED_KEY, arr);
+
+// ───────── BGM 플레이어 ─────────
+// 입장 시 자동 재생을 시도하고, 브라우저 정책으로 막히면 첫 사용자 인터랙션 때 시작한다.
+// 오른쪽 하단의 동그란 토글 버튼으로 재생/일시정지.
+function BgmPlayer() {
+  const audioRef = useRef(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.volume = 0.4;
+    audio.loop = true;
+
+    let cleanedUp = false;
+    const startOnInteract = () => {
+      audio.play().catch(() => {});
+      removeInteractListeners();
+    };
+    const interactEvents = ["pointerdown", "keydown", "touchstart"];
+    function removeInteractListeners() {
+      interactEvents.forEach(ev => window.removeEventListener(ev, startOnInteract));
+    }
+
+    audio.play().catch(() => {
+      // 자동 재생 차단 — 첫 인터랙션을 기다린다
+      if (cleanedUp) return;
+      interactEvents.forEach(ev =>
+        window.addEventListener(ev, startOnInteract, { once: true, passive: true }));
+    });
+
+    const onPlay = () => setPlaying(true);
+    const onPause = () => setPlaying(false);
+    audio.addEventListener("play", onPlay);
+    audio.addEventListener("pause", onPause);
+    return () => {
+      cleanedUp = true;
+      removeInteractListeners();
+      audio.removeEventListener("play", onPlay);
+      audio.removeEventListener("pause", onPause);
+    };
+  }, []);
+
+  function toggle() {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (audio.paused) audio.play().catch(() => {});
+    else audio.pause();
+  }
+
+  return (
+    <React.Fragment>
+      <audio ref={audioRef} src="bgm.mp3" preload="auto" loop/>
+      <button className="bgm-toggle" onClick={toggle} type="button"
+        aria-label={playing ? "BGM 일시정지" : "BGM 재생"}
+        title={playing ? "음악 끄기" : "음악 켜기"}>
+        {playing ? "⏸" : "▶"}
+      </button>
+    </React.Fragment>
+  );
+}
 
 function App() {
   const [tab, setTab] = useState("추천");
@@ -1131,12 +1216,14 @@ function App() {
   }, []);
 
   const set = (patch) => setFilters(f => ({ ...f, ...patch }));
-  const toggleGenre = (g) => setFilters(f => ({
-    ...f, genres: f.genres.includes(g) ? f.genres.filter(x => x !== g) : [...f.genres, g],
-  }));
-  const toggleCond = (c) => setFilters(f => ({
-    ...f, conditions: f.conditions.includes(c) ? f.conditions.filter(x => x !== c) : [...f.conditions, c],
-  }));
+  const toggleInFilter = (key, v) => setFilters(f => {
+    const arr = Array.isArray(f[key]) ? f[key] : [];
+    return { ...f, [key]: arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v] };
+  });
+  const toggleGenre = (g) => toggleInFilter("genres", g);
+  const toggleCond = (c) => toggleInFilter("conditions", c);
+  const togglePeople = (p) => toggleInFilter("people", p);
+  const toggleBudget = (b) => toggleInFilter("budget", b);
 
   const resetFilters = () => setFilters(DEFAULT_FILTERS);
 
@@ -1185,13 +1272,14 @@ function App() {
       content = <StepMode filters={filters} set={set}
         next={() => setRecScreen("step2")} back={handleHome}/>;
     } else if (recScreen === "step2") {
-      content = <StepPeople filters={filters} set={set}
+      content = <StepPeople filters={filters} togglePeople={togglePeople}
         next={() => setRecScreen("step3")} back={() => setRecScreen("step1")}/>;
     } else if (recScreen === "step3") {
       content = <StepMood filters={filters} set={set}
         next={() => setRecScreen("step4")} back={() => setRecScreen("step2")}/>;
     } else if (recScreen === "step4") {
-      content = <StepGenre filters={filters} set={set} toggleGenre={toggleGenre} toggleCond={toggleCond}
+      content = <StepGenre filters={filters} toggleGenre={toggleGenre}
+        toggleBudget={toggleBudget} toggleCond={toggleCond}
         finish={() => setRecScreen("result")} back={() => setRecScreen("step3")}/>;
     } else if (recScreen === "result") {
       content = <Result filters={filters} set={set} toggleGenre={toggleGenre} toggleCond={toggleCond}
@@ -1228,6 +1316,7 @@ function App() {
         onClose={() => setDetailId(null)}
         onUpdate={handleUpdated} onDelete={handleDeleted} toast={toast}/>}
       {toastEl}
+      <BgmPlayer/>
     </div>
   );
 }
