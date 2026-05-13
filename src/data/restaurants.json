@@ -1264,5 +1264,34 @@
     "team": "UX디자인팀",
     "submittedAt": "2026-05-13T06:28:37.071Z",
     "reports": 1
+  },
+  {
+    "id": "restaurant-1778653871640",
+    "name": "자연산산꼼장어",
+    "address": "경기 성남시 분당구 판교역로192번길 22 판교 효성 해링턴 타워",
+    "genre": "해산물",
+    "mood": "social",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "1~2만원",
+      "2~3만원"
+    ],
+    "extras": [
+      "역 근처",
+      "2차 추천"
+    ],
+    "comment": "평소와 다른 메뉴가 먹고 싶다면 갈만한 곳, 구이류 종류 다양하고 계란찜 맛있음",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-13T06:31:11.639Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/FTXwfEdl",
+    "naverLinkManual": true,
+    "naverCategory": "장어,먹장어요리",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20241029_84/1730191453257f2ymQ_JPEG/1730191415527.jpg"
   }
 ]
