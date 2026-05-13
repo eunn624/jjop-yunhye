@@ -278,13 +278,14 @@
       "5~10명 팀회식"
     ],
     "priceRange": [
-      "2~3만원"
+      "2~3만원",
+      "3~5만원"
     ],
     "extras": [],
     "comment": "안가봤는데 가보고 싶음",
     "nickname": "zizon시은",
     "team": "UX디자인",
-    "submittedAt": "2026-05-13T01:28:59.439Z",
+    "submittedAt": "2026-05-13T01:29:08.717Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/search/%EC%96%B4%EC%8A%AC%EC%B2%AD%EB%8B%B4%20%ED%8C%90%EA%B5%90%EC%95%84%EB%B8%8C%EB%89%B4%ED%94%84%EB%9E%91%EC%A0%90",
     "naverCategory": "한식",
@@ -295,14 +296,14 @@
       "5~10명 팀회식"
     ],
     "priceRangeLabels": [
-      "1~2만원"
+      "2~3만원"
     ],
     "menu": [],
     "tone": "warm",
     "capMin": 2,
     "capMax": 10,
-    "priceMin": 1,
-    "priceMax": 2,
+    "priceMin": 2,
+    "priceMax": 3,
     "hasRoom": false,
     "hasParking": false,
     "hasReserve": false,
