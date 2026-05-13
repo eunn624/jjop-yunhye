@@ -674,5 +674,37 @@
     "naverLinkManual": true,
     "naverCategory": "중식당",
     "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/20250201121916_photo2_bb41d450dce0.webp"
+  },
+  {
+    "id": "restaurant-1778645174852",
+    "name": "손에손잡고 판교직영점",
+    "address": "경기 성남시 분당구 삼평동 655",
+    "genre": "한식",
+    "mood": "social",
+    "mealType": "dinner",
+    "people": [
+      "5~10명 팀회식",
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "1~2만원",
+      "2~3만원",
+      "3~5만원"
+    ],
+    "extras": [
+      "2차 추천",
+      "역 근처",
+      "룸/단체석",
+      "술 가능"
+    ],
+    "comment": "레트로 분위기인데 메뉴가 MZ스탈",
+    "nickname": "zizon시은",
+    "team": "UX디자인팀",
+    "submittedAt": "2026-05-13T04:06:14.852Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/F2ZTennF",
+    "naverLinkManual": true,
+    "naverCategory": "한식",
+    "thumbnail": "http://imgnews.naver.net/image/5730/2025/04/03/0000013810_001_20250403172614296.jpg"
   }
 ]
