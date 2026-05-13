@@ -24,17 +24,24 @@ const SHEET_ID = "1qrwhcoOpBuR7g6G7bL8aYGJtfSn0zVgYR-e8uGTDdR0";
 const SHEET_NAME = "제보";
 const ID_COL = 13; // M열
 
-// 좋아요 시트 이름 — 외부 의존 없도록 좋아요 함수가 직접 가져다 씀
+// 좋아요/댓글 시트 이름 — 외부 의존 없도록 함수가 직접 가져다 씀
 function _likesSheetName() { return "Likes"; }
+function _commentsSheetName() { return "Comments"; }
 
 // ───── 라우팅 ─────
 
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
-    if (data.action === "like")   return handleLike(data);
-    if (data.action === "delete") return handleDelete(data.id);
-    if (data.action === "update") return handleUpdate(data.id, data.patch);
+    if (data.action === "like")    return handleLike(data);
+    if (data.action === "comment") return handleComment(data);
+    if (data.action === "delete")  return handleDelete(data.id);
+    if (data.action === "update")  return handleUpdate(data.id, data.patch);
+    // 알 수 없는 action은 명시적 거부 — 오타나 신규 클라이언트의 미배포 액션이
+    // 실수로 handleCreate 로 떨어져 제보 시트/GitHub JSON에 쓰레기 row가 박히는 것을 방지.
+    if (data.action) {
+      return jsonResponse({ ok: false, error: "unknown action: " + data.action });
+    }
     return handleCreate(data);
   } catch (err) {
     Logger.log(err.toString());
@@ -43,8 +50,10 @@ function doPost(e) {
 }
 
 function doGet(e) {
-  const what = (e && e.parameter && e.parameter.what) || "likes";
-  if (what === "likes") return jsonResponse({ likes: aggregateLikes() });
+  const what = (e && e.parameter && e.parameter.what) || "all";
+  if (what === "likes")    return jsonResponse({ likes: aggregateLikes() });
+  if (what === "comments") return jsonResponse({ comments: aggregateComments() });
+  if (what === "all")      return jsonResponse({ likes: aggregateLikes(), comments: aggregateComments() });
   return jsonResponse({ ok: false, error: "unknown what: " + what });
 }
 
@@ -111,6 +120,68 @@ function aggregateLikes() {
     const c = Number(data[i][1]);
     if (id && !isNaN(c) && c > 0) out[id] = c;
   }
+  return out;
+}
+
+// ───── 댓글 ─────
+// "Comments" 시트 컬럼: id | placeId | nickname | team | text | createdAt
+
+function ensureCommentsSheet() {
+  const name = _commentsSheetName();
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  let sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    sheet.appendRow(["id", "placeId", "nickname", "team", "text", "createdAt"]);
+  } else if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["id", "placeId", "nickname", "team", "text", "createdAt"]);
+  }
+  return sheet;
+}
+
+function handleComment(payload) {
+  const placeId = String(payload.placeId || "").trim();
+  if (!placeId) throw new Error("placeId required");
+  const text = String(payload.text || "").trim();
+  if (!text) throw new Error("text required");
+
+  const id = String(payload.id || ("comment-" + Date.now())).trim();
+  const nickname = String(payload.nickname || "익명").trim() || "익명";
+  const team = String(payload.team || "").trim();
+  const createdAt = payload.createdAt || new Date().toISOString();
+
+  const sheet = ensureCommentsSheet();
+  sheet.appendRow([id, placeId, nickname, team, text, createdAt]);
+  return jsonResponse({ ok: true, id: id, placeId: placeId });
+}
+
+function aggregateComments() {
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(_commentsSheetName());
+  if (!sheet) return {};
+  const data = sheet.getDataRange().getValues();
+  const out = {};
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+    const id = String(row[0] || "").trim();
+    const placeId = String(row[1] || "").trim();
+    if (!placeId) continue;
+    const nickname = String(row[2] || "익명") || "익명";
+    const team = String(row[3] || "");
+    const text = String(row[4] || "").trim();
+    if (!text) continue;
+    const rawCreatedAt = row[5];
+    const createdAt = rawCreatedAt instanceof Date
+      ? rawCreatedAt.toISOString()
+      : String(rawCreatedAt || "");
+    if (!out[placeId]) out[placeId] = [];
+    out[placeId].push({ id: id, nickname: nickname, team: team, text: text, createdAt: createdAt });
+  }
+  // placeId별로 시간순(오래된 게 먼저)
+  Object.keys(out).forEach(function(k) {
+    out[k].sort(function(a, b) {
+      return (a.createdAt || "").localeCompare(b.createdAt || "");
+    });
+  });
   return out;
 }
 
@@ -515,4 +586,16 @@ function testLike() {
   const r = handleLike({ placeId: "restaurant-test", delta: 1 });
   Logger.log(r.getContent());
   Logger.log("aggregated: " + JSON.stringify(aggregateLikes()));
+}
+
+// 댓글 동작 확인용
+function testComment() {
+  const r = handleComment({
+    placeId: "restaurant-test",
+    nickname: "테스터",
+    team: "QA",
+    text: "댓글 동작 테스트",
+  });
+  Logger.log(r.getContent());
+  Logger.log("aggregated: " + JSON.stringify(aggregateComments()));
 }

@@ -562,8 +562,117 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
   );
 }
 
+// ───────── 댓글 ─────────
+// 닉네임/팀은 사용자가 매번 다시 입력하지 않도록 localStorage에 기억
+const COMMENTER_KEY = "jjop.commenter";
+function loadCommenter() {
+  try { return JSON.parse(localStorage.getItem(COMMENTER_KEY) || "{}") || {}; }
+  catch { return {}; }
+}
+function saveCommenter(o) {
+  try { localStorage.setItem(COMMENTER_KEY, JSON.stringify(o)); } catch {}
+}
+
+function formatTimeAgo(iso) {
+  if (!iso) return "";
+  const t = Date.parse(iso);
+  if (isNaN(t)) return "";
+  const diff = Date.now() - t;
+  if (diff < 60_000) return "방금";
+  const m = Math.floor(diff / 60_000);
+  if (m < 60) return m + "분 전";
+  const h = Math.floor(m / 60);
+  if (h < 24) return h + "시간 전";
+  const d = Math.floor(h / 24);
+  if (d < 7) return d + "일 전";
+  const date = new Date(iso);
+  return (date.getMonth() + 1) + "/" + date.getDate();
+}
+
+function CommentsSection({ placeId, comments, onAddComment }) {
+  const [draft, setDraft] = useState(() => {
+    const saved = loadCommenter();
+    return { text: "", nickname: saved.nickname || "", team: saved.team || "" };
+  });
+
+  function submit() {
+    const text = draft.text.trim();
+    if (!text) return;
+    saveCommenter({ nickname: draft.nickname, team: draft.team });
+    onAddComment && onAddComment(placeId, {
+      text,
+      nickname: draft.nickname,
+      team: draft.team,
+    });
+    setDraft(d => ({ ...d, text: "" }));
+  }
+
+  const inputStyle = {
+    width: '100%', height: 36, padding: '0 10px', borderRadius: 8,
+    border: '1px solid rgba(0,0,0,0.12)', fontSize: 13, fontFamily: 'inherit',
+    background: '#fff', boxSizing: 'border-box', color: '#1b1c1e',
+  };
+
+  return (
+    <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: 16, marginTop: 4 }}>
+      <div style={{ fontSize: 14, fontWeight: 600, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+        <span>댓글</span>
+        {comments.length > 0 && (
+          <span style={{ color: '#878a93', fontWeight: 400, fontSize: 13 }}>{comments.length}</span>
+        )}
+      </div>
+
+      {comments.length > 0 ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 16 }}>
+          {comments.map(c => (
+            <div key={c.id} style={{ background: '#f7f7f8', borderRadius: 8, padding: '10px 12px' }}>
+              <div style={{ fontSize: 13, color: '#37383c', lineHeight: 1.5, marginBottom: 4, whiteSpace: 'pre-wrap' }}>{c.text}</div>
+              <div style={{ fontSize: 11, color: '#878a93' }}>
+                {c.nickname || "익명"}{c.team ? ` · ${c.team}` : ""}
+                {c.createdAt && ` · ${formatTimeAgo(c.createdAt)}`}
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div style={{ fontSize: 12, color: '#aeb0b6', marginBottom: 16 }}>
+          아직 댓글이 없어요. 첫 댓글을 남겨보세요.
+        </div>
+      )}
+
+      <textarea
+        value={draft.text}
+        onChange={e => setDraft(d => ({ ...d, text: e.target.value }))}
+        placeholder="이 가게에 대한 의견을 남겨주세요"
+        rows={2}
+        style={{ ...inputStyle, height: 64, padding: '8px 10px', resize: 'vertical', lineHeight: 1.4 }}
+      />
+      <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+        <input
+          style={{ ...inputStyle, flex: 1 }}
+          value={draft.nickname}
+          onChange={e => setDraft(d => ({ ...d, nickname: e.target.value }))}
+          placeholder="닉네임 (선택)"
+        />
+        <input
+          style={{ ...inputStyle, flex: 1 }}
+          value={draft.team}
+          onChange={e => setDraft(d => ({ ...d, team: e.target.value }))}
+          placeholder="팀 (선택)"
+        />
+        <button className="btn-primary" type="button" onClick={submit}
+          disabled={!draft.text.trim()}
+          style={{ height: 36, padding: '0 14px', fontSize: 13 }}>
+          보내기
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ───────── DETAIL MODAL ─────────
-function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [] }) {
+function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [],
+  comments = [], onAddComment }) {
   const [mode, setMode] = useState("view"); // view | edit
   const [busy, setBusy] = useState(false);
 
@@ -727,6 +836,8 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [] })
                   🗑 삭제
                 </button>
               </div>
+
+              <CommentsSection placeId={place.id} comments={comments} onAddComment={onAddComment}/>
             </div>
           </React.Fragment>
         )}
@@ -754,6 +865,7 @@ const EXTRA_OPTS  = [
   "룸/단체석",
   "야외 테라스",
   "술 가능",
+  "2차 추천",
   "늦게까지",
   "포장 가능",
   "배달 가능",
@@ -1000,7 +1112,7 @@ function ReportForm({ toast, onSubmitted, places = [] }) {
 }
 
 // ───────── REPORT FEED ─────────
-function ReportFeed({ places, onDetail, onNav, serverLikes = {}, optimisticDelta = {} }) {
+function ReportFeed({ places, onDetail, onNav, serverLikes = {}, optimisticDelta = {}, comments = {} }) {
   const filtered = useMemo(() => dataHelpers.sortByRecent(places), [places]);
 
   return (
@@ -1018,6 +1130,7 @@ function ReportFeed({ places, onDetail, onNav, serverLikes = {}, optimisticDelta
           <div className="feed-grid">
             {filtered.map(p => {
               const cnt = likeCount(serverLikes, optimisticDelta, p.id);
+              const commentCnt = (comments[p.id] || []).length;
               return (
                 <div key={p.id} className="opt-card" onClick={() => onDetail(p.id)}
                   style={{ background: '#fff', borderRadius: 12, padding: 14,
@@ -1034,6 +1147,10 @@ function ReportFeed({ places, onDetail, onNav, serverLikes = {}, optimisticDelta
                       {cnt > 0 && (
                         <span style={{ fontSize: 12, color: '#c2185b', fontWeight: 600,
                           flexShrink: 0 }}>❤️ {cnt}</span>
+                      )}
+                      {commentCnt > 0 && (
+                        <span style={{ fontSize: 12, color: '#46474c', fontWeight: 600,
+                          flexShrink: 0 }}>💬 {commentCnt}</span>
                       )}
                     </div>
                     <div style={{ fontSize: 12, color: '#70737c', marginBottom: 8,
@@ -1261,6 +1378,7 @@ function App() {
   const [likedSet, setLikedSet] = useState(loadLikedSet); // { placeId: true } — 내가 누른 상태
   const [serverLikes, setServerLikes] = useState({});     // { placeId: count }
   const [optimisticDelta, setOptimisticDelta] = useState({}); // 이번 세션 +/- 합
+  const [comments, setComments] = useState({});           // { placeId: [comment, ...] }
   const [toastEl, toast] = useToast();
 
   // setLikedSet 업데이터가 비동기라 바깥에서 같은 tick에 willBeLiked를 읽으면 안 됨.
@@ -1268,19 +1386,21 @@ function App() {
   const likedSetRef = useRef(likedSet);
   likedSetRef.current = likedSet;
 
-  // 마운트 시 서버 좋아요 카운트 fetch (Apps Script GET ?what=likes)
+  // 마운트 시 서버 좋아요 + 댓글 fetch (Apps Script GET ?what=all)
   useEffect(() => {
     const url = (window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL) || "";
     if (!url || url === "여기에_URL_입력") return;
-    fetch(url + (url.indexOf("?") >= 0 ? "&" : "?") + "what=likes", { cache: "no-cache" })
+    fetch(url + (url.indexOf("?") >= 0 ? "&" : "?") + "what=all", { cache: "no-cache" })
       .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
       .then(body => {
-        const map = body && body.likes && typeof body.likes === "object" ? body.likes : {};
-        setServerLikes(map);
+        const likesMap = body && body.likes && typeof body.likes === "object" ? body.likes : {};
+        const commentsMap = body && body.comments && typeof body.comments === "object" ? body.comments : {};
+        setServerLikes(likesMap);
+        setComments(commentsMap);
         // 새 페이지 로드라 이번 세션 누적치는 의미 없음 — 리셋
         setOptimisticDelta({});
       })
-      .catch(err => console.warn("[likes] GET failed (서버 좋아요 카운트 로드 실패):", err));
+      .catch(err => console.warn("[social] GET failed (서버 좋아요/댓글 로드 실패):", err));
   }, []);
 
   const toggleLike = useCallback((id) => {
@@ -1311,6 +1431,33 @@ function App() {
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({ action: "like", placeId: id, delta }),
     }).catch(err => console.warn("[likes] POST failed:", err));
+  }, []);
+
+  // 댓글 추가 — optimistic local 추가 + Apps Script POST 발화
+  const addComment = useCallback((placeId, draft) => {
+    if (!placeId || !draft || !draft.text || !draft.text.trim()) return null;
+    const id = "comment-" + Date.now() + "-" + Math.random().toString(36).slice(2, 6);
+    const createdAt = new Date().toISOString();
+    const entry = {
+      id,
+      nickname: (draft.nickname || "").trim() || "익명",
+      team: (draft.team || "").trim(),
+      text: draft.text.trim(),
+      createdAt,
+    };
+    setComments(prev => {
+      const list = prev[placeId] || [];
+      return { ...prev, [placeId]: [...list, entry] };
+    });
+    const url = (window.APP_CONFIG && window.APP_CONFIG.APPS_SCRIPT_URL) || "";
+    if (!url || url === "여기에_URL_입력") return entry;
+    fetch(url, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ action: "comment", placeId, ...entry }),
+    }).catch(err => console.warn("[comments] POST failed:", err));
+    return entry;
   }, []);
 
   // 데이터 로드 — JSON + localStorage 펜딩/삭제 머지
@@ -1458,7 +1605,7 @@ function App() {
     }
   } else if (tab === "제보 피드") {
     content = <ReportFeed places={places}
-      serverLikes={serverLikes} optimisticDelta={optimisticDelta}
+      serverLikes={serverLikes} optimisticDelta={optimisticDelta} comments={comments}
       onDetail={id => setDetailId(id)} onNav={handleNav}/>;
   } else if (tab === "제보하기") {
     content = <ReportForm toast={toast} onSubmitted={handleSubmitted} places={places}/>;
@@ -1482,7 +1629,9 @@ function App() {
       </div>
       {detailPlace && <DetailModal place={detailPlace}
         onClose={() => setDetailId(null)} places={places}
-        onUpdate={handleUpdated} onDelete={handleDeleted} toast={toast}/>}
+        onUpdate={handleUpdated} onDelete={handleDeleted} toast={toast}
+        comments={comments[detailPlace.id] || []}
+        onAddComment={addComment}/>}
       {toastEl}
       <BgmPlayer/>
     </div>

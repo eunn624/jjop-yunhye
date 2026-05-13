@@ -1,4 +1,4 @@
-# Apps Script 통합 — 좋아요 백엔드
+# Apps Script 통합 — 좋아요 + 댓글 백엔드
 
 `Code.gs` 는 Apps Script 편집기에 붙여넣을 코드의 저장소 스냅샷입니다. 실제 동작 코드는 Google 클라우드에 있으므로 이 파일을 수정해도 바로 반영되진 않습니다 — 편집기로 복사하고 재배포해야 됩니다.
 
@@ -16,9 +16,11 @@
 
 ## 동작 확인
 
-- `curl "<APPS_SCRIPT_URL>?what=likes"` → `{"likes":{}}` (초기 상태)
-- 프론트엔드에서 하트 클릭 → 시트에 row 추가 → 다음 새로고침 시 count 반영
-- 콘솔에서 `fetch('<URL>?what=likes').then(r=>r.json()).then(console.log)` 로 직접 검증
+- `curl "<APPS_SCRIPT_URL>?what=all"` → `{"likes":{}, "comments":{}}` (초기 상태)
+- 프론트엔드에서 하트 클릭 → `Likes` 시트에 row 추가 → 다음 새로고침 시 count 반영
+- DetailModal에서 댓글 작성 → `Comments` 시트에 row 추가 → 다음 새로고침 시 표시
+- 콘솔에서 `fetch('<URL>?what=all').then(r=>r.json()).then(console.log)` 로 직접 검증
+- 편집기에서 `testLike`, `testComment` 함수 실행으로 백엔드 단독 동작 확인 가능
 
 ## 주의
 
