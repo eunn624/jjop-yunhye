@@ -364,7 +364,7 @@ function StepMood({ filters, set, next, back }) {
 function StepGenre({ filters, toggleGenre, toggleBudget, toggleCond, finish, back }) {
   const genreIcons = {
     "한식": "🍚", "일식": "🍣", "중식": "🥟", "양식": "🍝", "아시안": "🍜",
-    "고기구이": "🥩", "해산물": "🦐", "분식·면": "🍱", "튀김류": "🍤", "채식 가능": "🥗", "뷔페": "🍽",
+    "고기구이": "🥩", "해산물": "🦐", "분식·면": "🍱", "튀김류": "🍤", "뷔페": "🍽",
   };
   return (
     <div className="wizard-page">
@@ -848,7 +848,7 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [],
 
 // ───────── REPORT FORM ─────────
 // 폼 옵션 상수 (제보/수정 공통)
-const GENRE_OPTS  = ["한식","일식","중식","양식","아시안","고기구이","해산물","분식·면","튀김류","채식 가능","뷔페"];
+const GENRE_OPTS  = ["한식","일식","중식","양식","아시안","고기구이","해산물","분식·면","튀김류","뷔페"];
 const MOOD_OPTS   = [
   { id: "quiet",  l: "조용히 먹고 끝내기" },
   { id: "social", l: "수다 위주" },
@@ -869,7 +869,6 @@ const EXTRA_OPTS  = [
   "늦게까지",
   "포장 가능",
   "배달 가능",
-  "채식 옵션",
 ];
 
 function emptyForm(mealType = "lunch") {
