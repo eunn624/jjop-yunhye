@@ -6,8 +6,13 @@
     "genre": "해산물",
     "mood": "quiet",
     "mealType": "dinner",
-    "people": "2~4명 소수팀",
-    "priceRange": "2~3만원",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "2~3만원"
+    ],
     "extras": [
       "주차 가능",
       "예약 가능",
@@ -16,11 +21,29 @@
     "comment": "겨울 - 방어회 / 여름 - 산오징어\n야채무침과 함께하는 환상적인 회 조합",
     "nickname": "바다의딸",
     "team": "디자인",
-    "submittedAt": "2026-05-12T09:23:45.865Z",
+    "submittedAt": "2026-05-13T09:05:06.519Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/search/%EB%B0%A9%EC%95%84%EA%B9%90",
     "naverCategory": "요리주점",
-    "thumbnail": "https://pup-post-phinf.pstatic.net/MjAyNjAyMDFfMjIy/MDAxNzY5OTQ4Nzg5NTE1.U3p1mCSoRI2rN3IvKnNO9dzDa-4TE6X3wyWhl4Uh3oMg.KrCJqFt8iC-qc7zNd0k6BnxsRyV_jjAv_rr7zgLSKOwg.JPEG/POST_IMAGE_ENCODING_20260201_212620_179.jpg"
+    "thumbnail": "https://pup-post-phinf.pstatic.net/MjAyNTEyMDRfMjgw/MDAxNzY0ODM5NDYwNDc4.weOOBDX51oddMJAYBeC0d2ROF2Q0axfoe7r1l5kF6igg.och2kqa2QiGdR8RNNSYSpYIvFl_v-dPLt30rFmmEOe8g.JPEG/A1C937FF-E4B4-4484-AA63-074163C64ED5.jpg",
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀"
+    ],
+    "priceRangeLabels": [
+      "2~3만원"
+    ],
+    "menu": [],
+    "tone": "seafood",
+    "capMin": 2,
+    "capMax": 4,
+    "priceMin": 2,
+    "priceMax": 3,
+    "hasRoom": false,
+    "hasParking": true,
+    "hasReserve": true,
+    "walkable": false,
+    "naverLinkManual": true
   },
   {
     "id": "restaurant-1778577958027",
