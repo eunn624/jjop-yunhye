@@ -488,5 +488,33 @@
     "reports": 1,
     "naverLink": "https://map.naver.com/p/search/%EC%98%A4%EA%BC%AC%20%EB%85%B8%EB%AF%B8%EC%95%BC%EB%81%BC/place/1572882787?c=15.55,0,0,0,dh&placePath=/home?entry=bmp&from=map&fromPanelNum=2&timestamp=202605131250&locale=ko&svcName=map_pcv5&searchText=%EC%98%A4%EA%BC%AC%20%EB%85%B8%EB%AF%B8%EC%95%BC%EB%81%BC",
     "naverLinkManual": true
+  },
+  {
+    "id": "restaurant-1778644475333",
+    "name": "일편닭심 판교본점",
+    "address": "경기 성남시 분당구 판교역로192번길 22 판교 효성 해링턴 타워",
+    "genre": "한식",
+    "mood": "casual",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "1~2만원",
+      "2~3만원"
+    ],
+    "extras": [
+      "역 근처",
+      "술 가능"
+    ],
+    "comment": "가볍게 술자리를 원한다면 일편닭심. 닭꼬치등 간단한 안주. 판교에서 오래된 노점이었으나 성공해서 가게차린듯",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T03:54:35.333Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EB%8B%AD%EA%BC%AC%EC%B9%98/place/37345417?c=14.00,0,0,0,dh&placePath=/home?entry=bmp&from=map&fromPanelNum=2&timestamp=202605131252&locale=ko&svcName=map_pcv5&searchText=%EB%8B%AD%EA%BC%AC%EC%B9%98",
+    "naverLinkManual": true,
+    "naverCategory": "요리주점",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20250310_136/1741614049929JOKoG_JPEG/KakaoTalk_20250308_205704029.jpg"
   }
 ]
