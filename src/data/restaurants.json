@@ -900,5 +900,32 @@
     "naverLinkManual": true,
     "naverCategory": "육류,고기요리",
     "thumbnail": "https://ldb-phinf.pstatic.net/20220712_111/1657605520316t8fJo_PNG/20220712_145143.png"
+  },
+  {
+    "id": "restaurant-1778646512926",
+    "name": "목탄장",
+    "address": "경기 성남시 분당구 분당내곡로 155 Kcc웰츠타워 102호",
+    "genre": "한식",
+    "mood": "formal",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "3~5만원",
+      "5만원+"
+    ],
+    "extras": [
+      "술 가능"
+    ],
+    "comment": "웬만하면 예약하고 가기. 소수정예로 분위기 있는 술집을 원한다면 여기로.",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T04:28:32.926Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EB%AA%A9%ED%83%84%EC%9E%A5/place/1886465835?c=15.00,0,0,0,dh&placePath=/review?reviewItem=0&entry=bmp&from=map&fromPanelNum=2&timestamp=202605131327&locale=ko&svcName=map_pcv5&searchText=%EB%AA%A9%ED%83%84%EC%9E%A5",
+    "naverLinkManual": true,
+    "naverCategory": "요리주점",
+    "thumbnail": "https://www.diningcode.com/_next/image?url=https%3A%2F%2Fd12zq4w4guyljn.cloudfront.net%2F750_750_20220327030706_photo2_8e6bfe6820d3.webp&w=1080&q=75"
   }
 ]
