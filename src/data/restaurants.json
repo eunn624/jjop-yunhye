@@ -706,5 +706,35 @@
     "naverLinkManual": true,
     "naverCategory": "한식",
     "thumbnail": "http://imgnews.naver.net/image/5730/2025/04/03/0000013810_001_20250403172614296.jpg"
+  },
+  {
+    "id": "restaurant-1778645245874",
+    "name": "흑화돗 판교본점",
+    "address": "경기 성남시 분당구 분당내곡로 131 판교 테크원 1층 16-2호",
+    "genre": "고기구이",
+    "mood": "formal",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "3~5만원",
+      "5만원+"
+    ],
+    "extras": [
+      "역 근처",
+      "주차 가능",
+      "술 가능"
+    ],
+    "comment": "비싸지만 맛있다. 내돈말고 법카로 긁자.",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T04:07:25.874Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%ED%9D%91%ED%99%94%EB%8F%97/place/1434758757?c=15.00,0,0,0,dh&isCorrectAnswer=true&placePath=/home?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202605131306&locale=ko&svcName=map_pcv5&searchText=%ED%9D%91%ED%99%94%EB%8F%97",
+    "naverLinkManual": true,
+    "naverCategory": "육류,고기요리",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20230731_280/1690768830960GQrG1_JPEG/KakaoTalk_20230728_094432754_08.jpg"
   }
 ]
