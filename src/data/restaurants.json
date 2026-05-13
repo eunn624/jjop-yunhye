@@ -29,30 +29,42 @@
     "genre": "분식·면",
     "mood": "casual",
     "mealType": "lunch",
-    "people": "2~4명 소수팀",
-    "priceRange": "2~3만원",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "~1만원",
+      "1~2만원"
+    ],
     "extras": [
       "도보 10분 이내"
     ],
     "comment": "점심에만 즉석떡볶이 판매. 순대튀김 2인1개 필수임!",
     "nickname": "zi0_zzang",
     "team": "UX디자인팀",
-    "submittedAt": "2026-05-12T09:28:27.513Z",
+    "submittedAt": "2026-05-13T04:54:48.079Z",
     "reports": 1,
     "sub": "",
     "menu": [],
     "tone": "soup",
     "capMin": 2,
     "capMax": 4,
-    "priceMin": 3,
-    "priceMax": 5,
+    "priceMin": 2,
+    "priceMax": 3,
     "hasRoom": false,
     "hasParking": false,
     "hasReserve": false,
     "walkable": true,
-    "thumbnail": "https://ldb-phinf.pstatic.net/20190125_131/1548390589240AT701_JPEG/Y7dmwn3zFmeEQulUPQYItYYq.JPG.jpg",
+    "thumbnail": "https://www.diningcode.com/_next/image?url=https%3A%2F%2Fd12zq4w4guyljn.cloudfront.net%2F750_750_20230408100655943_photo_d0aae9ecf5e6.webp&w=1080&q=75",
     "naverLink": "https://map.naver.com/p/search/%EC%A7%9D%ED%83%9C%EC%95%A4%EB%85%B8%EA%B0%80%EB%A6%AC%20%EC%84%B1%EB%82%A8%ED%8C%90%EA%B5%90%EC%A0%90",
-    "naverCategory": "포장마차"
+    "naverCategory": "포장마차",
+    "peopleLabels": [
+      "2~4명 소수팀"
+    ],
+    "priceRangeLabels": [
+      "2~3만원"
+    ],
+    "naverLinkManual": true
   },
   {
     "id": "restaurant-1778578668872",
