@@ -273,16 +273,38 @@
     "genre": "한식",
     "mood": "formal",
     "mealType": "dinner",
-    "people": "2~4명 소수팀",
-    "priceRange": "1~2만원",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "1~2만원"
+    ],
     "extras": [],
-    "comment": "명품 소갈비찜의 진수",
+    "comment": "안가봤는데 가보고 싶음",
     "nickname": "zizon시은",
     "team": "UX디자인",
-    "submittedAt": "2026-05-12T11:30:25.952Z",
+    "submittedAt": "2026-05-13T01:27:13.872Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/search/%EC%96%B4%EC%8A%AC%EC%B2%AD%EB%8B%B4%20%ED%8C%90%EA%B5%90%EC%95%84%EB%B8%8C%EB%89%B4%ED%94%84%EB%9E%91%EC%A0%90",
     "naverCategory": "한식",
-    "thumbnail": "https://file.albamon.com/Albamon/Recruit/Photo/C-Photo-View?FN=2024%5C6%5C20%5CJK_CO_vwesay24062012360586.png"
+    "thumbnail": "https://file.albamon.com/Albamon/Recruit/Photo/C-Photo-View?FN=2024%5C6%5C20%5CJK_CO_vwesay24062012360586.png",
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀"
+    ],
+    "priceRangeLabels": [
+      "1~2만원"
+    ],
+    "menu": [],
+    "tone": "warm",
+    "capMin": 2,
+    "capMax": 4,
+    "priceMin": 1,
+    "priceMax": 2,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": false
   }
 ]
