@@ -872,5 +872,33 @@
     "naverLinkManual": true,
     "naverCategory": "맥주,호프",
     "thumbnail": "https://ldb-phinf.pstatic.net/20241016_262/1729063185827Du6Bz_JPEG/%B8%DE%B4%BA%C0%FC%C3%BC%C4%C6_4.jpg"
+  },
+  {
+    "id": "restaurant-1778646382633",
+    "name": "감성쪽갈비",
+    "address": "경기 성남시 분당구 대왕판교로 660 유스페이스1 a동 211호",
+    "genre": "고기구이",
+    "mood": "casual",
+    "mealType": "dinner",
+    "people": [
+      "5~10명 팀회식",
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원"
+    ],
+    "extras": [
+      "도보 10분 이내"
+    ],
+    "comment": "유스페이스에서 오래된 쪽갈비집. 부드럽고 맛있다.",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T04:26:22.633Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EC%9D%8C%EC%8B%9D%EC%A0%90/place/37186449?c=16.78,0,0,0,dh&placePath=/home?entry=bmp&from=map&fromPanelNum=2&timestamp=202605131325&locale=ko&svcName=map_pcv5&searchText=%EC%9D%8C%EC%8B%9D%EC%A0%90",
+    "naverLinkManual": true,
+    "naverCategory": "육류,고기요리",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20220712_111/1657605520316t8fJo_PNG/20220712_145143.png"
   }
 ]
