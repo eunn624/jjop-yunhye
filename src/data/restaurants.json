@@ -735,7 +735,8 @@
     "mood": "casual",
     "mealType": "lunch",
     "people": [
-      "2~4명 소수팀"
+      "2~4명 소수팀",
+      "5~10명 팀회식"
     ],
     "priceRange": [
       "1~2만원"
@@ -744,12 +745,29 @@
     "comment": "곧 있을 선거 행정복지센터 근처에 있음. 투표하고 여기는 꼭 들러서 짬뽕을 먹고 와야 한다.",
     "nickname": "디자인팀회식담당",
     "team": "디자인팀",
-    "submittedAt": "2026-05-13T04:05:42.848Z",
+    "submittedAt": "2026-05-13T09:06:18.208Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/entry/place/32125981?c=15.34,0,0,0,dh&placePath=/home?bookmarkId=4370992381&from=map&fromPanelNum=1&additionalHeight=76&timestamp=202605131304&locale=ko&svcName=map_pcv5",
     "naverLinkManual": true,
     "naverCategory": "중식당",
-    "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/20250201121916_photo2_bb41d450dce0.webp"
+    "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/20250201121916_photo2_bb41d450dce0.webp",
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀"
+    ],
+    "priceRangeLabels": [
+      "1~2만원"
+    ],
+    "menu": [],
+    "tone": "soup",
+    "capMin": 2,
+    "capMax": 4,
+    "priceMin": 1,
+    "priceMax": 2,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": false
   },
   {
     "id": "restaurant-1778645174852",
