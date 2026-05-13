@@ -1389,5 +1389,27 @@
     "naverLinkManual": true,
     "naverCategory": "양꼬치",
     "thumbnail": "https://ldb-phinf.pstatic.net/20240109_289/1704778227760i6zn8_JPEG/1000011743.jpg"
+  },
+  {
+    "id": "restaurant-1778656065478",
+    "name": "대진항막회",
+    "address": "경기 성남시 분당구 동판교로 91 상가동 1층",
+    "genre": "해산물",
+    "mood": "social",
+    "mealType": "lunch",
+    "people": [],
+    "priceRange": [],
+    "extras": [
+      "술 가능",
+      "야외 테라스"
+    ],
+    "comment": "백현마을 4단지 상가에 있는 야장 횟집 야외에서 먹고 싶을 때 추천",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-13T07:07:45.478Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EB%8C%80%EC%A7%84%ED%95%AD%EB%A7%89%ED%9A%8C",
+    "naverCategory": "생선회",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20200613_12/15920142248452LWf5_JPEG/83JICHlBRmRfVLa5xVNrvcvH.jpeg.jpg"
   }
 ]
