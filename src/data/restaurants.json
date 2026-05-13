@@ -953,5 +953,33 @@
     "naverLinkManual": true,
     "naverCategory": "이자카야",
     "thumbnail": "https://ldb-phinf.pstatic.net/20251114_48/1763054967080x7ehz_JPEG/IMG_5020.jpeg"
+  },
+  {
+    "id": "restaurant-1778647028497",
+    "name": "찌마기 정자본점",
+    "address": "경기 성남시 분당구 내정로119번길 9 1층 찌마기",
+    "genre": "해산물",
+    "mood": "casual",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "3~5만원",
+      "2~3만원"
+    ],
+    "extras": [
+      "술 가능"
+    ],
+    "comment": "찌마기 판교점보다 조용하고 메뉴가 더 많다. 제철해산물 먹고싶을때는 여기로",
+    "nickname": "디자인팀회식담당",
+    "team": "디자인팀",
+    "submittedAt": "2026-05-13T04:37:08.497Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/entry/place/31442290?c=15.00,0,0,0,dh&placePath=/home?from=map&fromPanelNum=1&additionalHeight=76&timestamp=202605131335&locale=ko&svcName=map_pcv5",
+    "naverLinkManual": true,
+    "naverCategory": "조개요리",
+    "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipOCPRSlDpDCaN6e_Zbu-RwT1h8Vk803vWxoFD0d=w800-h1060-k-no"
   }
 ]
