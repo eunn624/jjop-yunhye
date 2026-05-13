@@ -67,8 +67,8 @@ function EmptyState({ onReport, title, body }) {
 }
 
 // ───────── Step indicator ─────────
-function Stepper({ step, total = 4 }) {
-  const labels = ["언제", "인원", "분위기", "장르"].slice(0, total);
+function Stepper({ step, total = 3 }) {
+  const labels = ["언제", "인원", "장르"].slice(0, total);
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 40 }}>
       {labels.map((l, i) => {
@@ -314,60 +314,6 @@ function StepPeople({ filters, togglePeople, next, back }) {
   );
 }
 
-// ───────── STEP 2: mood ─────────
-function StepMood({ filters, set, next, back }) {
-  const moods = [
-    { id: "quiet",  ico: "🤫", label: "조용히 먹고 끝내기", desc: "회의 전후, 빠른 식사" },
-    { id: "social", ico: "🎉", label: "분위기 좋게 수다 위주", desc: "팀 빌딩, 친목" },
-    { id: "formal", ico: "💼", label: "격식 있게",          desc: "임원 동석, 손님 접대" },
-    { id: "casual", ico: "🎮", label: "게임·캐주얼",         desc: "부서 MT, 신입 환영" },
-  ];
-  return (
-    <div className="wizard-page">
-      <Stepper step={3}/>
-      <MascotSay mood="wink">
-        {filters.people && filters.people.length > 0
-          ? `${filters.people.join(" · ")}이군요. `
-          : ""}<b>어떤 자리</b>로 만들 거예요?
-      </MascotSay>
-      <h2 style={{ font: 'var(--text-h1)', margin: '24px 0 8px', letterSpacing: '-0.01em' }}>
-        오늘은 어떤 분위기예요?
-      </h2>
-      <p style={{ color: '#70737c', margin: '0 0 32px' }}>
-        이게 음식 종류보다 더 중요해요. 하나만 골라주세요.
-      </p>
-
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        {moods.map(m => {
-          const on = filters.mood === m.id;
-          return (
-            <div key={m.id} className="opt-card" onClick={() => set({ mood: m.id })}
-              style={{
-                border: on ? '2px solid #FFC107' : '1px solid rgba(0,0,0,0.1)',
-                background: on ? '#FFFDF0' : '#fff',
-                borderRadius: 12, padding: '20px 18px', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', gap: 14,
-              }}>
-              <div style={{ fontSize: 30 }}>{m.ico}</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 2 }}>{m.label}</div>
-                <div style={{ fontSize: 14, color: '#70737c' }}>{m.desc}</div>
-              </div>
-              {on && <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#FFC107',
-                color: '#1b1c1e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>✓</div>}
-            </div>
-          );
-        })}
-      </div>
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 48 }}>
-        <button className="btn-ghost" onClick={back}>← 이전</button>
-        <button className="btn-primary" onClick={next} disabled={!filters.mood}>다음 →</button>
-      </div>
-    </div>
-  );
-}
-
 // ───────── STEP 3: genre + budget + conditions ─────────
 // 예산·조건 옵션 모두 제보 폼(PRICE_OPTS, EXTRA_OPTS)과 동일한 라벨을 사용한다.
 function StepGenre({ filters, toggleGenre, toggleBudget, toggleCond, finish, back }) {
@@ -377,7 +323,7 @@ function StepGenre({ filters, toggleGenre, toggleBudget, toggleCond, finish, bac
   };
   return (
     <div className="wizard-page">
-      <Stepper step={4}/>
+      <Stepper step={3}/>
       <MascotSay mood="hungry">
         마지막 — <b>음식 종류</b>는 끌리는 거 다 골라요. 안 골라도 돼요.
       </MascotSay>
@@ -436,7 +382,6 @@ function Result({ filters, set, toggleGenre, toggleCond, places, onDetail, onRes
   const summary = [
     mealType === "lunch" ? "🌞 팀 점심" : mealType === "dinner" ? "🌙 본 회식" : null,
     ...(filters.people || []),
-    filters.mood ? { quiet: "조용히", social: "수다", formal: "격식", casual: "캐주얼" }[filters.mood] : null,
     ...filters.genres,
     ...(filters.budget || []),
     ...filters.conditions,
@@ -1333,7 +1278,7 @@ function HotPicks({ places, onDetail, onNav, serverLikes = {}, optimisticDelta =
 // 위저드 필터는 제보 폼과 동일한 한국어 라벨을 저장한다 (필터/폼 일치)
 // people/budget 도 다중 선택을 지원하므로 배열.
 const DEFAULT_FILTERS = {
-  mode: null, people: [], mood: null, genres: [], budget: [], conditions: [],
+  mode: null, people: [], genres: [], budget: [], conditions: [],
 };
 
 // 낙관적 업데이트용: Apps Script가 JSON에 반영하기 전까지 localStorage에서 유지.
@@ -1642,24 +1587,22 @@ function App() {
     setRecScreen("landing");
   };
 
-  // 키보드 네비 (위저드 동안) — 4단계: mode → people → mood → genre → result
+  // 키보드 네비 (위저드 동안) — 3단계: mode → people → genre → result
   useEffect(() => {
     function onKey(e) {
       if (tab !== "추천") return;
       if (e.key === "Enter" || e.key === "ArrowRight") {
         if (recScreen === "step1" && filters.mealType) setRecScreen("step2");
         else if (recScreen === "step2") setRecScreen("step3");
-        else if (recScreen === "step3" && filters.mood) setRecScreen("step4");
-        else if (recScreen === "step4") setRecScreen("result");
+        else if (recScreen === "step3") setRecScreen("result");
       } else if (e.key === "ArrowLeft") {
         if (recScreen === "step2") setRecScreen("step1");
         else if (recScreen === "step3") setRecScreen("step2");
-        else if (recScreen === "step4") setRecScreen("step3");
       }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [tab, recScreen, filters.mealType, filters.mood]);
+  }, [tab, recScreen, filters.mealType]);
 
   const detailPlace = detailId ? places.find(p => p.id === detailId) : null;
 
@@ -1675,18 +1618,15 @@ function App() {
       content = <StepPeople filters={filters} togglePeople={togglePeople}
         next={() => setRecScreen("step3")} back={() => setRecScreen("step1")}/>;
     } else if (recScreen === "step3") {
-      content = <StepMood filters={filters} set={set}
-        next={() => setRecScreen("step4")} back={() => setRecScreen("step2")}/>;
-    } else if (recScreen === "step4") {
       content = <StepGenre filters={filters} toggleGenre={toggleGenre}
         toggleBudget={toggleBudget} toggleCond={toggleCond}
-        finish={() => setRecScreen("result")} back={() => setRecScreen("step3")}/>;
+        finish={() => setRecScreen("result")} back={() => setRecScreen("step2")}/>;
     } else if (recScreen === "result") {
       content = <Result filters={filters} set={set} toggleGenre={toggleGenre} toggleCond={toggleCond}
         places={places}
         onDetail={id => setDetailId(id)}
         onReset={() => { resetFilters(); }}
-        onBack={() => setRecScreen("step4")}
+        onBack={() => setRecScreen("step3")}
         onNav={handleNav}
         toast={toast}
         likedSet={likedSet} serverLikes={serverLikes} optimisticDelta={optimisticDelta}

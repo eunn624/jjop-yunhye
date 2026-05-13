@@ -130,8 +130,8 @@ function filterPlaces(places, filters) {
       if (!ok) return false;
     }
 
-    // 분위기: 단일 값 일치
-    if (filters.mood && p.mood && filters.mood !== p.mood) return false;
+    // (분위기/mood 필터는 의도적으로 제거 — 가게마다 mood 가 하나라 너무 좁아짐.
+    //  점심/저녁 + 장르 위주로 매칭하기 위함.)
 
     // 장르: 선택된 것 중 하나라도 일치
     if (filters.genres && filters.genres.length > 0) {
