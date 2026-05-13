@@ -688,7 +688,36 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [],
   return (
     <div className="modal-backdrop" onClick={mode === "view" ? onClose : undefined}>
       <div className="modal-panel" onClick={e => e.stopPropagation()}>
-        <button className="modal-close" onClick={onClose} aria-label="닫기" disabled={busy}>✕</button>
+        <div className="modal-actions">
+          {mode === "view" && (
+            <React.Fragment>
+              <button className="modal-icon-btn" onClick={() => setMode("edit")}
+                disabled={busy} aria-label="수정" title="수정">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                  <path d="m15 5 4 4"/>
+                </svg>
+              </button>
+              <button className="modal-icon-btn danger" onClick={handleDelete}
+                disabled={busy} aria-label="삭제" title="삭제">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M3 6h18"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                  <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </React.Fragment>
+          )}
+          <button className="modal-icon-btn" onClick={onClose}
+            disabled={busy} aria-label="닫기" title="닫기">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
 
         {mode === "edit" ? (
           <div style={{ padding: '32px 36px 36px' }}>
@@ -779,16 +808,6 @@ function DetailModal({ place, onClose, onUpdate, onDelete, toast, places = [],
                     지도 연결을 위해 주소 정보가 필요해요
                   </div>
                 )}
-              </div>
-
-              <div style={{ display: 'flex', gap: 8, paddingTop: 12,
-                borderTop: '1px solid rgba(0,0,0,0.06)' }}>
-                <button className="btn-ghost" onClick={() => setMode("edit")} disabled={busy}
-                  style={{ flex: 1, justifyContent: 'center' }}>✏️ 수정</button>
-                <button className="btn-ghost" onClick={handleDelete} disabled={busy}
-                  style={{ flex: 1, justifyContent: 'center', color: '#d83838', borderColor: 'rgba(216,56,56,0.3)' }}>
-                  🗑 삭제
-                </button>
               </div>
 
               <CommentsSection placeId={place.id} comments={comments} onAddComment={onAddComment}/>

@@ -250,14 +250,24 @@
     box-shadow: 0 20px 60px rgba(0,0,0,0.25);
     animation: panelIn .22s cubic-bezier(.2,.7,.3,1);
   }
-  .modal-close {
-    position: absolute; top: 12px; right: 12px; z-index: 1;
-    width: 32px; height: 32px; border-radius: 50%; border: 0;
-    background: rgba(255,255,255,0.95); cursor: pointer; font-size: 15px;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  /* Modal 우상단 액션 클러스터 (수정·삭제·닫기) */
+  .modal-actions {
+    position: absolute; top: 14px; right: 14px; z-index: 2;
+    display: flex; gap: 6px;
   }
-  .modal-close:hover { background: #fff; }
+  .modal-icon-btn {
+    width: 34px; height: 34px; border-radius: 50%; border: 0;
+    background: rgba(255,255,255,0.95); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    color: #37383c; padding: 0; font-family: inherit;
+    transition: background .12s, color .12s, transform .08s;
+  }
+  .modal-icon-btn:hover { background: #fff; transform: translateY(-1px); }
+  .modal-icon-btn:active { transform: translateY(0); }
+  .modal-icon-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .modal-icon-btn.danger { color: #d83838; }
+  .modal-icon-btn.danger:hover { background: #fff; color: #b81818; }
 
   @media (max-width: 600px) {
     .modal-backdrop { padding: 0; align-items: flex-end; }
