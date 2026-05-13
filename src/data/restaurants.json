@@ -1411,5 +1411,33 @@
     "naverLink": "https://map.naver.com/p/search/%EB%8C%80%EC%A7%84%ED%95%AD%EB%A7%89%ED%9A%8C",
     "naverCategory": "생선회",
     "thumbnail": "https://ldb-phinf.pstatic.net/20200613_12/15920142248452LWf5_JPEG/83JICHlBRmRfVLa5xVNrvcvH.jpeg.jpg"
+  },
+  {
+    "id": "restaurant-1778656219081",
+    "name": "이가네양꼬치 판교본점",
+    "address": "경기 성남시 분당구 분당내곡로 155 KCC웰츠타워 B동",
+    "genre": "중식",
+    "mood": "social",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원"
+    ],
+    "extras": [
+      "역 근처",
+      "예약 가능"
+    ],
+    "comment": "그냥 이가네양꼬치 맛. 맛있음",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-13T07:10:19.081Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EC%9D%B4%EA%B0%80%EB%84%A4%EC%96%91%EA%BC%AC%EC%B9%98%20%ED%8C%90%EA%B5%90%EB%B3%B8%EC%A0%90",
+    "naverCategory": "양꼬치",
+    "thumbnail": "https://d2uja84sd90jmv.cloudfront.net/posts/MKXtiBP8LNvwTfeE2l2jdA/ms.jpg"
   }
 ]
