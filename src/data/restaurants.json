@@ -197,8 +197,13 @@
     "genre": "고기구이",
     "mood": "quiet",
     "mealType": "dinner",
-    "people": "5~10명 팀회식",
-    "priceRange": "5만원+",
+    "people": [
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "5만원+",
+      "3~5만원"
+    ],
     "extras": [
       "도보 10분 이내",
       "주차 가능",
@@ -208,7 +213,7 @@
     "comment": "판교육담/찌마기 사장님이 같음",
     "nickname": "zi0_zzang",
     "team": "UX디자인팀",
-    "submittedAt": "2026-05-12T10:06:39.846Z",
+    "submittedAt": "2026-05-13T07:49:54.957Z",
     "reports": 1,
     "sub": "",
     "menu": [],
@@ -223,7 +228,14 @@
     "hasRoom": false,
     "hasParking": true,
     "hasReserve": true,
-    "walkable": true
+    "walkable": true,
+    "peopleLabels": [
+      "5~10명 팀회식"
+    ],
+    "priceRangeLabels": [
+      "5만원+"
+    ],
+    "naverLinkManual": true
   },
   {
     "id": "restaurant-1778579936217",
