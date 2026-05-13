@@ -1293,5 +1293,38 @@
     "naverLinkManual": true,
     "naverCategory": "장어,먹장어요리",
     "thumbnail": "https://ldb-phinf.pstatic.net/20241029_84/1730191453257f2ymQ_JPEG/1730191415527.jpg"
+  },
+  {
+    "id": "restaurant-1778654002642",
+    "name": "탭퍼블릭 판교점",
+    "address": "경기 성남시 분당구 분당내곡로 131 판교테크원 1층",
+    "genre": "양식",
+    "mood": "casual",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식",
+      "11~20명 부서",
+      "20명+ 대규모"
+    ],
+    "priceRange": [
+      "1~2만원",
+      "2~3만원"
+    ],
+    "extras": [
+      "역 근처",
+      "주차 가능",
+      "2차 추천",
+      "술 가능"
+    ],
+    "comment": "판교역이랑 연결 되어 있다는 게 장점! 맥주를 내가 먹고 싶은 만큼 따라서 마실 수 있음. 다양한 맥주 있음",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-13T06:33:22.642Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/5oE5ADvH",
+    "naverLinkManual": true,
+    "naverCategory": "맥주,호프",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20250501_290/1746091222868q3xH3_JPEG/KakaoTalk_Image_2022-07-03-11-08-46.jpeg"
   }
 ]
