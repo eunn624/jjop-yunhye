@@ -1080,8 +1080,9 @@ const loadDeletedIds = () => loadJsonArray(DELETED_KEY);
 const saveDeletedIds = (arr) => saveJsonArray(DELETED_KEY, arr);
 
 // ───────── BGM 플레이어 ─────────
-// 입장 시 자동 재생을 시도하고, 브라우저 정책으로 막히면 첫 사용자 인터랙션 때 시작한다.
-// 오른쪽 하단의 동그란 토글 버튼으로 재생/일시정지.
+// 브라우저는 "소리 있는" 자동 재생을 차단하므로, 음소거 상태로 자동 재생을 시작하고
+// 첫 사용자 인터랙션 때 음소거를 해제하는 표준 패턴을 쓴다.
+// 반복 재생은 `loop` 속성. 오른쪽 하단 토글 버튼으로 수동 재생/정지도 가능.
 function BgmPlayer() {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
@@ -1091,39 +1092,52 @@ function BgmPlayer() {
     if (!audio) return;
     audio.volume = 0.4;
     audio.loop = true;
+    audio.muted = true; // muted autoplay은 항상 허용됨
+    audio.play().catch(() => {});
 
-    let cleanedUp = false;
-    const startOnInteract = () => {
-      audio.play().catch(() => {});
-      removeInteractListeners();
+    // 첫 인터랙션에서 음소거 해제. 토글 버튼 클릭은 React onClick(루트 위임)이 먼저
+    // 처리되고 그 뒤 window 까지 버블링되므로, 버튼의 자체 토글 로직과 충돌하지 않는다.
+    let unmuted = false;
+    const onInteract = () => {
+      if (unmuted) return;
+      unmuted = true;
+      if (audio.muted) {
+        audio.muted = false;
+        if (audio.paused) audio.play().catch(() => {});
+      }
+      removeListeners();
     };
-    const interactEvents = ["pointerdown", "keydown", "touchstart"];
-    function removeInteractListeners() {
-      interactEvents.forEach(ev => window.removeEventListener(ev, startOnInteract));
+    const interactEvents = ["click", "keydown", "touchstart"];
+    function removeListeners() {
+      interactEvents.forEach(ev => window.removeEventListener(ev, onInteract));
     }
+    interactEvents.forEach(ev =>
+      window.addEventListener(ev, onInteract, { passive: true }));
 
-    audio.play().catch(() => {
-      // 자동 재생 차단 — 첫 인터랙션을 기다린다
-      if (cleanedUp) return;
-      interactEvents.forEach(ev =>
-        window.addEventListener(ev, startOnInteract, { once: true, passive: true }));
-    });
-
-    const onPlay = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
-    audio.addEventListener("play", onPlay);
-    audio.addEventListener("pause", onPause);
+    function updatePlaying() {
+      setPlaying(!audio.paused && !audio.muted);
+    }
+    updatePlaying();
+    audio.addEventListener("play", updatePlaying);
+    audio.addEventListener("pause", updatePlaying);
+    audio.addEventListener("volumechange", updatePlaying);
     return () => {
-      cleanedUp = true;
-      removeInteractListeners();
-      audio.removeEventListener("play", onPlay);
-      audio.removeEventListener("pause", onPause);
+      removeListeners();
+      audio.removeEventListener("play", updatePlaying);
+      audio.removeEventListener("pause", updatePlaying);
+      audio.removeEventListener("volumechange", updatePlaying);
     };
   }, []);
 
   function toggle() {
     const audio = audioRef.current;
     if (!audio) return;
+    // muted-autoplay 직후 첫 클릭: 음소거만 해제하고 계속 재생.
+    if (audio.muted) {
+      audio.muted = false;
+      if (audio.paused) audio.play().catch(() => {});
+      return;
+    }
     if (audio.paused) audio.play().catch(() => {});
     else audio.pause();
   }
