@@ -1115,7 +1115,21 @@ function ReportForm({ toast, onSubmitted, places = [] }) {
 function ReportFeed({ places, onDetail, onNav,
   serverLikes = {}, optimisticDelta = {}, comments = {},
   likedSet = {}, toggleLike }) {
-  const filtered = useMemo(() => dataHelpers.sortByRecent(places), [places]);
+  // 피드 자체 필터 (위저드 필터와 독립). 장르·조건만 노출 — 빠른 탐색용.
+  const [feedFilters, setFeedFilters] = useState({ genres: [], conditions: [] });
+  const toggleGenre = (g) => setFeedFilters(f => ({
+    ...f, genres: f.genres.includes(g) ? f.genres.filter(x => x !== g) : [...f.genres, g],
+  }));
+  const toggleCond = (c) => setFeedFilters(f => ({
+    ...f, conditions: f.conditions.includes(c) ? f.conditions.filter(x => x !== c) : [...f.conditions, c],
+  }));
+  const clearFilters = () => setFeedFilters({ genres: [], conditions: [] });
+  const filterActive = feedFilters.genres.length > 0 || feedFilters.conditions.length > 0;
+
+  const filtered = useMemo(() => {
+    const matched = dataHelpers.filterPlaces(places, feedFilters);
+    return dataHelpers.sortByRecent(matched);
+  }, [places, feedFilters]);
 
   return (
     <div className="result-page">
@@ -1126,8 +1140,48 @@ function ReportFeed({ places, onDetail, onNav,
         <p style={{ color: '#70737c', margin: '0 0 24px' }}>
           동료들이 직접 다녀와서 남긴 한 줄 추천이에요.
         </p>
-        {filtered.length === 0 ? (
+
+        {/* 필터 strip — 장르 + 조건 */}
+        {places.length > 0 && (
+          <div style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.06)', borderRadius: 12,
+            padding: 12, marginBottom: 18 }}>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
+              <span style={{ fontSize: 12, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>장르:</span>
+              {GENRE_OPTS.map(g => (
+                <span key={g} className={"chip" + (feedFilters.genres.includes(g) ? " on" : "")}
+                  onClick={() => toggleGenre(g)} style={{ fontSize: 12, height: 28 }}>{g}</span>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 12, color: '#70737c', alignSelf: 'center', marginRight: 4 }}>조건:</span>
+              {EXTRA_OPTS.map(c => (
+                <span key={c} className={"chip" + (feedFilters.conditions.includes(c) ? " on" : "")}
+                  onClick={() => toggleCond(c)} style={{ fontSize: 12, height: 28 }}>{c}</span>
+              ))}
+              {filterActive && (
+                <button onClick={clearFilters} type="button"
+                  style={{ marginLeft: 'auto', fontSize: 12, color: '#70737c',
+                    background: 'transparent', border: 0, cursor: 'pointer',
+                    textDecoration: 'underline', fontFamily: 'inherit' }}>
+                  필터 초기화
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+
+        {places.length === 0 ? (
           <EmptyState onReport={() => onNav("제보하기")}/>
+        ) : filtered.length === 0 ? (
+          <div style={{ background: '#fff', borderRadius: 16, padding: '40px 24px', textAlign: 'center',
+            border: '1px solid rgba(0,0,0,0.06)' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <MeoksungMascot size={96} mood="sleepy"/>
+            </div>
+            <h3 style={{ font: 'var(--text-h3)', marginTop: 12, marginBottom: 4 }}>조건에 맞는 가게가 없어요</h3>
+            <p style={{ color: '#70737c', fontSize: 13, margin: '0 0 16px' }}>조건을 조금 풀어볼까요?</p>
+            <button className="btn-primary" onClick={clearFilters}>필터 초기화</button>
+          </div>
         ) : (
           <div className="feed-grid">
             {filtered.map(p => {
