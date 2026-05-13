@@ -1397,8 +1397,13 @@
     "genre": "해산물",
     "mood": "social",
     "mealType": "lunch",
-    "people": [],
-    "priceRange": [],
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원"
+    ],
     "extras": [
       "술 가능",
       "야외 테라스"
@@ -1406,11 +1411,25 @@
     "comment": "백현마을 4단지 상가에 있는 야장 횟집 야외에서 먹고 싶을 때 추천",
     "nickname": "익명",
     "team": "",
-    "submittedAt": "2026-05-13T07:07:45.478Z",
+    "submittedAt": "2026-05-13T07:27:44.592Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/search/%EB%8C%80%EC%A7%84%ED%95%AD%EB%A7%89%ED%9A%8C",
     "naverCategory": "생선회",
-    "thumbnail": "https://ldb-phinf.pstatic.net/20200613_12/15920142248452LWf5_JPEG/83JICHlBRmRfVLa5xVNrvcvH.jpeg.jpg"
+    "thumbnail": "https://ldb-phinf.pstatic.net/20200613_12/15920142248452LWf5_JPEG/83JICHlBRmRfVLa5xVNrvcvH.jpeg.jpg",
+    "sub": "",
+    "peopleLabels": [],
+    "priceRangeLabels": [],
+    "menu": [],
+    "tone": "seafood",
+    "capMin": 1,
+    "capMax": 99,
+    "priceMin": 0,
+    "priceMax": 99,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": false,
+    "naverLinkManual": true
   },
   {
     "id": "restaurant-1778656219081",
