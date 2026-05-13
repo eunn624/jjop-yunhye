@@ -466,7 +466,7 @@
   },
   {
     "id": "restaurant-1778644311315",
-    "name": "죠죠",
+    "name": "죠죠 판교아브뉴프랑점",
     "address": "경기 성남시 분당구 동판교로177번길 25 2층 223호",
     "genre": "일식",
     "mood": "casual",
@@ -484,10 +484,29 @@
     "comment": "오꼬노미야끼가 땡긴다면 여기로. 은근히 양이 많다.",
     "nickname": "디자인팀회식담당",
     "team": "디자인팀",
-    "submittedAt": "2026-05-13T03:51:51.315Z",
+    "submittedAt": "2026-05-13T04:02:20.433Z",
     "reports": 1,
-    "naverLink": "https://map.naver.com/p/search/%EC%98%A4%EA%BC%AC%20%EB%85%B8%EB%AF%B8%EC%95%BC%EB%81%BC/place/1572882787?c=15.55,0,0,0,dh&placePath=/home?entry=bmp&from=map&fromPanelNum=2&timestamp=202605131250&locale=ko&svcName=map_pcv5&searchText=%EC%98%A4%EA%BC%AC%20%EB%85%B8%EB%AF%B8%EC%95%BC%EB%81%BC",
-    "naverLinkManual": true
+    "naverLink": "https://naver.me/FCA9inKR",
+    "naverLinkManual": true,
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀"
+    ],
+    "priceRangeLabels": [
+      "1~2만원"
+    ],
+    "menu": [],
+    "tone": "cool",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20250411_77/1744350382129bCOs6_JPEG/%B8%ED%B6%F5%B1%B3%C0%DA_6.jpg",
+    "naverCategory": "일식당",
+    "capMin": 2,
+    "capMax": 4,
+    "priceMin": 1,
+    "priceMax": 2,
+    "hasRoom": false,
+    "hasParking": true,
+    "hasReserve": false,
+    "walkable": false
   },
   {
     "id": "restaurant-1778644475333",
