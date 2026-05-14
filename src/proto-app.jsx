@@ -1732,57 +1732,29 @@ function BgmPlayer() {
   const audioRef = useRef(null);
   const [playing, setPlaying] = useState(false);
 
+  // 자동 재생은 비활성화 — 사용자가 토글 버튼을 직접 눌러야만 재생됨.
+  // 재생 상태만 audio 이벤트로 동기화.
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = 0.4;
     audio.loop = true;
-    audio.muted = true; // muted autoplay은 항상 허용됨
-    audio.play().catch(() => {});
-
-    // 첫 인터랙션에서 음소거 해제. 토글 버튼 클릭은 React onClick(루트 위임)이 먼저
-    // 처리되고 그 뒤 window 까지 버블링되므로, 버튼의 자체 토글 로직과 충돌하지 않는다.
-    let unmuted = false;
-    const onInteract = () => {
-      if (unmuted) return;
-      unmuted = true;
-      if (audio.muted) {
-        audio.muted = false;
-        if (audio.paused) audio.play().catch(() => {});
-      }
-      removeListeners();
-    };
-    const interactEvents = ["click", "keydown", "touchstart"];
-    function removeListeners() {
-      interactEvents.forEach(ev => window.removeEventListener(ev, onInteract));
-    }
-    interactEvents.forEach(ev =>
-      window.addEventListener(ev, onInteract, { passive: true }));
 
     function updatePlaying() {
-      setPlaying(!audio.paused && !audio.muted);
+      setPlaying(!audio.paused);
     }
-    updatePlaying();
     audio.addEventListener("play", updatePlaying);
     audio.addEventListener("pause", updatePlaying);
-    audio.addEventListener("volumechange", updatePlaying);
     return () => {
-      removeListeners();
       audio.removeEventListener("play", updatePlaying);
       audio.removeEventListener("pause", updatePlaying);
-      audio.removeEventListener("volumechange", updatePlaying);
     };
   }, []);
 
   function toggle() {
     const audio = audioRef.current;
     if (!audio) return;
-    // muted-autoplay 직후 첫 클릭: 음소거만 해제하고 계속 재생.
-    if (audio.muted) {
-      audio.muted = false;
-      if (audio.paused) audio.play().catch(() => {});
-      return;
-    }
+    if (audio.muted) audio.muted = false; // 혹시 모를 음소거 상태 풀고
     if (audio.paused) audio.play().catch(() => {});
     else audio.pause();
   }
