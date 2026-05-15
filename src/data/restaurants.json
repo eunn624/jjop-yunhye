@@ -1723,5 +1723,28 @@
     "hasReserve": false,
     "walkable": false,
     "naverLinkManual": true
+  },
+  {
+    "id": "restaurant-1778844397202",
+    "name": "산성가마솥",
+    "address": "경기 성남시 분당구 내정로129번길 4",
+    "genre": "한식",
+    "mood": "social",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "2~3만원"
+    ],
+    "extras": [],
+    "comment": "",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-15T11:26:37.202Z",
+    "reports": 1,
+    "naverLink": "https://map.naver.com/p/search/%EC%82%B0%EC%84%B1%EA%B0%80%EB%A7%88%EC%86%A5%EB%9A%9C%EA%BB%91%EA%B5%AC%EC%9D%B4%20%EB%B6%84%EB%8B%B91%ED%98%B8%EC%9A%B0%EB%8B%B9%EC%A0%90",
+    "naverCategory": "한식",
+    "thumbnail": "https://ldb-phinf.pstatic.net/20250623_56/1750605240661eT7NE_JPEG/IMG_8718.jpeg"
   }
 ]
