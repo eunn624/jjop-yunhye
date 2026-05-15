@@ -1738,13 +1738,31 @@
       "2~3만원"
     ],
     "extras": [],
-    "comment": "",
+    "comment": "솥뚜껑삼겹살",
     "nickname": "익명",
     "team": "",
-    "submittedAt": "2026-05-15T11:26:37.202Z",
+    "submittedAt": "2026-05-15T11:27:03.097Z",
     "reports": 1,
     "naverLink": "https://map.naver.com/p/search/%EC%82%B0%EC%84%B1%EA%B0%80%EB%A7%88%EC%86%A5%EB%9A%9C%EA%BB%91%EA%B5%AC%EC%9D%B4%20%EB%B6%84%EB%8B%B91%ED%98%B8%EC%9A%B0%EB%8B%B9%EC%A0%90",
     "naverCategory": "한식",
-    "thumbnail": "https://ldb-phinf.pstatic.net/20250623_56/1750605240661eT7NE_JPEG/IMG_8718.jpeg"
+    "thumbnail": "https://ldb-phinf.pstatic.net/20250623_56/1750605240661eT7NE_JPEG/IMG_8718.jpeg",
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀"
+    ],
+    "priceRangeLabels": [
+      "2~3만원"
+    ],
+    "menu": [],
+    "tone": "warm",
+    "capMin": 2,
+    "capMax": 4,
+    "priceMin": 2,
+    "priceMax": 3,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": false,
+    "naverLinkManual": false
   }
 ]
