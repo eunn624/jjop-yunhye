@@ -1764,5 +1764,31 @@
     "hasReserve": false,
     "walkable": false,
     "naverLinkManual": false
+  },
+  {
+    "id": "restaurant-1778844568178",
+    "name": "죽여주는김치찜김치찌개 서현점",
+    "address": "경기 성남시 분당구 서현동 272-1",
+    "genre": "한식",
+    "mood": "social",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "2~3만원"
+    ],
+    "extras": [
+      "역 근처"
+    ],
+    "comment": "계란말이도 먹어야함",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-15T11:29:28.178Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/52lhTXFa",
+    "naverLinkManual": true,
+    "naverCategory": "한식",
+    "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/20251120093241480_photo_36c31d0ac7f1.webp"
   }
 ]
