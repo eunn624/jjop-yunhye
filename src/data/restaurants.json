@@ -1833,15 +1833,35 @@
     "priceRange": [
       "2~3만원"
     ],
-    "extras": [],
+    "extras": [
+      "주차 가능"
+    ],
     "comment": "한정식 맛집",
     "nickname": "익명",
     "team": "",
-    "submittedAt": "2026-05-19T08:01:20.746Z",
+    "submittedAt": "2026-05-19T08:02:37.688Z",
     "reports": 1,
     "naverLink": "https://naver.me/G1wSVKy2",
     "naverLinkManual": true,
     "naverCategory": "한정식",
-    "thumbnail": "https://img.siksinhot.com/place/1675995594890261.webp?w=246&h=140&c=Y"
+    "thumbnail": "https://img.siksinhot.com/place/1675995594890261.webp?w=246&h=140&c=Y",
+    "sub": "",
+    "peopleLabels": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRangeLabels": [
+      "2~3만원"
+    ],
+    "menu": [],
+    "tone": "warm",
+    "capMin": 2,
+    "capMax": 10,
+    "priceMin": 2,
+    "priceMax": 3,
+    "hasRoom": false,
+    "hasParking": false,
+    "hasReserve": false,
+    "walkable": false
   }
 ]
