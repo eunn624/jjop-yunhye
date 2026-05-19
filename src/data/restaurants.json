@@ -1818,5 +1818,30 @@
     "naverLinkManual": true,
     "naverCategory": "돼지고기구이",
     "thumbnail": "https://ugc-images.catchtable.co.kr/shop/manager/images/14a5569f262a4258b48a1a97523dc40f"
+  },
+  {
+    "id": "restaurant-1779177680746",
+    "name": "장모밥상",
+    "address": "경기 성남시 분당구 하오개로344번길 5",
+    "genre": "한식",
+    "mood": "quiet",
+    "mealType": "lunch",
+    "people": [
+      "2~4명 소수팀",
+      "5~10명 팀회식"
+    ],
+    "priceRange": [
+      "2~3만원"
+    ],
+    "extras": [],
+    "comment": "한정식 맛집",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-19T08:01:20.746Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/G1wSVKy2",
+    "naverLinkManual": true,
+    "naverCategory": "한정식",
+    "thumbnail": "https://img.siksinhot.com/place/1675995594890261.webp?w=246&h=140&c=Y"
   }
 ]
