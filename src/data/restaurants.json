@@ -1790,5 +1790,33 @@
     "naverLinkManual": true,
     "naverCategory": "한식",
     "thumbnail": "https://d12zq4w4guyljn.cloudfront.net/20251120093241480_photo_36c31d0ac7f1.webp"
+  },
+  {
+    "id": "restaurant-1779177519771",
+    "name": "돈멜 서현 직영점",
+    "address": "경기 성남시 분당구 황새울로360번길 21 1층 101호",
+    "genre": "고기구이",
+    "mood": "social",
+    "mealType": "dinner",
+    "people": [
+      "2~4명 소수팀"
+    ],
+    "priceRange": [
+      "2~3만원",
+      "3~5만원"
+    ],
+    "extras": [
+      "역 근처",
+      "예약 가능"
+    ],
+    "comment": "제주스타일 고깃집",
+    "nickname": "익명",
+    "team": "",
+    "submittedAt": "2026-05-19T07:58:39.771Z",
+    "reports": 1,
+    "naverLink": "https://naver.me/GctEZKmO",
+    "naverLinkManual": true,
+    "naverCategory": "돼지고기구이",
+    "thumbnail": "https://ugc-images.catchtable.co.kr/shop/manager/images/14a5569f262a4258b48a1a97523dc40f"
   }
 ]
